@@ -79,7 +79,7 @@ public class TollCalculator
 
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
 
-        if (year == 2013)
+        if (year == DateTime.Now.Year)
         {
             if (month == 1 && day == 1 ||
                 month == 3 && (day == 28 || day == 29) ||
