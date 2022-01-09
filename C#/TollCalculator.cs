@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Globalization;
-using TollFeeCalculator;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
+
+
+namespace TollFeeCalculator
+{
 
 public class TollCalculator
 {
@@ -13,29 +19,36 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(Vehicle vehicle, DateTime[] dates) 
     {
+        //Check first if vehicle or date is toll free
+        if (IsTollFreeVehicle(vehicle)|| IsTollFreeDate(dates[0])) return 0;
+
         DateTime intervalStart = dates[0];
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        int biggestFee = 0;
+        int newFee = 0;
+
+        for (int i = 0; i <= dates.Length - 1; i++)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            TimeSpan comparedDates = dates[i].Subtract(intervalStart);
 
-            if (minutes <= 60)
+            if(comparedDates.TotalMinutes > 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
+                //If it's more than 60min we start a new interval
+                totalFee += biggestFee;
+                intervalStart = dates[i];
+                biggestFee = GetTollFee(dates[i]);
+            } else
             {
-                totalFee += nextFee;
+                //If we are still in the same interval, compare new fee with biggest
+                newFee = GetTollFee(dates[i]);
+                if (newFee > biggestFee) biggestFee = newFee;
+
             }
         }
+        totalFee += biggestFee;
         if (totalFee > 60) totalFee = 60;
         return totalFee;
     }
@@ -44,17 +57,11 @@ public class TollCalculator
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public int GetTollFee(DateTime date)
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
         int hour = date.Hour;
         int minute = date.Minute;
@@ -71,32 +78,55 @@ public class TollCalculator
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    private Boolean IsTollFreeDate(DateTime date) //Added api to check for red days
     {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
 
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
 
-        if (year == 2013)
+        return CheckIfTollFree(date);
+
+    }
+
+        public bool CheckIfTollFree(DateTime date)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
+            int year = date.Year;
+            int month = date.Month;
+            int day = date.Day;
+
+            string urlDate = year.ToString() + "/" + month.ToString() + "/" + day.ToString();
+            string url = "https://sholiday.faboul.se/dagar/v2.1/" + urlDate;
+
+            WebRequest requestObj = WebRequest.Create(url);
+            requestObj.Method = "GET";
+            HttpWebResponse responseObj = null;
+            responseObj = (HttpWebResponse)requestObj.GetResponse();
+
+            string result = null;
+            using (Stream stream = responseObj.GetResponseStream())
+            {
+                StreamReader sr = new StreamReader(stream);
+                result = sr.ReadToEnd();
+                Console.WriteLine(result);
+                sr.Close();
+            }
+
+            JObject jsonResult = JObject.Parse(result);
+            var dag = jsonResult["dagar"];
+            JObject dagen = (JObject)dag[0];
+
+            if (dagen["röd dag"].ToString() == "Ja")
             {
                 return true;
             }
-        }
-        return false;
-    }
+            else
+            {
+                return false;
+            }
 
-    private enum TollFreeVehicles
+
+        }
+
+        private enum TollFreeVehicles
     {
         Motorbike = 0,
         Tractor = 1,
@@ -105,4 +135,5 @@ public class TollCalculator
         Foreign = 4,
         Military = 5
     }
+}
 }
