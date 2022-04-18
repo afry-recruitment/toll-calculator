@@ -7,14 +7,12 @@
   "author": "Samir Sayyad",
   "description": "A calculator for vehicle toll fees.",
   "license": "ISC",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": ""
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3"
   },
   "devDependencies": {
     "prettier": "2.6.2"
