@@ -13,6 +13,8 @@
     "url": ""
   },
   "dependencies": {
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.2.3"
   },
   "devDependencies": {
     "prettier": "2.6.2"
