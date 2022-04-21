@@ -1,13 +1,4 @@
-export const prices = [
-    {
-        amount: 0,
-        intervals: [
-            {
-                from: "18:30",
-                to: "05:59",
-            },
-        ],
-    },
+export const feeTimes = [
     {
         amount: 8,
         intervals: [
