@@ -12,10 +12,7 @@
     "type": "git",
     "url": ""
   },
-  "dependencies": {
-    "node-cache": "^5.1.2",
-    "node-fetch": "^3.2.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "^9.2.2",
     "prettier": "2.6.2"

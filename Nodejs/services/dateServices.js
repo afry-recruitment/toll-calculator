@@ -1,10 +1,6 @@
-import fetch from 'node-fetch';
-import appCache from './appCache.js';
 import { holidays, holiMonths } from '../config/holidays.js';
 export default class dateServices {
-  constructor() {
-    this.cache = new appCache();
-  }
+  constructor() {}
 
   isTollFreeDate(date) {
     if (this.isWeekend(date)) return true;
@@ -34,23 +30,5 @@ export default class dateServices {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
-  }
-
-  /**
-   * https://date.nager.at/Api
-   */
-  async getRemoteHolidays(year, country) {
-    try {
-      if (this.cache.has(`${year}${country}`))
-        return this.cache.get(`${year}${country}`);
-      const url = `https://date.nager.at/api/v3/PublicHolidays/${year}/${country}`;
-      const result = await fetch(url);
-      const data = result.json();
-      this.cache.set(`${year}${country}`, data);
-      return data;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
   }
 }
