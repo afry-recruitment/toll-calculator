@@ -7,13 +7,13 @@ export default class dateServices{
     }
 
     isTollFreeDate(date){
-        if (isWeekend(date)) return true;
+        if (this.isWeekend(date)) return true;
         for (const holiMonth of holiMonths) {
-            if (isSameMonth(new Date(holiMonth), date)) return true;
+            if (this.isSameMonth(new Date(holiMonth), date)) return true;
         }
 
         for (const holiday of holidays) {
-            if (isSameDay(new Date(holiday), date)) return true;
+            if (this.isSameDay(new Date(holiday), date)) return true;
         }
     
         return false;

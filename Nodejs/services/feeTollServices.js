@@ -54,6 +54,6 @@ function getTimeFromInterval(interval) {
     return [time[0], time[1]];
 }
 
-function isBetweenIntervals(date, min, max) {
+export function isBetweenIntervals(date, min, max) {
     return (date.getTime() >= min.getTime() && date.getTime() <= max.getTime());
 }
