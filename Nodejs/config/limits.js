@@ -1,4 +1,4 @@
 export const limits = {
-    maxPricePerDay: 60,
-    multipleVehicleInterval: 60,
+  maxPricePerDay: 60,
+  multipleVehicleInterval: 60,
 };

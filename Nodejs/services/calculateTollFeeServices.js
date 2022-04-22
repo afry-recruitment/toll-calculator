@@ -1,44 +1,42 @@
+import { isMultiplePassage } from './passingServices.js';
+import { limits } from '../config/limits.js';
+import dateServices from './dateServices.js';
+import { getTollFee } from './feeTollServices.js';
 
-import {isMultiplePassage} from "./passingServices.js";
-import { limits } from "../config/limits.js";
-import dateServices from "./dateServices.js";
-import {getTollFee} from "./feeTollServices.js";
+export function calculateTollFee(vehicleInstance, ...dates) {
+  if (vehicleInstance.isTollFree()) return 0;
+  const sortedDates = dates.sort((a, b) => a - b);
 
-export function calculateTollFee(vehicleInstance,...dates){
-    if (vehicleInstance.isTollFree()) return 0;
-    const sortedDates = dates.sort((a, b) => a - b);
+  let totalFee = 0;
+  let latestPassageTime = undefined;
+  let pendingFees = [];
+  const dateServicesInstance = new dateServices();
 
-    let totalFee = 0;
-    let latestPassageTime = undefined;
-    let pendingFees = [];
-    const dateServicesInstance = new dateServices();
-    
-    for (const date of sortedDates) {
-        if (dateServicesInstance.isTollFreeDate(date)) continue;
+  for (const date of sortedDates) {
+    if (dateServicesInstance.isTollFreeDate(date)) continue;
 
-        let fee = getTollFee(date);
+    let fee = getTollFee(date);
 
-        if (isMultiplePassage(date, latestPassageTime)) {
-            pendingFees.push(fee);
-        } else {
-            totalFee += getHighestFee(pendingFees);
-            latestPassageTime = date.getTime();
+    if (isMultiplePassage(date, latestPassageTime)) {
+      pendingFees.push(fee);
+    } else {
+      totalFee += getHighestFee(pendingFees);
+      latestPassageTime = date.getTime();
 
-            pendingFees = [];
-            pendingFees.push(fee);
-        }
+      pendingFees = [];
+      pendingFees.push(fee);
     }
+  }
 
-    totalFee += getHighestFee(pendingFees);
-    if (totalFee >= limits.maxPricePerDay ) return limits.maxPricePerDay;
+  totalFee += getHighestFee(pendingFees);
+  if (totalFee >= limits.maxPricePerDay) return limits.maxPricePerDay;
 
-    return totalFee;
-
+  return totalFee;
 }
 function getHighestFee(pendingFees) {
-    if (pendingFees.length >= 1) {
-        return Math.max(...pendingFees);
-    }
+  if (pendingFees.length >= 1) {
+    return Math.max(...pendingFees);
+  }
 
-    return 0;
+  return 0;
 }
