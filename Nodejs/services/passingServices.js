@@ -1,4 +1,4 @@
-import { limits } from '../config/limits.js';
+import { limits } from '../config/settings.js';
 import { isBetweenIntervals } from './feeTollServices.js';
 
 export function isMultiplePassage(currentDate, latestPassingTime) {

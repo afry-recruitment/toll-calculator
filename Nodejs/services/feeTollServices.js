@@ -1,5 +1,8 @@
 import { feeTimes } from '../config/feeTimes.js';
-const TEMP_DATE = '2013-01-05T00:00:00Z';
+import {temp} from '../config/settings.js';
+
+const TEMP_DATE = temp.staticTempDate;
+
 export function getTollFee(date) {
   const passingTime = getPassingTime(date);
   for (const feeTime of feeTimes) {
@@ -9,7 +12,7 @@ export function getTollFee(date) {
   return 0;
 }
 
-function getPassingTime(date) {
+export function getPassingTime(date) {
   const currentHour = date.getUTCHours();
   const currentMinute = date.getUTCMinutes();
 
@@ -20,7 +23,7 @@ function getPassingTime(date) {
   return passingTime;
 }
 
-function getFeeForTime(passingTime, feeTime) {
+export function getFeeForTime(passingTime, feeTime) {
   for (const interval of feeTime.intervals) {
     const [fromHour, fromMinute] = getTimeFromInterval(interval.from);
     const [toHour, toMinute] = getTimeFromInterval(interval.to);
@@ -36,14 +39,15 @@ function getFeeForTime(passingTime, feeTime) {
   return false;
 }
 
-function addToTime(time, hour, minute) {
+export function addToTime(time, hour, minute) {
   const tempDate = new Date(time);
   tempDate.setTime(
     tempDate.getTime() + hour * 60 * 60 * 1000 + minute * 60 * 1000
   );
   return tempDate;
 }
-function convertToTime(hour, minute) {
+export function convertToTime(hour, minute) {
+  if(!(hour && minute)) return null;
   const tempDate = new Date(TEMP_DATE);
   tempDate.setHours(hour);
   tempDate.setMinutes(minute);
@@ -52,11 +56,12 @@ function convertToTime(hour, minute) {
   return actualDate;
 }
 
-function getTimeFromInterval(interval) {
+export function getTimeFromInterval(interval) {
   const time = interval.split(':');
   return [time[0], time[1]];
 }
 
 export function isBetweenIntervals(date, min, max) {
-  return date.getTime() >= min.getTime() && date.getTime() <= max.getTime();
+  if  (date && min && max) console.log(date.getTime(),min.getTime(),max.getTime())
+  return (date && min && max) ? (date.getTime() >= min.getTime() && date.getTime() <= max.getTime()) : null;
 }

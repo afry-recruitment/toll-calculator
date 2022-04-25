@@ -1,6 +1,6 @@
 import { isMultiplePassage } from './passingServices.js';
-import { limits } from '../config/limits.js';
-import dateServices from './dateServices.js';
+import { limits } from '../config/settings.js';
+import {isTollFreeDate} from './dateServices.js';
 import { getTollFee } from './feeTollServices.js';
 
 export function calculateTollFee(vehicleInstance, ...dates) {
@@ -10,10 +10,8 @@ export function calculateTollFee(vehicleInstance, ...dates) {
   let totalFee = 0;
   let latestPassageTime = undefined;
   let pendingFees = [];
-  const dateServicesInstance = new dateServices();
-
   for (const date of sortedDates) {
-    if (dateServicesInstance.isTollFreeDate(date)) continue;
+    if (isTollFreeDate(date)) continue;
 
     let fee = getTollFee(date);
 
