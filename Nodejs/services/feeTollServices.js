@@ -4,6 +4,7 @@ import {temp} from '../config/settings.js';
 const TEMP_DATE = temp.staticTempDate;
 
 export function getTollFee(date) {
+  if (!date) return null;
   const passingTime = getPassingTime(date);
   for (const feeTime of feeTimes) {
     const fee = getFeeForTime(passingTime, feeTime);
@@ -13,6 +14,7 @@ export function getTollFee(date) {
 }
 
 export function getPassingTime(date) {
+  if (!date) return null;
   const currentHour = date.getUTCHours();
   const currentMinute = date.getUTCMinutes();
 
@@ -23,7 +25,8 @@ export function getPassingTime(date) {
   return passingTime;
 }
 
-export function getFeeForTime(passingTime, feeTime) {
+function getFeeForTime(passingTime, feeTime) {
+  if(!passingTime || !feeTime) return null;
   for (const interval of feeTime.intervals) {
     const [fromHour, fromMinute] = getTimeFromInterval(interval.from);
     const [toHour, toMinute] = getTimeFromInterval(interval.to);
@@ -62,6 +65,5 @@ export function getTimeFromInterval(interval) {
 }
 
 export function isBetweenIntervals(date, min, max) {
-  if  (date && min && max) console.log(date.getTime(),min.getTime(),max.getTime())
   return (date && min && max) ? (date.getTime() >= min.getTime() && date.getTime() <= max.getTime()) : null;
 }
