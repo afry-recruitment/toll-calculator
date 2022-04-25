@@ -1,7 +1,7 @@
 import { holidays, holiMonths } from '../config/holidays.js';
 
 export function isTollFreeDate(date) {
-  if(!date) return null;
+  if (!date) return null;
   if (isWeekend(date)) return true;
   for (const holiMonth of holiMonths) {
     if (isSameMonth(new Date(holiMonth), date)) return true;
@@ -16,17 +16,19 @@ export function isTollFreeDate(date) {
 
 // 6 = Saturday, 0 = Sunday
 export function isWeekend(date) {
-  return (date) ? [0, 6].includes(date.getDay()) : null;
+  return date ? [0, 6].includes(date.getDay()) : null;
 }
 
 export function isSameMonth(a, b) {
-  return (a,b) ? (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()) : null;
+  return (a, b)
+    ? a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
+    : null;
 }
 
 export function isSameDay(a, b) {
-  return (a, b) ? (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  ) : null;
+  return (a, b)
+    ? a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate()
+    : null;
 }

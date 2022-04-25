@@ -1,10 +1,10 @@
 import { isMultiplePassage } from './passingServices.js';
 import { limits } from '../config/settings.js';
-import {isTollFreeDate} from './dateServices.js';
+import { isTollFreeDate } from './dateServices.js';
 import { getTollFee } from './feeTollServices.js';
 
 export function calculateTollFee(vehicleInstance, ...dates) {
-  if(!vehicleInstance || !dates) return null;
+  if (!vehicleInstance || !dates) return null;
   if (vehicleInstance.isTollFree()) return 0;
   const sortedDates = dates.sort((a, b) => a - b);
 

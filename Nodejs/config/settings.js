@@ -4,5 +4,5 @@ export const limits = {
 };
 
 export const temp = {
-  staticTempDate : '2013-01-05T00:00:00Z'
+  staticTempDate: '2013-01-05T00:00:00Z',
 };

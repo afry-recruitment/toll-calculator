@@ -1,5 +1,5 @@
 import { feeTimes } from '../config/feeTimes.js';
-import {temp} from '../config/settings.js';
+import { temp } from '../config/settings.js';
 
 const TEMP_DATE = temp.staticTempDate;
 
@@ -26,7 +26,7 @@ export function getPassingTime(date) {
 }
 
 function getFeeForTime(passingTime, feeTime) {
-  if(!passingTime || !feeTime) return null;
+  if (!passingTime || !feeTime) return null;
   for (const interval of feeTime.intervals) {
     const [fromHour, fromMinute] = getTimeFromInterval(interval.from);
     const [toHour, toMinute] = getTimeFromInterval(interval.to);
@@ -50,7 +50,7 @@ export function addToTime(time, hour, minute) {
   return tempDate;
 }
 export function convertToTime(hour, minute) {
-  if(!(hour && minute)) return null;
+  if (!(hour && minute)) return null;
   const tempDate = new Date(TEMP_DATE);
   tempDate.setHours(hour);
   tempDate.setMinutes(minute);
@@ -65,5 +65,7 @@ export function getTimeFromInterval(interval) {
 }
 
 export function isBetweenIntervals(date, min, max) {
-  return (date && min && max) ? (date.getTime() >= min.getTime() && date.getTime() <= max.getTime()) : null;
+  return date && min && max
+    ? date.getTime() >= min.getTime() && date.getTime() <= max.getTime()
+    : null;
 }
