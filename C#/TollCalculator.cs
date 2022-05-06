@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using TollFeeCalculator;
 
 public class TollCalculator
@@ -13,27 +14,33 @@ public class TollCalculator
 
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
+        if (IsTollFreeVehicle(vehicle)) return 0;
+
+        var intervalStart = dates[0];
+        var totalFee = 0;
+        var highestFeeHour = 0;
         foreach (DateTime date in dates)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            var ts = date - intervalStart;
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies / 1000 / 60;
-
-            if (minutes <= 60)
+            Thread.Sleep(1000);
+            var fee = GetTollFee(date, vehicle);
+            if(dates[0] == date)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                highestFeeHour= fee;
             }
-            else
+            else if (ts.Hours > 0 || ts.Minutes > 60)
             {
-                totalFee += nextFee;
+                totalFee += highestFeeHour;
+                intervalStart = date;
+                highestFeeHour = fee;
+            }
+            else if(highestFeeHour < fee)
+            {
+                highestFeeHour = fee;
             }
         }
+        totalFee += highestFeeHour;
         if (totalFee > 60) totalFee = 60;
         return totalFee;
     }
@@ -41,13 +48,13 @@ public class TollCalculator
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        var vehicleType = vehicle.GetVehicleType();
+        return vehicleType.Equals(nameof(TollFreeVehicles.Motorbike)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Tractor)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Emergency)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Diplomat)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Foreign)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Military));
     }
 
     public int GetTollFee(DateTime date, Vehicle vehicle)
