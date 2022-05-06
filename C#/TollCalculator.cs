@@ -1,52 +1,51 @@
-﻿using Newtonsoft.Json;
-using PublicHoliday;
+﻿using PublicHoliday;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using TollFeeCalculator;
 
 public class TollCalculator
 {
-
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
+    /// <summary>
+    /// Calculate the total toll fee for one day.
+    /// </summary>
+    /// <param name="vehicle">The <see cref="Vehicle"/>.</param>
+    /// <param name="dates">The date and time of all passes on one day.</param>
+    /// <returns>A <see langword="int"/> with the total toll fee.</returns>
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
+        int highestFee = 0;
+
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        for (int i = 0; i < dates.Length; i++)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            int tempFee = 0;
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            var timeDifference = dates[i].Subtract(intervalStart);
 
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+            if (timeDifference.TotalMinutes > 60)
+            {   
+                totalFee += highestFee;
+                intervalStart = dates[i];
+                highestFee = GetTollFee(dates[i], vehicle);
             }
             else
             {
-                totalFee += nextFee;
+                tempFee = GetTollFee(dates[i], vehicle);
+                if (tempFee > highestFee) highestFee = tempFee;
             }
         }
+
+        totalFee += highestFee;
+
         if (totalFee > 60) totalFee = 60;
         return totalFee;
     }
 
+    /// <summary>
+    /// Check if the <see cref="Vehicle"/> is toll free or not.
+    /// </summary>
+    /// <param name="vehicle">The <see cref="Vehicle"/>.</param>
+    /// <returns><see langword="true"/> if the <see cref="Vehicle"/> is toll free and <see langword="false"/> if not.</returns>
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
@@ -59,6 +58,12 @@ public class TollCalculator
                vehicleType.Equals(TollFreeVehicles.Military.ToString());
     }
 
+    /// <summary>
+    /// Gets the totla toll fee.
+    /// </summary>
+    /// <param name="date">The date.</param>
+    /// <param name="vehicle">The <see cref="Vehicle"/>.</param>
+    /// <returns>The toll fee.</returns>
     public int GetTollFee(DateTime date, Vehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
@@ -78,6 +83,11 @@ public class TollCalculator
         else return 0;
     }
 
+    /// <summary>
+    /// Checks if the date is a toll free date.
+    /// </summary>
+    /// <param name="date">The date.</param>
+    /// <returns><see langword="true"/> if it is a toll free date and <see langword="false"/> if it is not.</returns>
     private Boolean IsTollFreeDate(DateTime date)
     {
         var publicHolidays = new SwedenPublicHoliday().IsPublicHoliday(date);
@@ -85,6 +95,9 @@ public class TollCalculator
         return false;
     }
 
+    /// <summary>
+    /// All toll free vehicles.
+    /// </summary>
     private enum TollFreeVehicles
     {
         Motorbike = 0,
