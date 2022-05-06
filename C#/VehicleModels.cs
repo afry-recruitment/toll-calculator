@@ -1,7 +1,7 @@
 ﻿using System;
 using TollFeeCalculator;
 
-namespace afryCodeTest.toll_calculator.C_
+namespace TollFeeCalculator
 {
     public class Motorbike : Vehicle
     {

@@ -42,7 +42,7 @@ public class TollCalculator
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(nameof(TollFreeVehicles.Motorbike)) ||
+        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
                vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
                vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
                vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
