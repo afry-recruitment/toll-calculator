@@ -1,41 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Net;
 
-namespace afryCodeTest.toll_calculator.C_
+namespace TollFeeCalculator
 {
     public static class ApiHelper
     {
-        public static HttpClient APIClient { get; set; } = new HttpClient();
-
-        public static void InitializeClient()
+        private const string BaseURL = "https://holidays.abstractapi.com/v1/";
+        private const string APIKey = "0383d039f45345608a90e50aec32297a";
+        public static bool GetPublicHoliday(DateTime date)
         {
-            APIClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://svenskahelgdagar.info/v2")
-            };
-            APIClient.DefaultRequestHeaders.Accept.Clear();
-            APIClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-        }
 
-        public static async Task<DataResponse> getToday()
-        {
-            using (var response = await APIClient.GetAsync("/today"))
-            {
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsAsync<DataResponse>();
-                }
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-            }
+            var tokenRequest = WebRequest.Create(BaseURL + $"?api_key={APIKey}&country=SE&year={date.Year}&month={date.Month}&day={date.Day}");
+            tokenRequest.Method = "GET";
+
+            using var response = tokenRequest.GetResponse();
+            //if length is 2 then its an empty array
+            return response.ContentLength == 2 ? false : true;
         }
-    }
-    public class DataResponse {
-        public bool public_sunday { get; set; }
     }
 }
