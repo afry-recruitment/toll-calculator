@@ -69,6 +69,38 @@ namespace Tests
         }
 
         /// <summary>
+        /// Test getting the total toll fee for a car passing through multiple tolls does 
+        /// not total past the max amount of toll fee for a day.
+        /// </summary>
+        [TestMethod()]
+        public void GetTotalTollFeeTest_ShouldNotTotalGreaterThanMaxPerDay()
+        {
+            var vehicle = new Car();
+
+            var year = 2013;
+            var month = 1;
+            int day = 2;
+            var tollPasses = new DateTime[]
+            {
+            new DateTime(year, month, day, 6, 0, 0), // fee is 8, total is 8
+            new DateTime(year, month, day, 6, 30, 0), // fee is 13 but within the hour since last fee, total updated to 13
+            new DateTime(year, month, day, 7, 0, 0), // fee is 18 but within the hour since last fee, total is now 18
+            new DateTime(year, month, day, 8, 0, 0), // fee is 13, total is now 18+13
+            new DateTime(year, month, day, 8, 30, 0), // fee is 8 but within the hour, total is still 18+13
+            new DateTime(year, month, day, 9, 45, 0), // 18+13+8 = 39
+            new DateTime(year, month, day, 11, 30, 0), // 18+13+8+8 = 47
+            new DateTime(year, month, day, 12, 31, 0), // 18+13+8+8+8 = 55
+            new DateTime(year, month, day, 13, 32, 0), // 18+13+8+8+8+8 = 63
+            new DateTime(year, month, day, 14, 33, 0), // 18+13+8+8+8+8+8 = 71
+            };
+
+            int expectedTotalMaxFeePerDay = 60;
+            var actualTotalFee = TollCalculator.GetTotalTollFee(vehicle, tollPasses);
+
+            Assert.AreEqual(expectedTotalMaxFeePerDay, actualTotalFee);
+        }
+
+        /// <summary>
         /// Test the getting the toll fee passing through a single toll. 
         /// </summary>
         [TestMethod()]
@@ -77,6 +109,10 @@ namespace Tests
         [DataRow(7, 0, 18)]
         [DataRow(8, 0, 13)]
         [DataRow(8, 30, 8)]
+        [DataRow(11, 30, 8)]
+        [DataRow(12, 31, 8)]
+        [DataRow(13, 32, 8)]
+        [DataRow(14, 33, 8)]
         public void GetTollFeeTest(int hour, int minute, int expectedTollFee)
         {
             var year = 2013;
