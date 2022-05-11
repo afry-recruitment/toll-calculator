@@ -4,6 +4,7 @@ namespace TollFeeCalculator
 {
     public class Motorbike : Vehicle
     {
+        public string LicensePlate { get; set; }
         public string GetVehicleType()
         {
             return "Motorbike";
@@ -12,6 +13,7 @@ namespace TollFeeCalculator
 
     public class Car : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Car";
@@ -20,6 +22,7 @@ namespace TollFeeCalculator
 
     public class Tractor : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Tractor";
@@ -28,6 +31,7 @@ namespace TollFeeCalculator
 
     public class Emergency : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Emergency";
@@ -36,6 +40,7 @@ namespace TollFeeCalculator
 
     public class Diplomat : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Diplomat";
@@ -44,6 +49,7 @@ namespace TollFeeCalculator
 
     public class Military : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Military";
@@ -52,6 +58,7 @@ namespace TollFeeCalculator
 
     public class Foreign : Vehicle
     {
+        public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
             return "Foreign";
