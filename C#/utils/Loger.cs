@@ -14,11 +14,10 @@ namespace TollFeeCalculator
         }
         public void LogPassing(Vehicle vehicle, DateTime dateTime)
         {
-            var file = Path.Combine(LogPath, dateTime.ToString("yyyy-MM-dd"));
-            if (!File.Exists(file))
-            {
+        }
+        public void SaveCarFee(Vehicle vehicle, DateTime dateTime, int fee)
+        {
 
-            }
         }
     }
 }
