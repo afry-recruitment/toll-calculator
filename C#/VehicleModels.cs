@@ -2,8 +2,9 @@
 
 namespace TollFeeCalculator
 {
-    public class Motorbike : Vehicle
+    public class Motorbike : IVehicle
     {
+        public Motorbike(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public string GetVehicleType()
         {
@@ -11,8 +12,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Car : Vehicle
+    public class Car : IVehicle
     {
+        public Car(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
@@ -20,8 +22,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Tractor : Vehicle
+    public class Tractor : IVehicle
     {
+        public Tractor(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
@@ -29,8 +32,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Emergency : Vehicle
+    public class Emergency : IVehicle
     {
+        public Emergency(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
@@ -38,8 +42,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Diplomat : Vehicle
+    public class Diplomat : IVehicle
     {
+        public Diplomat(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
@@ -47,8 +52,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Military : Vehicle
+    public class Military : IVehicle
     {
+        public Military(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {
@@ -56,8 +62,9 @@ namespace TollFeeCalculator
         }
     }
 
-    public class Foreign : Vehicle
+    public class Foreign : IVehicle
     {
+        public Foreign(string licensePlate) { LicensePlate = licensePlate; }
         public string LicensePlate { get; set; }
         public String GetVehicleType()
         {

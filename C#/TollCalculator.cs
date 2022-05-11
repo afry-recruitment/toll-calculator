@@ -9,7 +9,7 @@ public class TollCalculator
     /// <param name="vehicle">the vehicle</param>
     /// <param name="dates">date and time of all passes on one day</param>
     /// <returns>the total toll fee for that day</returns>
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
         if (IsTollFreeVehicle(vehicle)) return 0;
 
@@ -46,7 +46,7 @@ public class TollCalculator
     /// <param name="date">time of passing</param>
     /// <param name="vehicle">what vehicle</param>
     /// <returns>fee</returns>
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public int GetTollFee(DateTime date, IVehicle vehicle)
     {
         var loger = new Loger();
         loger.LogPassing(vehicle, date);
@@ -80,7 +80,7 @@ public class TollCalculator
     /// </summary>
     /// <param name="vehicle">the Vehicle</param>
     /// <returns>bool if free</returns>
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    private bool IsTollFreeVehicle(IVehicle vehicle)
     {
         if (vehicle == null) return false;
         var vehicleType = vehicle.GetVehicleType();

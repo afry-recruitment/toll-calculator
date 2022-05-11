@@ -2,7 +2,7 @@
 
 namespace TollFeeCalculator
 {
-    public interface Vehicle
+    public interface IVehicle
     {
         public string LicensePlate { get; set; }
         String GetVehicleType();

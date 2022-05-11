@@ -20,7 +20,7 @@ namespace TollFeeCalculator
         /// </summary>
         /// <param name="vehicle">Vehicle passed toll</param>
         /// <param name="dateTime">Time of pasage</param>
-        public void LogPassing(Vehicle vehicle, DateTime dateTime)
+        public void LogPassing(IVehicle vehicle, DateTime dateTime)
         {
             var path = Path.Combine(LogPath, dateTime.ToString("yyyy-MM-dd") + ".csv");
             var logString = $"{dateTime.TimeOfDay},{vehicle.GetVehicleType()},{vehicle.LicensePlate}";
