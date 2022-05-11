@@ -48,6 +48,9 @@ public class TollCalculator
     /// <returns>fee</returns>
     public int GetTollFee(DateTime date, Vehicle vehicle)
     {
+        var loger = new Loger();
+        loger.LogPassing(vehicle, date);
+
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
         int hour = date.Hour;
