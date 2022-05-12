@@ -123,6 +123,19 @@ public class TollCalculator
     /// <returns>bool if is toll free or not</returns>
     private static bool IsTollFreeDate(DateTime date) => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || ApiHelper.GetPublicHoliday(date);
 
+    /// <summary>
+    /// Get total Fee for a given Vehicle
+    /// </summary>
+    /// <param name="vehicle">the vehicle</param>
+    /// <returns>total fee</returns>
+    public int GetTotalFeeForVehicle(IVehicle vehicle)
+    {
+        using (var db = new TollFeeCalculator.utils.DataBaseContext())
+        {
+            var dbVehicle = db.Fees.First(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            return (dbVehicle?.FeeAmount) ?? 0;
+        }
+    }
 
     /// <summary>
     /// checks if Vehicle is tollFree
