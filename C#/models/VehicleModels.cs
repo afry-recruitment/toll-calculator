@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TollFeeCalculator
+namespace TollFeeCalculator.models
 {
     public class Motorbike : IVehicle
     {

@@ -24,8 +24,10 @@ namespace TollFeeCalculator
         {
             var path = Path.Combine(LogPath, dateTime.ToString("yyyy-MM-dd") + ".csv");
             var logString = $"{dateTime.TimeOfDay},{vehicle.GetVehicleType()},{vehicle.LicensePlate}";
-            using var sw = new StreamWriter(path, true);
-            sw.WriteLine(logString);
+            using (var sw = new StreamWriter(path, true))
+            {
+                sw.WriteLine(logString);
+            }
         }
     }
 }
