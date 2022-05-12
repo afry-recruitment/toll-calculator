@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TollFeeCalculator;
 
 public class TollCalculator
@@ -53,8 +54,66 @@ public class TollCalculator
 
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
-        int hour = date.Hour;
-        int minute = date.Minute;
+        using (var db = new TollFeeCalculator.utils.DataBaseContext())
+        {
+            var fee = GetFeeAtTime(date);
+
+            var dbVehicle = db.Fees.First(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            if (dbVehicle == null)
+            {
+                var newVechliceFee = new TollFeeCalculator.models.Fee { FeeAmount = fee, Vehicle = vehicle };
+                newVechliceFee.FeeDay.Day = date;
+                newVechliceFee.FeeDay.FeeAmount = fee;
+                newVechliceFee.FeeHour.Time = date;
+                newVechliceFee.FeeHour.FeeAmount = fee;
+                db.Fees.Add(newVechliceFee);
+            }
+            else
+            {
+                if (dbVehicle.FeeDay.Day == date.Date)
+                {
+                    if (dbVehicle.FeeDay.FeeAmount == 60) return 0;
+
+                    var ts = date - dbVehicle.FeeHour.Time;
+                    int feeToAdd;
+                    if (ts.TotalHours == 0 && dbVehicle.FeeHour.FeeAmount > fee)
+                    {
+                        return 0;
+                    }
+                    else if (ts.TotalHours == 0)
+                    {
+                        feeToAdd = fee - dbVehicle.FeeHour.FeeAmount;
+                        feeToAdd = dbVehicle.FeeAmount + feeToAdd < 60 ? feeToAdd : 60 - dbVehicle.FeeAmount;
+                    }
+                    else
+                    {
+                        dbVehicle.FeeHour.Time = date;
+                        feeToAdd = dbVehicle.FeeAmount + fee < 60 ? fee : 60 - dbVehicle.FeeAmount;
+                    }
+                    dbVehicle.FeeAmount += feeToAdd;
+                    dbVehicle.FeeHour.FeeAmount = fee;
+                    db.SaveChanges();
+                    return feeToAdd;
+                }
+                dbVehicle.FeeHour.Time = date;
+                dbVehicle.FeeHour.FeeAmount = fee;
+                dbVehicle.FeeAmount = fee;
+            }
+
+            db.SaveChanges();
+            return fee;
+        }
+    }
+
+    /// <summary>
+    /// give fee for time
+    /// </summary>
+    /// <param name="date">time</param>
+    /// <returns>fee amount</returns>
+    private static int GetFeeAtTime(DateTime date)
+    {
+        var hour = date.Hour;
+        var minute = date.Minute;
 
         if (hour == 6 && minute >= 0 && minute <= 29) return 8;
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
@@ -62,7 +121,7 @@ public class TollCalculator
         else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
         else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
         else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
+        else if ((hour == 15 && minute >= 0) || (hour == 16 && minute <= 59)) return 18;
         else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
         else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
         else return 0;

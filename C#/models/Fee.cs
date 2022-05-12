@@ -7,7 +7,7 @@ namespace TollFeeCalculator.models
     class Fee
     {
         public IVehicle Vehicle { get; set; }
-        public float FeeAmount { get; set; }
+        public int FeeAmount { get; set; }
         public FeeDay FeeDay { get; set; }
         public FeeHour FeeHour { get; set; }
     }
