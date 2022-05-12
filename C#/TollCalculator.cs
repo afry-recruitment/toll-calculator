@@ -14,31 +14,13 @@ public class TollCalculator
     {
         if (IsTollFreeVehicle(vehicle)) return 0;
 
-        var intervalStart = dates[0];
-        var totalFee = 0;
-        var highestFeeHour = 0;
+        var totaltfee = 0;
+
         foreach (DateTime date in dates)
         {
-            var ts = date - intervalStart;
-            var fee = GetTollFee(date, vehicle);
-            if (dates[0] == date)
-            {
-                highestFeeHour = fee;
-            }
-            else if (ts.Hours > 0 || ts.Minutes > 60)
-            {
-                totalFee += highestFeeHour;
-                intervalStart = date;
-                highestFeeHour = fee;
-            }
-            else if (highestFeeHour < fee)
-            {
-                highestFeeHour = fee;
-            }
+            totaltfee += GetTollFee(date, vehicle);
         }
-        totalFee += highestFeeHour;
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+        return totaltfee;
     }
 
     /// <summary>
