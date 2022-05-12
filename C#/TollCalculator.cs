@@ -41,6 +41,7 @@ public class TollCalculator
             var fee = GetFeeAtTime(date);
 
             var dbVehicle = db.Fees.First(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            //Create new vehicle
             if (dbVehicle == null)
             {
                 var newVechliceFee = new TollFeeCalculator.models.Fee { FeeAmount = fee, Vehicle = vehicle };
@@ -54,7 +55,11 @@ public class TollCalculator
             {
                 if (dbVehicle.FeeDay.Day == date.Date)
                 {
-                    if (dbVehicle.FeeDay.FeeAmount == 60) return 0;
+                    //Due to 60 being max amount add nothing
+                    if (dbVehicle.FeeDay.FeeAmount == 60)
+                    {
+                        return 0;
+                    }
 
                     var ts = date - dbVehicle.FeeHour.Time;
                     int feeToAdd;
@@ -65,11 +70,13 @@ public class TollCalculator
                     else if (ts.TotalHours == 0)
                     {
                         feeToAdd = fee - dbVehicle.FeeHour.FeeAmount;
+                        //If feeToAdd is less then 60 add full feeToAdd else add whats left
                         feeToAdd = dbVehicle.FeeAmount + feeToAdd < 60 ? feeToAdd : 60 - dbVehicle.FeeAmount;
                     }
                     else
                     {
                         dbVehicle.FeeHour.Time = date;
+                        //If fee is less then 60 add full fee else add whats left
                         feeToAdd = dbVehicle.FeeAmount + fee < 60 ? fee : 60 - dbVehicle.FeeAmount;
                     }
                     dbVehicle.FeeAmount += feeToAdd;
@@ -90,7 +97,7 @@ public class TollCalculator
     /// <summary>
     /// give fee for time
     /// </summary>
-    /// <param name="date">time</param>
+    /// <param name="date">time of passage</param>
     /// <returns>fee amount</returns>
     private static int GetFeeAtTime(DateTime date)
     {
@@ -114,14 +121,15 @@ public class TollCalculator
     /// </summary>
     /// <param name="date">Date of passage</param>
     /// <returns>bool if is toll free or not</returns>
-    private Boolean IsTollFreeDate(DateTime date) => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || ApiHelper.GetPublicHoliday(date);
+    private static bool IsTollFreeDate(DateTime date) => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || ApiHelper.GetPublicHoliday(date);
+
 
     /// <summary>
     /// checks if Vehicle is tollFree
     /// </summary>
     /// <param name="vehicle">the Vehicle</param>
     /// <returns>bool if free</returns>
-    private bool IsTollFreeVehicle(IVehicle vehicle)
+    private static bool IsTollFreeVehicle(IVehicle vehicle)
     {
         if (vehicle == null) return false;
         var vehicleType = vehicle.GetVehicleType();
