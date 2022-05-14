@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using TollFeeCalculator;
 
@@ -10,7 +11,7 @@ public class TollCalculator
     /// <param name="vehicle">the vehicle</param>
     /// <param name="dates">date and time of all passes on one day</param>
     /// <returns>the total toll fee for that day</returns>
-    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
         if (IsTollFreeVehicle(vehicle)) return 0;
 
@@ -29,7 +30,7 @@ public class TollCalculator
     /// <param name="date">time of passing</param>
     /// <param name="vehicle">what vehicle</param>
     /// <returns>fee</returns>
-    public int GetTollFee(DateTime date, IVehicle vehicle)
+    public int GetTollFee(DateTime date, Vehicle vehicle)
     {
         var loger = new Loger();
         loger.LogPassing(vehicle, date);
@@ -40,15 +41,17 @@ public class TollCalculator
         {
             var fee = GetFeeAtTime(date);
 
-            var dbVehicle = db.Fees.First(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            var dbVehicle = db.Fees.Include("FeeDay").Include("FeeHour").FirstOrDefault(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
             //Create new vehicle
             if (dbVehicle == null)
             {
-                var newVechliceFee = new TollFeeCalculator.models.Fee { FeeAmount = fee, Vehicle = vehicle };
-                newVechliceFee.FeeDay.Day = date;
-                newVechliceFee.FeeDay.FeeAmount = fee;
-                newVechliceFee.FeeHour.Time = date;
-                newVechliceFee.FeeHour.FeeAmount = fee;
+                var newVechliceFee = new TollFeeCalculator.models.Fee
+                {
+                    FeeAmount = fee,
+                    Vehicle = vehicle,
+                    FeeDay = new TollFeeCalculator.models.FeeDay{ Day = date, FeeAmount = fee },
+                    FeeHour = new TollFeeCalculator.models.FeeHour{ Time = date, FeeAmount = fee }
+                };
                 db.Fees.Add(newVechliceFee);
             }
             else
@@ -128,7 +131,7 @@ public class TollCalculator
     /// </summary>
     /// <param name="vehicle">the vehicle</param>
     /// <returns>total fee</returns>
-    public int GetTotalFeeForVehicle(IVehicle vehicle)
+    public int GetTotalFeeForVehicle(Vehicle vehicle)
     {
         using (var db = new TollFeeCalculator.utils.DataBaseContext())
         {
@@ -142,10 +145,10 @@ public class TollCalculator
     /// </summary>
     /// <param name="vehicle">the Vehicle</param>
     /// <returns>bool if free</returns>
-    private static bool IsTollFreeVehicle(IVehicle vehicle)
+    private static bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
-        var vehicleType = vehicle.GetVehicleType();
+        var vehicleType = vehicle.VehicleType;
         return vehicleType.Equals(nameof(TollFreeVehicles.Motorbike)) ||
                vehicleType.Equals(nameof(TollFreeVehicles.Tractor)) ||
                vehicleType.Equals(nameof(TollFreeVehicles.Emergency)) ||
