@@ -1,63 +1,111 @@
-﻿using System;
-using System.Globalization;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using TollFeeCalculator;
 
 public class TollCalculator
 {
-
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
+    /// <summary>
+    /// Calculate the total toll fee for one day
+    /// </summary>
+    /// <param name="vehicle">the vehicle</param>
+    /// <param name="dates">date and time of all passes on one day</param>
+    /// <returns>the total toll fee for that day</returns>
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
+        if (IsTollFreeVehicle(vehicle)) return 0;
+
+        var totaltfee = 0;
+
         foreach (DateTime date in dates)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            totaltfee += GetTollFee(date, vehicle);
+        }
+        return totaltfee;
+    }
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+    /// <summary>
+    /// the toll cost for a vehicle at a given time
+    /// </summary>
+    /// <param name="date">time of passing</param>
+    /// <param name="vehicle">what vehicle</param>
+    /// <returns>fee</returns>
+    public int GetTollFee(DateTime date, Vehicle vehicle)
+    {
+        var loger = new Loger();
+        loger.LogPassing(vehicle, date);
 
-            if (minutes <= 60)
+        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+
+        using (var db = new TollFeeCalculator.utils.DataBaseContext())
+        {
+            var fee = GetFeeAtTime(date);
+
+            var dbVehicle = db.Fees.Include("FeeDay").Include("FeeHour").FirstOrDefault(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            //Create new vehicle
+            if (dbVehicle == null)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                var newVechliceFee = new TollFeeCalculator.models.Fee
+                {
+                    FeeAmount = fee,
+                    Vehicle = vehicle,
+                    FeeDay = new TollFeeCalculator.models.FeeDay{ Day = date, FeeAmount = fee },
+                    FeeHour = new TollFeeCalculator.models.FeeHour{ Time = date, FeeAmount = fee }
+                };
+                db.Fees.Add(newVechliceFee);
             }
             else
             {
-                totalFee += nextFee;
+                if (dbVehicle.FeeDay.Day == date.Date)
+                {
+                    //Due to 60 being max amount add nothing
+                    if (dbVehicle.FeeDay.FeeAmount == 60)
+                    {
+                        return 0;
+                    }
+
+                    var ts = date - dbVehicle.FeeHour.Time;
+                    int feeToAdd;
+                    if (ts.TotalHours == 0 && dbVehicle.FeeHour.FeeAmount > fee)
+                    {
+                        return 0;
+                    }
+                    else if (ts.TotalHours == 0)
+                    {
+                        feeToAdd = fee - dbVehicle.FeeHour.FeeAmount;
+                        //If feeToAdd is less then 60 add full feeToAdd else add whats left
+                        feeToAdd = dbVehicle.FeeAmount + feeToAdd < 60 ? feeToAdd : 60 - dbVehicle.FeeAmount;
+                    }
+                    else
+                    {
+                        dbVehicle.FeeHour.Time = date;
+                        //If fee is less then 60 add full fee else add whats left
+                        feeToAdd = dbVehicle.FeeAmount + fee < 60 ? fee : 60 - dbVehicle.FeeAmount;
+                    }
+                    dbVehicle.FeeAmount += feeToAdd;
+                    dbVehicle.FeeHour.FeeAmount = fee;
+                    db.SaveChanges();
+                    return feeToAdd;
+                }
+                dbVehicle.FeeHour.Time = date;
+                dbVehicle.FeeHour.FeeAmount = fee;
+                dbVehicle.FeeAmount = fee;
             }
+
+            db.SaveChanges();
+            return fee;
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    /// <summary>
+    /// give fee for time
+    /// </summary>
+    /// <param name="date">time of passage</param>
+    /// <returns>fee amount</returns>
+    private static int GetFeeAtTime(DateTime date)
     {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
-    }
-
-    public int GetTollFee(DateTime date, Vehicle vehicle)
-    {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
+        var hour = date.Hour;
+        var minute = date.Minute;
 
         if (hour == 6 && minute >= 0 && minute <= 29) return 8;
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
@@ -65,35 +113,48 @@ public class TollCalculator
         else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
         else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
         else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
+        else if ((hour == 15 && minute >= 0) || (hour == 16 && minute <= 59)) return 18;
         else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
         else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    /// <summary>
+    /// Checks of day is TollFree
+    /// </summary>
+    /// <param name="date">Date of passage</param>
+    /// <returns>bool if is toll free or not</returns>
+    private static bool IsTollFreeDate(DateTime date) => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || ApiHelper.GetPublicHoliday(date);
+
+    /// <summary>
+    /// Get total Fee for a given Vehicle
+    /// </summary>
+    /// <param name="vehicle">the vehicle</param>
+    /// <returns>total fee</returns>
+    public int GetTotalFeeForVehicle(Vehicle vehicle)
     {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
-
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
+        using (var db = new TollFeeCalculator.utils.DataBaseContext())
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
+            var dbVehicle = db.Fees.First(x => x.Vehicle.LicensePlate == vehicle.LicensePlate);
+            return (dbVehicle?.FeeAmount) ?? 0;
         }
-        return false;
+    }
+
+    /// <summary>
+    /// checks if Vehicle is tollFree
+    /// </summary>
+    /// <param name="vehicle">the Vehicle</param>
+    /// <returns>bool if free</returns>
+    private static bool IsTollFreeVehicle(Vehicle vehicle)
+    {
+        if (vehicle == null) return false;
+        var vehicleType = vehicle.VehicleType;
+        return vehicleType.Equals(nameof(TollFreeVehicles.Motorbike)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Tractor)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Emergency)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Diplomat)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Foreign)) ||
+               vehicleType.Equals(nameof(TollFreeVehicles.Military));
     }
 
     private enum TollFreeVehicles
