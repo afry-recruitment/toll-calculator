@@ -22,13 +22,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import linus.kjellgren.tollcalculator.java.vehicles.RegestrationTollAndDate;
 
 /**
- * JavaFX App
+ * JavaFX App - auto-generated.
  */
 public class App extends Application {
 
     private static Scene scene;
-    private ArrayList<RegestrationTollAndDate> vehiclesPast = new ArrayList<>();
-    private ObservableList<RegestrationTollAndDate> vehiclesTable = FXCollections.observableArrayList(vehiclesPast);
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -50,10 +48,7 @@ public class App extends Application {
         launch();
     }
     
-    
-    public void initializeVehicles(){
-        
-    }
+   
     
     
 }

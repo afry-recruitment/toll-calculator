@@ -65,6 +65,12 @@ public class PrimaryController implements Initializable{
     @FXML
     private Button newToll;
     
+    /**
+     * Initialize columns and ChoiceBox in FX
+     * 
+     * @param url
+     * @param rb 
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.newVehicleType.setValue("Car");
@@ -79,7 +85,11 @@ public class PrimaryController implements Initializable{
         tollTable.setItems(getVehicles());
     }
     
-    
+    /**
+     * Populate Toll List with Vehicles
+     * 
+     * @return 
+     */
     public ObservableList<RegestrationTollAndDate> getVehicles(){
         ArrayList<Date> dates = new ArrayList<>();
         LocalDateTime localDateTime = LocalDateTime.of(2022, 06, 10, 12, 00, 00);
@@ -101,12 +111,23 @@ public class PrimaryController implements Initializable{
         vehicleObservableList.add(new RegestrationTollAndDate("DEF456", 18, new Truck(), dates));
         return vehicleObservableList;
     }
+    /**
+     * Function to make date to localDateTime
+     * 
+     * @param localDateTime
+     * @return 
+     */
     private Date localDateTimeToDate(LocalDateTime localDateTime){
-        Instant instantFromDate = localDateTime.toInstant(ZoneOffset.UTC);
+        Instant instantFromDate = localDateTime.atZone(ourZone).toInstant();
         return java.util.Date.from(instantFromDate);
     }
     
-    
+    /**
+     * registerNewToll takes the button press in FX and adds a new toll in
+     * the ObservableList
+     * 
+     * @param event 
+     */
     @FXML
     void registerNewToll(ActionEvent event) {
         String regNr = newRegNr.getText();
@@ -116,15 +137,19 @@ public class PrimaryController implements Initializable{
         if (regNr.isBlank() || vehicleType.isBlank()){
             return;
         }
+        //Go through already registered vehciles
         ListIterator<RegestrationTollAndDate> iterator = vehicleObservableList.listIterator();
         while (iterator.hasNext()){
             RegestrationTollAndDate iteration = iterator.next();
+            //If Registration is same as entered registration
             if (iteration.getRegistration().equals(regNr)){
+                //Check if date in registration is current date
                 LocalDateTime localDateTime = LocalDateTime.now(ourZone);
                 int year = iteration.getDates().get(0).toInstant().atZone(ourZone).getYear();
                 int month = iteration.getDates().get(0).toInstant().atZone(ourZone).getMonthValue();
                 int day = iteration.getDates().get(0).toInstant().atZone(ourZone).getDayOfMonth();
                 if (localDateTime.getYear()==year && localDateTime.getMonthValue()==month && localDateTime.getDayOfMonth()==day){
+                    //Add new Time to existing date and update toll. 
                     existed = true;
                     ArrayList<Date> dateList =  iteration.getDates();
                     dateList.add(localDateTimeToDate(localDateTime));
@@ -137,6 +162,7 @@ public class PrimaryController implements Initializable{
                 }
             }
         }
+        //If registration didn't exist for current date.
         if (!existed){
             ArrayList<Date> dateList = new ArrayList<>();
             LocalDateTime localDateTime = LocalDateTime.now(ourZone);
@@ -164,6 +190,7 @@ public class PrimaryController implements Initializable{
             RegestrationTollAndDate newToll = new RegestrationTollAndDate(regNr, toll, vehicleObject, dateList);
             vehicleObservableList.add(newToll);
         }
+        //refresh ObservableList
         tollTable.setItems(vehicleObservableList);
         tollTable.refresh();
     }
