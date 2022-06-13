@@ -3,6 +3,8 @@ package main;
 import java.util.*;
 import java.util.concurrent.*;
 
+import vehicles.Vehicle;
+
 public class TollCalculator {
 
   /**

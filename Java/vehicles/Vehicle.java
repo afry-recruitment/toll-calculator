@@ -1,4 +1,4 @@
-package main;
+package vehicles;
 
 public interface Vehicle {
 
