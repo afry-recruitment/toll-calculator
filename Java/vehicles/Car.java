@@ -1,8 +1,9 @@
 package vehicles;
 
 public class Car implements Vehicle {
-  
-  public String getType() {
-    return "Car";
-  }
+	
+	@Override
+	public String getType() {
+		return "Car";
+	}
 }
