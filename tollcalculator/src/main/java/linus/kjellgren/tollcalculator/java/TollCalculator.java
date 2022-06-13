@@ -88,6 +88,15 @@ public class TollCalculator {
           month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
         return true;
       }
+    } else if(year == 2022){
+         if (month == Calendar.JANUARY && (day == 1 || day == 6) ||
+          month == Calendar.APRIL && (day == 15 || day == 18) ||
+          month == Calendar.MAY && (day == 1 || day == 26 ) ||
+          month == Calendar.JUNE && (day == 6 || day == 25) ||
+          month == Calendar.JULY ||
+          month == Calendar.NOVEMBER && day == 5 ||
+          month == Calendar.DECEMBER && day == 26) {
+        return true;
     }
     return false;
   }
