@@ -1,0 +1,14 @@
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\bin\Debug\TollFeeCalculator.exe.config
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\bin\Debug\TollFeeCalculator.exe
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\bin\Debug\TollFeeCalculator.pdb
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\obj\Debug\TollFeeCalculator.csprojAssemblyReference.cache
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\obj\Debug\TollFeeCalculator.csproj.CoreCompileInputs.cache
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\obj\Debug\TollFeeCalculator.exe
+D:\Nikita\Github_Project\toll_cal\toll_cal_solution\TollFeeCalculator\obj\Debug\TollFeeCalculator.pdb
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\bin\Debug\TollFeeCalculator.exe.config
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\bin\Debug\TollFeeCalculator.exe
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\bin\Debug\TollFeeCalculator.pdb
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\obj\Debug\TollFeeCalculator.csprojAssemblyReference.cache
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\obj\Debug\TollFeeCalculator.csproj.CoreCompileInputs.cache
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\obj\Debug\TollFeeCalculator.exe
+D:\Nikita\Github_Project\toll_cal\toll-calculator\C#\obj\Debug\TollFeeCalculator.pdb
