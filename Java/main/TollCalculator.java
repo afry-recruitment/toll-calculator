@@ -179,27 +179,28 @@ public class TollCalculator {
 	
 		int totalFee = 0;
 		ArrayList<int[][]> range = new ArrayList<int[][]>(); // this will hold pairs of int ranges and int, <int[],int>,
-																// where the int[] is a range of minutes over a day and
-																// the int is the fee for that range
+																// where the int[] is a period of minutes over a day where a fee has been issued.
+																// The int is the fee for that period
 		for (LocalDateTime date : dateTimes) {
 			// occupy an interval of time for a specific fee
 			int start = date.getHour() * 60 + date.getMinute();
 			int finish = date.getHour() * 60 + date.getMinute() + 60;
 			int[] partRange = { start, finish };
 			int fee = getFee(vehicle, date);
-			int[][] a = { partRange, { fee } };
+			int[][] feeForPeriod = { partRange, { fee } };
 
 			boolean overlap = false;
 			// look for overlap
-			// for (int[][] occupiedRange : range) { //loop over in order
-			for (ListIterator<int[][]> aa = range.listIterator(range.size()); aa.hasPrevious();) { // loop over the
-																									// ranges in reverse
-																									// order since the
-																									// possible overlaps
-				int[][] occupiedRange = aa.previous();												// will only be
-																									// those processed
-				if (start >= occupiedRange[0][0] && start <= occupiedRange[0][1]) {					// before the
-																									// current one
+			// for (int[][] occupiedRange : range) { //loop over in order. This one has a higher loop count than the one loop below
+			
+			for (ListIterator<int[][]> occupiedRanges = range.listIterator(range.size()); occupiedRanges.hasPrevious();) { // loop over the
+																															// ranges in reverse
+																															// order since the
+																															// possible overlaps
+				int[][] occupiedRange = occupiedRanges.previous();															// will only be
+				//Has the fee been given within an hour period of another fee?												// those processed
+				if (start >= occupiedRange[0][0] && start <= occupiedRange[0][1]) {											// before the
+																															// current one
 					// update fee if it is larger
 					if (fee > occupiedRange[1][0]) {
 						occupiedRange[1][0] = fee;
@@ -212,7 +213,7 @@ public class TollCalculator {
 							
 			// if there is no overlap, add to range
 			if (!overlap) {
-				range.add(a);
+				range.add(feeForPeriod);
 				overlap = true;
 			}
 
