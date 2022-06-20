@@ -1,10 +1,10 @@
 package main;
 
-public class APIfields {
+class APIfields {
 	private String access_token, token_type;
 	private int expires_in;
 	
-	public APIfields(String token, String type,  int expires) {
+	APIfields(String token, String type,  int expires) {
 		this.access_token = token;
 		this.token_type = type;
 		this.expires_in = expires;

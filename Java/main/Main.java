@@ -19,9 +19,9 @@ public class Main {
 				LocalDateTime.parse("2022-06-17T16:12:22"),
 				LocalDateTime.parse("2022-06-17T17:14:30")};
 		
+		System.out.println(a.getTotalDailyFee(c, b));
 		
-		
-		a.getAPIfields();
+		//a.getAPIfields();
 		
 	}
 
