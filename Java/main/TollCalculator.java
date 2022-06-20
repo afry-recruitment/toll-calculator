@@ -15,6 +15,12 @@ public class TollCalculator {
 	private HashSet<String> holidays;
 	private APIfields apifields;
 
+	
+	/**
+	 * The constructor of this class. 
+	 * 
+	 * @param year The year for which fees will be calculated from. Different years have different dates for holidays.
+	 */
 	public TollCalculator(int year) {
 		this.year = year;
 		this.holidays = getHolidaySet();
@@ -22,6 +28,10 @@ public class TollCalculator {
 
 	}
 
+	/**
+	 * 
+	 * @return Returns an instance of the APIfields class with usable API fields. Can return null if no connection to the API can be made
+	 */
 	private APIfields getAPIfields() {
 
 		try {
@@ -66,6 +76,10 @@ public class TollCalculator {
 
 	}
 
+	/**
+	 * 
+	 * @return Returns a String representing a JSON object containing all holidays for the year of this object. Returns null if no connection can be made to the API
+	 */
 	private String getHolidayJSONString() {
 
 		try {
@@ -102,6 +116,11 @@ public class TollCalculator {
 
 	}
 
+	
+	/**
+	 * 
+	 * @return Returns a HashSet<String> object containing all holidays for the year of this object in the format "yyyy-mm-dd"
+	 */
 	private HashSet<String> getHolidaySet() {
 
 		HashSet<String> holidays = new HashSet<String>();
@@ -153,11 +172,11 @@ public class TollCalculator {
 	 * the same, only time differs
 	 *
 	 * @param vehicle   - the vehicle
-	 * @param dateTimes - date and time of all passes on one day
-	 * @return - the total toll fee for that day
+	 * @param dateTimes - date and time of all passes on one day, using LocalDateTime format. These must be sorted in chronological order
+	 * @return - the total toll fee for that day for the given vehicle
 	 */
 	public int getTotalDailyFee(Vehicle vehicle, LocalDateTime... dateTimes) {
-
+	
 		int totalFee = 0;
 		ArrayList<int[][]> range = new ArrayList<int[][]>(); // this will hold pairs of int ranges and int, <int[],int>,
 																// where the int[] is a range of minutes over a day and
@@ -172,10 +191,15 @@ public class TollCalculator {
 
 			boolean overlap = false;
 			// look for overlap
-			for (int[][] occupiedRange : range) {
-
-				if (start >= occupiedRange[0][0] && start <= occupiedRange[0][1]) {
-
+			// for (int[][] occupiedRange : range) { //loop over in order
+			for (ListIterator<int[][]> aa = range.listIterator(range.size()); aa.hasPrevious();) { // loop over the
+																									// ranges in reverse
+																									// order since the
+																									// possible overlaps
+				int[][] occupiedRange = aa.previous();												// will only be
+																									// those processed
+				if (start >= occupiedRange[0][0] && start <= occupiedRange[0][1]) {					// before the
+																									// current one
 					// update fee if it is larger
 					if (fee > occupiedRange[1][0]) {
 						occupiedRange[1][0] = fee;
@@ -184,7 +208,8 @@ public class TollCalculator {
 					break;
 				}
 			}
-
+																									
+							
 			// if there is no overlap, add to range
 			if (!overlap) {
 				range.add(a);
@@ -203,6 +228,12 @@ public class TollCalculator {
 		return totalFee;
 	}
 
+	/**
+	 * 
+	 * @param vehicle The vehicle in question
+	 * @param dateTime The date and time of registered fee
+	 * @return Returns an int representing the fee the vehicle will receive based on the dateTime
+	 */
 	private int getFee(Vehicle vehicle, final LocalDateTime dateTime) {
 		if (isTollFreeDate(dateTime) || isTollFreeVehicle(vehicle))
 			return 0;
@@ -232,6 +263,11 @@ public class TollCalculator {
 
 	}
 
+	/**
+	 * 
+	 * @param vehicle The vehicle in question
+	 * @return Returns a boolean value. Returns true if the vehicle is toll free and false otherwise
+	 */
 	private boolean isTollFreeVehicle(Vehicle vehicle) {
 		if (vehicle == null)
 			return false;
@@ -244,6 +280,12 @@ public class TollCalculator {
 				|| vehicleType.equals(TollFreeVehicles.MILITARY.getType());
 	}
 
+	
+	/**
+	 * Is the date a toll free date?
+	 * @param date the date in question
+	 * @return Return a boolean value. Returns true if the date is a holiday or a weekend day
+	 */
 	private Boolean isTollFreeDate(LocalDateTime date) {
 
 		int year = date.getYear();
