@@ -9,6 +9,11 @@ import org.json.*;
 
 import vehicles.Vehicle;
 
+/**
+ * 
+ * @author Johan Larsson
+ *
+ */
 public class TollCalculator {
 
 	private int year;
