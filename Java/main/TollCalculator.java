@@ -181,7 +181,7 @@ public class TollCalculator {
 	 * @return - the total toll fee for that day for the given vehicle
 	 */
 	public int getTotalDailyFee(Vehicle vehicle, LocalDateTime... dateTimes) {
-		int loopcount = 0;
+		
 		int totalFee = 0;
 		ArrayList<int[][]> range = new ArrayList<int[][]>(); // this will hold pairs of int ranges and int, <int[],int>,
 																// where the int[] is a period of minutes over a day where a fee has been issued.
@@ -201,7 +201,7 @@ public class TollCalculator {
 			for (ListIterator<int[][]> occupiedRanges = range.listIterator(range.size()); occupiedRanges.hasPrevious();) { // loop over the
 																															// ranges in reverse
 																															// order since the
-				loopcount++;																											// possible overlaps
+																															// possible overlaps
 				int[][] occupiedRange = occupiedRanges.previous();	
 				if(start > occupiedRange[0][1]) break;																		// will only be
 				//Has the fee been given within an hour period of another fee?												// those processed
@@ -231,7 +231,7 @@ public class TollCalculator {
 		}
 		if (totalFee > 60)
 			totalFee = 60; // maximum fee is 60 sek
-		System.out.println(loopcount);
+		
 		return totalFee;
 	}
 
