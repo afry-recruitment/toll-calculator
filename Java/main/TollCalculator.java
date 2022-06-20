@@ -23,9 +23,8 @@ public class TollCalculator {
 	 */
 	public TollCalculator(int year) {
 		this.year = year;
-		this.holidays = getHolidaySet();
 		this.apifields = getAPIfields();
-
+		this.holidays = getHolidaySet();
 	}
 
 	/**
@@ -33,9 +32,9 @@ public class TollCalculator {
 	 * @return Returns an instance of the APIfields class with usable API fields. Can return null if no connection to the API can be made
 	 */
 	private APIfields getAPIfields() {
-
+		
 		try {
-
+			
 			URL url = new URL("https://svenskahelgdagar.info/v2/access_token");
 
 			String data = "grant_type=client_credentials&client_id=9904jolagm3211&client_secret=4b7248-468b4a-f143ec-fe603f-df4fd7";
@@ -57,6 +56,7 @@ public class TollCalculator {
 
 			String stringLine;
 			stringLine = bufferedReader.readLine();
+			
 
 			JSONObject obj = new JSONObject(stringLine);
 
