@@ -295,15 +295,18 @@ public class TollCalculator {
 	 */
 	private Boolean isTollFreeDate(LocalDateTime date) {
 
-		int year = date.getYear();
-		int month = date.getMonthValue();
-		int day = date.getDayOfMonth();
+		String year = String.valueOf(date.getYear());
+		String month = String.valueOf(date.getMonthValue());
+		if(month.length() == 1) month = "0"+month;				//in case of a date with a single digit, i.e 9th or 2nd, we pad it with a zero to make it compatible with the date format used in the hash set
+		String day = String.valueOf(date.getDayOfMonth());
+		if(day.length() == 1) day = "0"+day;
 
 		DayOfWeek dayOfWeek = date.getDayOfWeek();
 		if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)
 			return true;
 
 		String dateStr = year + "-" + month + "-" + day;
+		//System.out.println(holidays.contains(dateStr));
 		if (holidays.contains(dateStr))
 			return true;
 
