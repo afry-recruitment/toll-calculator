@@ -1,6 +1,8 @@
+package MyJava;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.Date;
 
 public class TollCalculator {
 
@@ -10,26 +12,71 @@ public class TollCalculator {
    * @param vehicle - the vehicle
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
+   * @throws Exception
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
+  public int getTollFeeTotal(Vehicle vehicle, Date... dates) throws Exception {
+    
     int totalFee = 0;
+    int nextFee = 0;
+    Date startTime = dates[0];
+    long minuteCounter = 0;
+    boolean startTimerSet = false;
+
+    // Check that all dates passed are concerning the same day
+    Calendar calStart = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
+    calStart.setTime(dates[0]);
+    int yearStart = calStart.get(Calendar.YEAR);
+    int monthStart= calStart.get(Calendar.MONTH);
+    int dayStart = calStart.get(Calendar.DAY_OF_MONTH);
+    boolean justOneDay = true;
+    for (Date dateCheck : dates) {
+      Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT+1:00"));
+      cal.setTime(dateCheck);
+      if (cal.get(Calendar.YEAR) != yearStart || cal.get(Calendar.MONTH) != monthStart || cal.get(Calendar.DAY_OF_MONTH) != dayStart) {
+        justOneDay = false;
+      } 
+    }
+    if (!justOneDay) throw new Exception("The dates passed concern more than one day!!!!!");
+    
+    // Calculate total toll fee
     for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
+      int tempFee = getTollFee(date, vehicle);
 
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
-      } else {
+      if (tempFee == 0) {
         totalFee += nextFee;
+        nextFee = 0;
+        minuteCounter = 0;
+  
+      } else {
+  
+        if (startTimerSet == false) {
+          startTime = date;
+          startTimerSet = true;
+        } else {
+          TimeUnit timeUnit = TimeUnit.MINUTES;
+          long diffInMillies = date.getTime() - startTime.getTime();
+          minuteCounter = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        }
+
+        if (minuteCounter > 60) {
+          if (date == dates[dates.length -1]) {
+            totalFee += tempFee += nextFee;
+            break;
+          }
+          totalFee += nextFee;
+          nextFee = 0;
+          minuteCounter = 0;
+          startTime = date;
+        } 
+
+        if (tempFee > nextFee) nextFee = tempFee;
+        if (date == dates[dates.length - 1]) {
+          totalFee += nextFee;;
+          break;
+        }
       }
     }
+
     if (totalFee > 60) totalFee = 60;
     return totalFee;
   }
@@ -56,9 +103,9 @@ public class TollCalculator {
     else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
     else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
     else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
+    else if (hour == 8 && minute >= 30 && minute <= 59 || hour >= 9 && hour <= 14 || hour == 14 && minute >= 0 && minute <= 59) return 8;
     else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
+    else if (hour == 15 && minute >= 30 && minute <= 59 || hour == 16 && minute >= 0 && minute <= 59) return 18;
     else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
     else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
     else return 0;
@@ -107,4 +154,3 @@ public class TollCalculator {
     }
   }
 }
-

@@ -1,3 +1,5 @@
+package MyJava;
+
 
 public interface Vehicle {
 
