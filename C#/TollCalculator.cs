@@ -23,7 +23,7 @@ public class TollCalculator
             int tempFee = GetTollFee(intervalStart, vehicle);
 
             long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            long minutes = diffInMillies / 1000 / 60;
 
             if (minutes <= 60)
             {
@@ -70,11 +70,19 @@ public class TollCalculator
 
     private Boolean IsTollFreeDate(DateTime date)
     {
+        // if holidays or red day return true
+        return (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || IsRedDay(date)) ? true : false;
+    }
+
+    // <Suggestion>:
+    // I have separated the function So, we can refactor the function based on the local calendar with specific red days of region.
+    // Or can use some popular libraries
+    // </suggestion>
+    private Boolean IsRedDay(DateTime date)
+    {
         int year = date.Year;
         int month = date.Month;
         int day = date.Day;
-
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
 
         if (year == 2013)
         {
