@@ -8,6 +8,6 @@ namespace TollFeeCalculator
 {
     public interface Vehicle
     {
-        String GetVehicleType();
+        internal String GetVehicleType();
     }
 }

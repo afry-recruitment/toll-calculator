@@ -8,7 +8,7 @@ namespace TollFeeCalculator
 {
     public class Car : Vehicle
     {
-        public String GetVehicleType()
+        string Vehicle.GetVehicleType()
         {
             return "Car";
         }
