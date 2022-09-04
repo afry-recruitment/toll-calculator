@@ -25,7 +25,7 @@ namespace Test_TollFeeCalculator
             Assert.Equal(8, actual);
         }
         [Fact]
-        public void Some_vehicle_types_are_fee_free()
+        public void some_vehicle_types_are_fee_free()
         {
             // Arrange
             Diplomat diplomat = new Diplomat();
@@ -59,7 +59,7 @@ namespace Test_TollFeeCalculator
             Assert.Equal(0, actual);
         }
         [Fact]
-        public void Car_should_only_be_charged_once_an_hour_highest_one()
+        public void car_should_only_be_charged_once_an_hour_highest_one()
         {
             // Arrange
             Car car = new Car();
@@ -78,7 +78,7 @@ namespace Test_TollFeeCalculator
             Assert.Equal(13, actual);
         }
         [Fact]
-        public void Fees_will_differ_between_8_SEK_and_18_SEK()
+        public void fees_will_differ_between_8_SEK_and_18_SEK()
         {
             // Arrange
             Car car = new Car();
