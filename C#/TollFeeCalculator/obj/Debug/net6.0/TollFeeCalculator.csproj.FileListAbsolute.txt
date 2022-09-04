@@ -1,0 +1,12 @@
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\bin\Debug\net6.0\TollFeeCalculator.deps.json
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\bin\Debug\net6.0\TollFeeCalculator.dll
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\bin\Debug\net6.0\ref\TollFeeCalculator.dll
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\bin\Debug\net6.0\TollFeeCalculator.pdb
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.csproj.AssemblyReference.cache
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.GeneratedMSBuildEditorConfig.editorconfig
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.AssemblyInfoInputs.cache
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.AssemblyInfo.cs
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.csproj.CoreCompileInputs.cache
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.dll
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\ref\TollFeeCalculator.dll
+D:\Sina\Portfolio\Toll-calc\toll-calculator\C#\TollFeeCalculator\obj\Debug\net6.0\TollFeeCalculator.pdb
