@@ -23,6 +23,7 @@ build/
 */.vs/*
 .vs/*
 C#/TollFeeCalculator/.vs/*
+C#/Test_TollFeeCalculator/.vs/*
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
