@@ -1,7 +1,5 @@
 package calculator;
 
-import calculator.Vehicle;
-
 public class Car implements Vehicle
 {
   @Override
