@@ -1,8 +1,9 @@
-# Ignore Gradle project-specific cache directory
+# Gradle project-specific cache directory
 .gradle
-# Ignore Gradle build output directory
+# Gradle build output directory
 build
-# Ignore IntelliJ project files
+# IntelliJ project files
 **/.idea
 .iml
-
+# Ignore secrets
+secrets.properties
