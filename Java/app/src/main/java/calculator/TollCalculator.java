@@ -57,7 +57,7 @@ public class TollCalculator {
     else if (hour == 6) return 13;
     else if (hour == 7) return 18;
     else if (hour == 8 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30) return 8; // every half an hour is free
+    else if ((hour >= 8 && minute >= 30) && hour <= 14 ) return 8;
     else if (hour == 15 && minute <= 29) return 13;
     else if (hour == 15 || hour == 16) return 18;
     else if (hour == 17) return 13;
@@ -85,6 +85,7 @@ public class TollCalculator {
           month == Calendar.NOVEMBER && day == 1 ||
           month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
         return true;
+
       }
     }
     return false;
