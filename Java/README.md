@@ -38,11 +38,11 @@
 
 * Compile the _SampleData.java_ class
 
-`javac SampleData.java`
+`javac -d .  ../SampleData.java`
 
 * Compile the _SampleDataTest.java_ class
 
-`javac -cp .:junit-4.12.jar SampleDataTest.java`
+`javac -d . -cp .:junit-4.12.jar ../SampleDataTest.java`
 
 * Run the test
 
