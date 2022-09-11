@@ -21,6 +21,7 @@ public class TollCalculator
     {
         this.tollFreeVehicleTypes = new HashSet<>();
         this.calendarService = calendarService;
+        loadTollFreeVehicles();
     }
 
     private void loadTollFreeVehicles()
