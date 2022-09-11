@@ -46,3 +46,9 @@
 * Run the test
 
 `java -cp .:junit-4.12.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitCore unittests.SampleDataTest`
+
+# Need to get rid of *.class files?
+
+* Execute follofing command by moving in to _anuja_ directory
+
+`find anuja -type f -name "*.class" -delete`
