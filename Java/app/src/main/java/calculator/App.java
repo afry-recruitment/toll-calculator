@@ -3,12 +3,36 @@
  */
 package calculator;
 
-public class App {
-    public String getGreeting() {
+import calculator.calendar.CalendarRegion;
+import calculator.calendar.CalendarService;
+
+public class App
+{
+
+    public App(String[] args)
+    {
+        // todo handle args
+        start("SWEDISH");
+    }
+
+    void start(String holidayRegion)
+    {
+        CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(holidayRegion));
+        System.out.println(calendarService.getHolidays());
+    }
+
+    private App()
+    {
+    }
+
+    public String getGreeting()
+    {
         return "Hello World!";
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static void main(String[] args)
+    {
+        //        System.out.println(new App().getGreeting());
+        new App(args);
     }
 }

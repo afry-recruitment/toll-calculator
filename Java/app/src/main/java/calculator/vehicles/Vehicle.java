@@ -1,4 +1,4 @@
-package calculator;
+package calculator.vehicles;
 
 public interface Vehicle {
 

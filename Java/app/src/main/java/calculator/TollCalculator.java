@@ -1,5 +1,7 @@
 package calculator;
 
+import calculator.vehicles.Vehicle;
+
 import java.util.*;
 import java.util.concurrent.*;
 
