@@ -14,7 +14,6 @@ public class PropertiesAccessor
     {
     }
 
-
     private static final Properties secretProperties = null;
     private static final Properties calendarRegionsProperties = null;
     private static final Properties settingsProperties = null;

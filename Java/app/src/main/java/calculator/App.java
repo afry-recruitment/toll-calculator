@@ -8,6 +8,7 @@ import calculator.calendar.CalendarService;
 import calculator.vehicles.VehicleType;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -22,13 +23,13 @@ public class App
 
     void start(String holidayRegion)
     {
-//        CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(holidayRegion));
+        CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(holidayRegion));
 //        System.out.println(calendarService.getHolidays());
-        TollCalculator calculator = new TollCalculator();
-        Date[]dates = new Date[]{Date.from(Instant.now()),Date.from(Instant.now().plus(10,
-                                                                                       ChronoUnit.HOURS)),
-                                 Date.from(Instant.now().plus(11, ChronoUnit.HOURS))};
-        System.out.println(calculator.getTollFee(VehicleType.CAR, dates));
+        TollCalculator calculator = new TollCalculator(calendarService);
+//        Date[]dates = new Date[]{LocalDate.from(Instant.now()), Date.from(Instant.now().plus(10,
+//                                                                                             ChronoUnit.HOURS)),
+//                                 Date.from(Instant.now().plus(11, ChronoUnit.HOURS))};
+//        System.out.println(calculator.getTollFee(VehicleType.CAR, dates));
     }
 
     private App()

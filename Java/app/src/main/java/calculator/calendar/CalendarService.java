@@ -10,8 +10,8 @@ public class CalendarService
 
     public CalendarService(CalendarRegion calendarRegion)
     {
+        // todo should not check more than once a week maybe
         CalenderHandler calenderHandler = getCalenderHandler();
-        // todo should be decoupled
         this.holidays = calenderHandler.getHolidays(calendarRegion);
     }
 
@@ -22,6 +22,10 @@ public class CalendarService
     public List<LocalDate> getHolidays()
     {
         return new ArrayList<>(holidays);
+    }
+
+    public boolean isHoliday(LocalDate date){
+       return holidays.stream().anyMatch(h->h.equals(date));
     }
 
     private static CalenderHandler getCalenderHandler()
