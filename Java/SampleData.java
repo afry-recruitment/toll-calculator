@@ -2,6 +2,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * SampleData - Responsible for manipulating parking sessions
+ */
 public class SampleData {
     
     /**
