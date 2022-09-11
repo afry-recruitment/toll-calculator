@@ -1,3 +1,4 @@
+package datamodel;
 
 public interface Vehicle {
 

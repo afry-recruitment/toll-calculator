@@ -1,4 +1,7 @@
+package coreapp;
 import java.util.Date;
+
+import datamodel.*;
 
 /**
  * TollFee - Where user can pass the vehicle type and it's parking sessions to calculate the fee

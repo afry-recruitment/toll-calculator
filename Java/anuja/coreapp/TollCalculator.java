@@ -1,6 +1,9 @@
+package coreapp;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import datamodel.Vehicle;
 
 public class TollCalculator {
 

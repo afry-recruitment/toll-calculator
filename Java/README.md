@@ -6,7 +6,6 @@
 # Used Tools
 
 * Command-line
-* VS Code
 
 # Usage
 
@@ -14,15 +13,15 @@
 
 * Go to the project's main file location
 
-`cd <path-to-this-project-cloned>/toll-calculator/Java/`
+`cd <path-to-this-project-cloned>/toll-calculator/Java/anuja`
 
 * Build the project 
 
-`javac TollFee.java`
+`javac -classpath . coreapp/TollFee.java`
 
 * Run the project
 
-`java TollFee`
+`java coreapp.TollFee`
 
 # Remark
 
@@ -38,11 +37,11 @@
 
 * Compile the _SampleData.java_ class
 
-`javac -d .  ../SampleData.java`
+`javac -d .  ../datamodel/SampleData.java`
 
 * Compile the _SampleDataTest.java_ class
 
-`javac -d . -cp .:junit-4.12.jar ../SampleDataTest.java`
+`javac -d . -cp .:junit-4.12.jar SampleDataTest.java`
 
 * Run the test
 
