@@ -1,7 +1,5 @@
 package calculator.calendar;
 
-import calculator.PropertiesAccessor;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
