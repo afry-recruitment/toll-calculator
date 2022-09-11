@@ -11,7 +11,7 @@
 
 ## Using command-line
 
-* Go to the project's main file location
+* Go to the following location
 
 `cd <path-to-this-project-cloned>/toll-calculator/Java/anuja`
 
