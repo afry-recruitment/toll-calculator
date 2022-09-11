@@ -34,7 +34,7 @@
 * Hasn't used complex frameworks or IDE features to achieve unit test.
 * Just used command-line these JAR files (_junit-4.12.jar_ & _hamcrest-core-1.3.jar_)
 
-* Go inside UnitTest directory
+* Go inside _unittests_ directory
 
 * Compile the _SampleData.java_ class
 
