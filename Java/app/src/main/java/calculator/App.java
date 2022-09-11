@@ -5,12 +5,7 @@ package calculator;
 
 import calculator.calendar.CalendarRegion;
 import calculator.calendar.CalendarService;
-import calculator.vehicles.VehicleType;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class App
 {
@@ -38,7 +33,6 @@ public class App
 
     public static void main(String[] args)
     {
-        //        System.out.println(new App().getGreeting());
         new App(args);
     }
 }

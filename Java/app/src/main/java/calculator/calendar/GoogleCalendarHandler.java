@@ -1,6 +1,6 @@
 package calculator.calendar;
 
-import calculator.PropertiesAccessor;
+import calculator.PropertiesService;
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,10 +63,10 @@ public class GoogleCalendarHandler implements CalenderHandler
     private String fetchHolidaysFromGoogleApi(String calendarRegion)
     {
         String response = "{}";
-        String baseUrl = PropertiesAccessor.getSettingsProperty("BASE_CALENDAR_URL", "NOT_FOUND");
+        String baseUrl = PropertiesService.getSettingsProperty("BASE_CALENDAR_URL", "NOT_FOUND");
         String calendarId =
-                PropertiesAccessor.getSettingsProperty("BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY", "NOT_FOUND");
-        String apiKey = PropertiesAccessor.getSecretProperty("GOOGLE_API_KEY", "NOT_FOUND");
+                PropertiesService.getSettingsProperty("BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY", "NOT_FOUND");
+        String apiKey = PropertiesService.getSecretProperty("GOOGLE_API_KEY", "NOT_FOUND");
         // singleEvents have no has no meaning in this case other than allowing time sorting
         String urlStr =
                 baseUrl + calendarRegion + "%23" + calendarId + "/events?key=" + apiKey + "&singleEvents" +
@@ -149,6 +149,6 @@ public class GoogleCalendarHandler implements CalenderHandler
                     case US -> "CALENDAR_REGION_US";
                     case VIETNAMESE -> "CALENDAR_REGION_VIETNAMESE";
                 };
-        return PropertiesAccessor.getCalendarRegionsProperty(calendarRegionName, "NOT_FOUND");
+        return PropertiesService.getCalendarRegionsProperty(calendarRegionName, "NOT_FOUND");
     }
 }

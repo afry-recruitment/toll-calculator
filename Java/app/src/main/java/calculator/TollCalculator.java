@@ -7,11 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.*;
 
 @Slf4j
 public class TollCalculator
@@ -28,7 +26,7 @@ public class TollCalculator
     private void loadTollFreeVehicles()
     {
         Properties properties =
-                PropertiesAccessor.getProperties(PropertiesAccessor.TOOL_FREE_VEHICLES_PROPERTIES);
+                PropertiesService.getProperties(PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES);
         Set<String> propertySet = properties.stringPropertyNames();
         for (String property : propertySet)
         {
@@ -44,7 +42,7 @@ public class TollCalculator
                 } catch (IllegalArgumentException ex)
                 {
                     log.error("Miss match between property name in " +
-                              PropertiesAccessor.TOOL_FREE_VEHICLES_PROPERTIES + " and the enum name. " +
+                              PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES + " and the enum name. " +
                               vehicleTypeName + " could not be matched. " + ex.getMessage());
                 }
             }
