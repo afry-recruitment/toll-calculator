@@ -6,4 +6,4 @@ build
 **/.idea
 .iml
 # Ignore secrets
-secrets.properties
+
