@@ -20,6 +20,7 @@ public class App
     {
         CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(holidayRegion));
 //        System.out.println(calendarService.getHolidays());
+        new TollPassesCsvParser(calendarService).parseCsv("data/tollPasses.csv");
         TollCalculator calculator = new TollCalculator(calendarService);
 //        Date[]dates = new Date[]{LocalDate.from(Instant.now()), Date.from(Instant.now().plus(10,
 //                                                                                             ChronoUnit.HOURS)),

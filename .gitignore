@@ -7,3 +7,5 @@ build
 .iml
 # Ignore secrets
 secrets.properties
+# Ignore user generated data
+**/app/data/report*.csv

@@ -1,12 +1,13 @@
 package calculator;
 
+import calculator.calendar.CalendarService;
 import calculator.vehicles.VehicleType;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,36 +16,56 @@ import java.util.concurrent.*;
 @Slf4j
 public class TollPassesCsvParser
 {
-    private TollPassesCsvParser()
+    private ExecutorService executor = null;
+    private TollCalculator tollCalculator = null;
+
+    public TollPassesCsvParser(CalendarService calendarService)
     {
+        this.tollCalculator = new TollCalculator(calendarService);
     }
 
-    private static ExecutorService executor = null;
-
-    /*
-        How should we handle bigger jobs? batches,mt etc possible? Unordered? Vechicle id?
-     */
-    public static void parseCsv(String csvFile)
+    public void parseCsv(String csvFile)
     {
         try
         {
             int noThreads = Integer.parseInt(PropertiesService.getSettingsProperty(
                     "NUMBER_OF_CALCULATOR_THREADS",
                     "8"));
+            this.reports = new LinkedBlockingQueue<>();
             executor = Executors.newFixedThreadPool(noThreads);
+
+            FeederThread feederThread = new FeederThread();
+/*            try
+            {*/
+                executor.execute(feederThread);
+/*            } catch (InterruptedException | ExecutionException ex)
+            {
+                log.error(ex.getMessage());
+//                e.printStackTrace();
+            }*/
+            // throw first line
+            boolean firstLine = true;
             try (BufferedReader br = new BufferedReader(new FileReader(csvFile)))
             {
                 String line;
                 while ((line = br.readLine()) != null)
                 {
-                    CalculatorThread thread = new CalculatorThread(line);
+                    log.info(line);
+                    if (firstLine)
+                    {
+                        firstLine = false;
+                        continue;
+                    }
+                    CalculatorThread calculatorThread = new CalculatorThread(line);
                     // do not care for return
-                    FutureTask<Void> task = new FutureTask<>(thread);
-                    executor.execute(task);
+                    //                    FutureTask task = new FutureTask(thread);
+                    log.info("Thread submitted. ");
+                    executor.execute(calculatorThread)
+                      /*      .get()*/;
                 }
-
             } catch (IOException ex)
             {
+                log.error(ex.getMessage());
                 ex.printStackTrace();
             }
         } catch (NumberFormatException ex)
@@ -55,8 +76,9 @@ public class TollPassesCsvParser
         {
             try
             {
-                executor.awaitTermination(30, TimeUnit.SECONDS);
+                executor.awaitTermination(5, TimeUnit.SECONDS);
                 executor = null;
+                log.info("ExecutorService: " + executor + " has finished. ");
             } catch (InterruptedException e)
             {
                 log.warn("Unexpected shutdown of CalculatorThread execution service. ");
@@ -65,60 +87,45 @@ public class TollPassesCsvParser
         }
     }
 
+    private LinkedBlockingQueue<String> reports;
 
-/*
-    private List<LocalDate> readHolidays() throws IOException
+    private boolean writeReports(String s)
     {
-        List<LocalDate> dates = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(HOLIDAY_DATES_FILE_NAME)))
+
+        LocalDate now = LocalDate.now();
+        File outputFile = new File("data/report_" + now + ".csv");
+        int i = 0;
+        while (i++ < 1000 && outputFile.exists())
         {
-            String line;
-            while ((line = br.readLine()) != null)
-            {
-                try
-                {
-                    dates.add(LocalDate.parse(line));
-                } catch (DateTimeParseException ex)
-                {
-                    log.error("Could not parse line: \n" + line + "\n as a date. ");
-                }
-            }
-            log.info("Parsed holidays file successfully. ");
-            return dates;
+
+            outputFile = new File("data/report_" + now + "(" + i + ").csv");
+        }
+        try (PrintWriter pw = new PrintWriter(outputFile))
+        {
+            pw.println(s);
+            //            reports.forEach(pw::println);
+            //            log.info("Updated " + HOLIDAY_DATES_FILE_NAME);
+            return true;
+        } catch (FileNotFoundException ex)
+        {
+            //            log.error(
+            //                    "Could not create file: " + HOLIDAY_DATES_FILE_NAME + " with error: " + ex.getMessage());
+            return false;
         }
     }
-*/
 
-    /* LinkedBlockingQueue<E> for data waiting to be written
-        private boolean writeHolidays(List<LocalDate> dates)
-        {
-
-            File outputFile = new File(HOLIDAY_DATES_FILE_NAME);
-            outputFile.delete();
-            try (PrintWriter pw = new PrintWriter(outputFile))
-            {
-                dates.forEach(pw::println);
-                log.info("Updated " + HOLIDAY_DATES_FILE_NAME);
-                return true;
-            } catch (FileNotFoundException ex)
-            {
-                log.error(
-                        "Could not create file: " + HOLIDAY_DATES_FILE_NAME + " with error: " + ex.getMessage());
-                return false;
-            }
-        }*/
-    private static String[] extractTollFeeDataFromCsvLine(String line) throws IllegalArgumentException
+    private String extractTollFeeDataFromCsvLine(String line) throws IllegalArgumentException
     {
-        line = line.trim();
         // get regId and vehicleType as [0] and passes as [1]
-        String[] splitOnList = line.split("[{}]"); // todo duoble check
-        if (splitOnList.length != 3) throw new IllegalArgumentException(
+        String[] splitOnList = line.trim()
+                                   .split("[{}]"); // todo double check
+        if (splitOnList.length != 2) throw new IllegalArgumentException(
                 "Csv line either has too many lists or the passes list is not properly formatted. " + line);
         List<ZonedDateTime> dates = parseStringForZonedDateTimes(splitOnList[1]);
         // get regId as [0] and vehicleType as [1]
         String[] splitOnComma = splitOnList[0].split(",");
         if (splitOnComma.length != 2) throw new IllegalArgumentException(
-                "Csv line does not follow expected " + "format:registrationId,vechicleType,passes" +
+                "Csv line does not follow expected " + "format:registrationId,vehicleType,passes" +
                 " actual value: " + line);
         String regId = splitOnComma[0];
         VehicleType vehicleType = null;
@@ -130,7 +137,8 @@ public class TollPassesCsvParser
             throw new IllegalArgumentException(
                     "Second field [" + splitOnComma[1] + "]could not be converted to a vehicle type. ", ex);
         }
-        return null;
+        int fee = this.tollCalculator.getTollFee(vehicleType, dates);
+        return TollReportService.buildCsvReportLine(regId, dates.size(), fee);
     }
 
     private static List<ZonedDateTime> parseStringForZonedDateTimes(String datesString)
@@ -141,17 +149,57 @@ public class TollPassesCsvParser
                      .toList();
     }
 
-    private static class CalculatorThread implements Callable<Void>
+    private class CalculatorThread implements Runnable
     {
+        private String line;
+
         public CalculatorThread(String line)
         {
-
+            this.line = line;
         }
 
         @Override
-        public Void call() throws Exception
+        public void run()
         {
-            return null;
+            try
+            {
+                reports.put(extractTollFeeDataFromCsvLine(line));
+            } catch (InterruptedException ex)
+            {
+                log.error(ex.getMessage());
+                //                e.printStackTrace();
+            }
+        }
+    }
+
+    private class FeederThread implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            List<String> lines = new ArrayList<>();
+            //            boolean reportsLeft = true;
+            while (true)
+            {
+                if (reports.isEmpty())
+                {
+                    try
+                    {
+                        Thread.sleep(75);
+                        if (reports.isEmpty())
+                        {
+                            break;
+                        }
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                        break;
+                    }
+                }
+                reports.drainTo(lines);
+                writeReports(lines.stream()
+                                  .reduce("", (a, b) -> a + b));
+            }
         }
     }
 }
