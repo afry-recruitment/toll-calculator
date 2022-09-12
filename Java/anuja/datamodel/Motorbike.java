@@ -1,3 +1,4 @@
+package datamodel;
 
 public class Motorbike implements Vehicle {
   @Override

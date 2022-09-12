@@ -1,6 +1,9 @@
+package coreapp;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import datamodel.Vehicle;
 
 public class TollCalculator {
 
@@ -74,6 +77,7 @@ public class TollCalculator {
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
+    // Assuming holidays for 2013 and 2012 are same for Sweden :)
     if (year == 2013) {
       if (month == Calendar.JANUARY && day == 1 ||
           month == Calendar.MARCH && (day == 28 || day == 29) ||

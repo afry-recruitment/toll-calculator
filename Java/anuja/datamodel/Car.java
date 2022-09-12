@@ -1,3 +1,4 @@
+package datamodel;
 
 public class Car implements Vehicle {
   @Override
