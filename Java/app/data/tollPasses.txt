@@ -1,0 +1,2 @@
+registrationId,vechicleType,passes
+ABC123,CAR,{2022-09-14T08:59:32+01:00}

@@ -19,9 +19,17 @@ This will create a runnable fat jar with settings and data in _app/build/executa
 
 Note: if you run from IDE or terminal/.class files make sure that you have _java/app/_ as working directory.
 
+### Upcoming:
+
+- Get the toll fee algorithm working
+- Externalize fee table.
+- Take csv input for tollcalculator
+- Separate testing environment from using actual vehicles
+
 ### Fixes:
 
 - The hourly pass rate is now 8 between 8:30 - 15:00. Earlier every first half hour of each hour between 8 -
   15 was free.
 - Holiday date where only checked for the year 2013 and did not even seem to be correct for that year. Check
   removed for now but the holiday data will not be correct.
+
