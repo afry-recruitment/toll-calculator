@@ -52,3 +52,8 @@
 * Execute follofing command by moving in to _anuja_ directory
 
 `find anuja -type f -name "*.class" -delete`
+
+# Room for improvement
+
+* Using Maven for build.
+* Rather than using hard coded years, use an API to get holidays for the year
