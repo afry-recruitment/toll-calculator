@@ -4,6 +4,7 @@ import calculator.PropertiesService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class CalendarService
+public class CalendarService implements CalendarServiceInterface
 {
     private List<LocalDate> holidays;
     private final String HOLIDAY_DATES_FILE_NAME = "data/holidays";
@@ -33,8 +34,8 @@ public class CalendarService
             !new File(HOLIDAY_DATES_FILE_NAME).exists())
         {
             log.info("List of holidays is out of date or file does not exist. Checking API. ");
-            CalenderHandler calenderHandler = getCalenderHandler();
-            this.holidays = calenderHandler.getHolidays(calendarRegion);
+            CalendarFetcher calendarFetcher = getCalenderHandler();
+            this.holidays = calendarFetcher.getHolidays(calendarRegion);
             if (writeHolidays(this.holidays)) PropertiesService.setSettingsProperty("LAST_UPDATED_HOLIDAYS",
                                                                                     LocalDate.now()
                                                                                              .toString());
@@ -66,15 +67,19 @@ public class CalendarService
         return new ArrayList<>(holidays);
     }
 
+    public boolean isWeekend(LocalDate date){
+        return date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+    }
+
     public boolean isHoliday(LocalDate date)
     {
         return holidays.stream()
                        .anyMatch(h -> h.equals(date));
     }
 
-    private static CalenderHandler getCalenderHandler()
+    private static CalendarFetcher getCalenderHandler()
     {
-        return new GoogleCalendarHandler();
+        return new GoogleCalendarFetcher();
     }
 
 
@@ -117,8 +122,8 @@ public class CalendarService
         }
     }
 
-    public void setHolidays(List<LocalDate> holidays)
-    {
-        this.holidays = holidays;
-    }
+//    public void setHolidays(List<LocalDate> holidays)
+//    {
+//        this.holidays = holidays;
+//    }
 }

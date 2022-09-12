@@ -19,7 +19,7 @@ public class PropertiesService
     public static final String SECRET_PROPERTIES_FILE_NAME = "secrets.properties";
     public static final String CALENDAR_REGIONS_PROPERTIES_NAME = "calendar-regions.properties";
     public static final String SETTINGS_PROPERTIES_FILE_NAME = "app-settings.properties";
-    public static final String TOOL_FREE_VEHICLES_PROPERTIES = "tool-free-vehicles.properties";
+    public static final String TOOL_FREE_VEHICLES_PROPERTIES = "toll-free-vehicles.properties";
     public static final String SETTINGS_FOLDER = "settings/";
 
     private static Properties loadProperties(String fileName)

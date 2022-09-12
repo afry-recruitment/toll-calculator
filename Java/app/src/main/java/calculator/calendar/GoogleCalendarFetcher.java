@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class GoogleCalendarHandler implements CalenderHandler
+public class GoogleCalendarFetcher implements CalendarFetcher
 {
 
     public List<LocalDate> getHolidays(CalendarRegion calendarRegion)

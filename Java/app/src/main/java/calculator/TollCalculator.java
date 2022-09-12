@@ -2,6 +2,7 @@ package calculator;
 
 
 import calculator.calendar.CalendarService;
+import calculator.calendar.CalendarServiceInterface;
 import calculator.vehicles.VehicleType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,9 +16,9 @@ import java.util.*;
 public class TollCalculator
 {
     private final HashSet<VehicleType> tollFreeVehicleTypes;
-    private final CalendarService calendarService;
+    private final CalendarServiceInterface calendarService;
 
-    public TollCalculator(CalendarService calendarService)
+    public TollCalculator(CalendarServiceInterface calendarService)
     {
         this.tollFreeVehicleTypes = new HashSet<>();
         this.calendarService = calendarService;
@@ -29,25 +30,25 @@ public class TollCalculator
         Properties properties =
                 PropertiesService.getProperties(PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES);
         Set<String> propertySet = properties.stringPropertyNames();
+        boolean parsedAtLeastOne = false;
         for (String property : propertySet)
         {
-            String[] keyValue = property.split("=");
-            if (keyValue.length != 2) continue;
-            String vehicleTypeName = keyValue[0];
-            boolean isToolFree = Boolean.parseBoolean(keyValue[1]);
+            boolean isToolFree = Boolean.parseBoolean(properties.getProperty(property));
             if (isToolFree)
             {
                 try
                 {
-                    tollFreeVehicleTypes.add(VehicleType.valueOf(vehicleTypeName));
+                    tollFreeVehicleTypes.add(VehicleType.valueOf(property));
+                    parsedAtLeastOne = true;
                 } catch (IllegalArgumentException ex)
                 {
                     log.error("Miss match between property name in " +
                               PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES + " and the enum name. " +
-                              vehicleTypeName + " could not be matched. " + ex.getMessage());
+                              property + " could not be matched. " + ex.getMessage());
                 }
             }
         }
+        if (parsedAtLeastOne) log.info("Successfully parsed toll free vehicles. ");
     }
 
     /**
@@ -101,9 +102,7 @@ public class TollCalculator
 
     private Boolean isTollFreeDate(LocalDate date)
     {
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY ||
-               calendarService.isHoliday(date);
+        return calendarService.isWeekend(date) || calendarService.isHoliday(date);
     }
 }
 
