@@ -5,27 +5,97 @@ package calculator;
 
 import calculator.calendar.CalendarRegion;
 import calculator.calendar.CalendarService;
+import calculator.exceptions.IllegalFileFormatException;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 public class App
 {
 
     public App(String[] args)
     {
-        // todo handle args
-        start("SWEDISH");
+        try
+        {
+            start(args);
+        } catch (IllegalFileFormatException | FileNotFoundException e)
+        {
+            log.error(e.getMessage());
+        }
     }
 
-    void start(String holidayRegion)
+    void start(String[] args) throws IllegalFileFormatException, FileNotFoundException
     {
-        CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(holidayRegion));
-//        System.out.println(calendarService.getHolidays());
-        new TollPassesCsvParser(calendarService).parseCsv("data/tollPasses.csv");
-        TollCalculator calculator = new TollCalculator(calendarService);
-//        Date[]dates = new Date[]{LocalDate.from(Instant.now()), Date.from(Instant.now().plus(10,
-//                                                                                             ChronoUnit.HOURS)),
-//                                 Date.from(Instant.now().plus(11, ChronoUnit.HOURS))};
-//        System.out.println(calculator.getTollFee(VehicleType.CAR, dates));
+        if (args == null || args.length == 0)
+        {
+            CalendarService calendarService = new CalendarService(CalendarRegion.valueOf("SWEDISH"));
+            new TollPassesCsvParser(calendarService).parseCsv("data/tollPasses.csv");
+            // TollCalculator calculator = new TollCalculator(calendarService);
+        }
+        else
+        {
+
+            List<String> argList = List.of(args);
+            if (argList.contains("help regions"))
+            {
+                System.out.println("Possible regions are: " + Arrays.toString(CalendarRegion.values()));
+                return;
+            }
+
+            if (argList.contains("help"))
+            {
+                System.out.println("Example: " + System.lineSeparator() + "> -in <input csv> [-out" +
+                                   " <name of report file>] -r <holiday region> " + System.lineSeparator() +
+                                   "For " + "selection of possible regions call TollCalculator.jar with:" +
+                                   System.lineSeparator() + "> help regions");
+                return;
+            }
+            Optional<String> inputPath = getArgument("-in", argList);
+            if (inputPath.isEmpty())
+            {
+                System.out.println("No input provided. Type " + System.lineSeparator() + "> help" +
+                                   System.lineSeparator() + "For more information. ");
+                return;
+            }
+            Optional<String> region = getArgument("-r", argList);
+            if (region.isEmpty())
+            {
+                System.out.println("No region provided, Type " + System.lineSeparator() + "> help" +
+                                   System.lineSeparator() + "For more information. ");
+                return;
+            }
+            Optional<String> outputPath = getArgument("-out", argList);
+            CalendarService calendarService = new CalendarService(CalendarRegion.valueOf(region.get()));
+
+            if (outputPath.isPresent())
+            {
+                new TollPassesCsvParser(calendarService).parseCsv(inputPath.get(), outputPath.get());
+            }
+            else
+            {
+                new TollPassesCsvParser(calendarService).parseCsv(inputPath.get());
+            }
+
+        }
+    }
+
+    private Optional<String> getArgument(String argKey, List<String> args)
+    {
+        String response = null;
+        if (args.contains(argKey))
+        {
+            int argKeyIndex = args.indexOf("-path");
+            if (args.size() > argKeyIndex)
+            {
+                response = args.get(argKeyIndex + 1);
+            }
+        }
+        return Optional.ofNullable(response);
     }
 
     private App()

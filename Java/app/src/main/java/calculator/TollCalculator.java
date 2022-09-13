@@ -60,7 +60,6 @@ public class TollCalculator
      */
     public int getTollFee(VehicleType vehicleType, List<ZonedDateTime> dates)
     {
-
         ZonedDateTime intervalStart = dates.get(0);
         int totalFee = 0;
         for (ZonedDateTime date : dates)

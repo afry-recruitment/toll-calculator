@@ -1,8 +1,9 @@
 package calculator;
 
+import calculator.Reports.CsvReport;
 import calculator.calendar.CalendarService;
+import calculator.exceptions.IllegalFileFormatException;
 import calculator.vehicles.VehicleType;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -18,14 +19,28 @@ public class TollPassesCsvParser
 {
     private ExecutorService executor = null;
     private TollCalculator tollCalculator = null;
+    private LinkedBlockingQueue<String> reports;
+    private File inputFile = null;
+    private File outputFile = null;
+    private String reportsPath;
 
     public TollPassesCsvParser(CalendarService calendarService)
     {
+        this.reportsPath = PropertiesService.getSettingsProperty("REPORTS_FOLDER", "reports");
         this.tollCalculator = new TollCalculator(calendarService);
     }
 
-    public void parseCsv(String csvFile)
+    public void parseCsv(String inputPath) throws IllegalFileFormatException, FileNotFoundException
     {
+        parseCsv(inputPath, reportsPath + File.separator);
+    }
+
+    public void parseCsv(String inputPath, String outputPath) throws
+                                                              IllegalFileFormatException,
+                                                              FileNotFoundException
+    {
+        loadCsvInputFile(inputPath);
+        loadCsvOutputFile(outputPath);
         try
         {
             int noThreads = Integer.parseInt(PropertiesService.getSettingsProperty(
@@ -33,35 +48,26 @@ public class TollPassesCsvParser
                     "8"));
             this.reports = new LinkedBlockingQueue<>();
             executor = Executors.newFixedThreadPool(noThreads);
-
-            FeederThread feederThread = new FeederThread();
-/*            try
-            {*/
-                executor.execute(feederThread);
-/*            } catch (InterruptedException | ExecutionException ex)
-            {
-                log.error(ex.getMessage());
-//                e.printStackTrace();
-            }*/
+            // read reports from queue and writes them to outputPath
+            ReportWriterThread reportWriterThread = new ReportWriterThread();
+            executor.execute(reportWriterThread);
             // throw first line
             boolean firstLine = true;
-            try (BufferedReader br = new BufferedReader(new FileReader(csvFile)))
+            try (BufferedReader br = new BufferedReader(new FileReader(this.inputFile)))
             {
                 String line;
                 while ((line = br.readLine()) != null)
                 {
                     log.info(line);
+                    // skip headers on first line
                     if (firstLine)
                     {
                         firstLine = false;
                         continue;
                     }
                     CalculatorThread calculatorThread = new CalculatorThread(line);
-                    // do not care for return
-                    //                    FutureTask task = new FutureTask(thread);
                     log.info("Thread submitted. ");
-                    executor.execute(calculatorThread)
-                      /*      .get()*/;
+                    executor.execute(calculatorThread);
                 }
             } catch (IOException ex)
             {
@@ -70,15 +76,16 @@ public class TollPassesCsvParser
             }
         } catch (NumberFormatException ex)
         {
-            log.error("NUMBER_OF_CALCULATOR_THREADS in app-settings.properties has a non integer value. ");
+            log.error("Property NUMBER_OF_CALCULATOR_THREADS in app-settings.properties has a non integer " +
+                      "value. ");
         }
         if (executor != null)
         {
             try
             {
                 executor.awaitTermination(5, TimeUnit.SECONDS);
-                executor = null;
-                log.info("ExecutorService: " + executor + " has finished. ");
+                executor.shutdown();
+                log.info("ExecutorService: " + executor + "is shutdown: " + executor.isShutdown());
             } catch (InterruptedException e)
             {
                 log.warn("Unexpected shutdown of CalculatorThread execution service. ");
@@ -87,34 +94,93 @@ public class TollPassesCsvParser
         }
     }
 
-    private LinkedBlockingQueue<String> reports;
-
-    private boolean writeReports(String s)
+    //todo
+    public boolean isRunning()
     {
+        return !this.executor.isShutdown();
+    }
 
-        LocalDate now = LocalDate.now();
-        File outputFile = new File("data/report_" + now + ".csv");
-        int i = 0;
-        while (i++ < 1000 && outputFile.exists())
+    private void loadCsvInputFile(String inputPath) throws FileNotFoundException, IllegalFileFormatException
+    {
+        File tmpInputFile = new File(inputPath);
+        if (!tmpInputFile.exists()) throw new FileNotFoundException("Could not locate " + inputPath);
+        if (!inputPath.endsWith(".csv"))
+            throw new IllegalFileFormatException("File has to be of typ CSV and end with the .csv suffix. ");
+        this.inputFile = tmpInputFile;
+    }
+
+    private void loadCsvOutputFile(String outputPath)
+    {
+        String path;
+        String fileName;
+        if (outputPath.contains(File.separator))
         {
+            // path and filename
+            int lastFileSeparatorIndex = outputPath.lastIndexOf(File.separator);
+            path = outputPath.substring(0, lastFileSeparatorIndex);
+            fileName = outputPath.substring(lastFileSeparatorIndex);
 
-            outputFile = new File("data/report_" + now + "(" + i + ").csv");
+        }else{
+            path = reportsPath;
+            fileName = outputPath;
         }
-        try (PrintWriter pw = new PrintWriter(outputFile))
+        if (!path.isEmpty()) new File(path).mkdirs();
+        if(fileName.isEmpty()) fileName = "toll-report_" + LocalDate.now();
+        if(!fileName.endsWith(".csv")) fileName += ".csv";
+        this.outputFile = makeFileWithUniqueName(path+File.separator+fileName, ".csv", 1000);
+
+/*        if (outputPath.endsWith(File.separator)) outputPath += "toll-report_" + LocalDate.now();
+        if (!outputPath.endsWith(".csv")) outputPath += ".csv";
+
+        // simple but dull check to see if file tree specified
+        // if not put report in /reports
+        if (outputPath.contains(File.separator))
         {
-            pw.println(s);
-            //            reports.forEach(pw::println);
-            //            log.info("Updated " + HOLIDAY_DATES_FILE_NAME);
+            if (outputPath.endsWith(File.separator + ".csv"))
+            {
+
+            }
+            this.outputFile = makeFileWithUniqueName(outputPath, ".csv", 1000);
+        }
+        else new File(reportsPath).mkdir();
+        {
+            if (outputPath.equals(".csv")) outputPath = LocalDate.now() + outputPath;
+            this.outputFile = makeFileWithUniqueName(reportsPath + outputPath, ".csv", 1000);
+        }*/
+    }
+
+    public File makeFileWithUniqueName(String filePath, String fileEnding, int noTries)
+    {
+        File file = new File(filePath);
+        if (file.exists())
+        {
+            String[] splitOnFileEnding = filePath.split(fileEnding);
+            int i = 0;
+            while (i++ < noTries && file.exists())
+            {
+                file = new File(splitOnFileEnding[0] + "(" + i + ")" + splitOnFileEnding[1]);
+                if (i == noTries - 1) throw new RuntimeException(
+                        "Could not produce unique filename with " + noTries + " tries. ");
+            }
+        }
+        return file;
+    }
+
+
+    private boolean writeReports(String reportLine)
+    {
+        try (PrintWriter pw = new PrintWriter(this.outputFile))
+        {
+            pw.println(reportLine);
             return true;
         } catch (FileNotFoundException ex)
         {
-            //            log.error(
-            //                    "Could not create file: " + HOLIDAY_DATES_FILE_NAME + " with error: " + ex.getMessage());
+            log.error("Could not write report file: " + this.outputFile);
             return false;
         }
     }
 
-    private String extractTollFeeDataFromCsvLine(String line) throws IllegalArgumentException
+    private CsvReport extractTollFeeDataFromCsvLine(String line) throws IllegalArgumentException
     {
         // get regId and vehicleType as [0] and passes as [1]
         String[] splitOnList = line.trim()
@@ -135,10 +201,10 @@ public class TollPassesCsvParser
         } catch (IllegalArgumentException ex)
         {
             throw new IllegalArgumentException(
-                    "Second field [" + splitOnComma[1] + "]could not be converted to a vehicle type. ", ex);
+                    "Second field [" + splitOnComma[1] + "] could not be converted to a vehicle type. ", ex);
         }
         int fee = this.tollCalculator.getTollFee(vehicleType, dates);
-        return TollReportService.buildCsvReportLine(regId, dates.size(), fee);
+        return new CsvReport(regId, dates.size(), fee);
     }
 
     private static List<ZonedDateTime> parseStringForZonedDateTimes(String datesString)
@@ -148,6 +214,7 @@ public class TollPassesCsvParser
                      .map(ZonedDateTime::parse)
                      .toList();
     }
+
 
     private class CalculatorThread implements Runnable
     {
@@ -163,42 +230,55 @@ public class TollPassesCsvParser
         {
             try
             {
-                reports.put(extractTollFeeDataFromCsvLine(line));
+                reports.put(extractTollFeeDataFromCsvLine(line).toString());
             } catch (InterruptedException ex)
             {
                 log.error(ex.getMessage());
-                //                e.printStackTrace();
             }
         }
     }
 
-    private class FeederThread implements Runnable
+    /**
+     * Polls outer reports of type LinkedBlockingQueue for reports to print to a given file path.
+     */
+    private class ReportWriterThread implements Runnable
     {
         @Override
         public void run()
         {
             List<String> lines = new ArrayList<>();
-            //            boolean reportsLeft = true;
-            while (true)
+            boolean hasWork = true;
+            boolean hasWaited = false;
+            int noPolls = 10;
+            while (hasWork)
             {
                 if (reports.isEmpty())
                 {
                     try
                     {
-                        Thread.sleep(75);
-                        if (reports.isEmpty())
-                        {
-                            break;
-                        }
+                        Thread.sleep(10);
+                        hasWaited = true;
+                        --noPolls;
+                        if (noPolls == 0) hasWork = false;
                     } catch (InterruptedException e)
                     {
+                        log.error("ReportWriterThread got interrupted in its execution. ");
                         e.printStackTrace();
                         break;
                     }
                 }
-                reports.drainTo(lines);
-                writeReports(lines.stream()
-                                  .reduce("", (a, b) -> a + b));
+                else
+                {
+                    if (hasWaited)
+                    {
+                        noPolls = 10;
+                        hasWaited = false;
+                    }
+                    reports.drainTo(lines);
+                    log.info("Writing " + lines.size() + " to reportFile. ");
+                    writeReports(lines.stream()
+                                      .reduce("", (a, b) -> a + b));
+                }
             }
         }
     }
