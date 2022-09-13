@@ -22,11 +22,20 @@ public class TollCalculatorTests
     }
 
     [Test]
-    public void Toll_weekday_6_30_is_13()
+    public void Toll_weekday_6_30_is_13_for_cars()
     {
         var date = DateTime.Parse("2022-09-8 6:30:00");
         var vehicle = new Car();
 
         Assert.That(_sut.GetTollFee(date, vehicle), Is.EqualTo(13));
+    }
+
+    [Test]
+    public void Toll_weekday_6_30_is_0_for_motorbikes()
+    {
+        var date = DateTime.Parse("2022-09-8 6:30:00");
+        var vehicle = new Motorbike();
+
+        Assert.That(_sut.GetTollFee(date, vehicle), Is.EqualTo(0));
     }
 }

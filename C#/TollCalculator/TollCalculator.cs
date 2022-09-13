@@ -64,13 +64,14 @@ namespace TollFeeCalculator
         private bool IsTollFreeVehicle(IVehicle vehicle)
         {
             if (vehicle == null) return false;
-            String vehicleType = vehicle.GetVehicleType();
-            return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Military.ToString());
+            return vehicle.IsTollFree;
+
+            // return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
+            //        vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
+            //        vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
+            //        vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
+            //        vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
+            //        vehicleType.Equals(TollFreeVehicles.Military.ToString());
         }
         private Boolean IsTollFreeDate(DateTime date)
         {
