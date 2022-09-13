@@ -8,7 +8,7 @@ A calculator for vehicle toll fees.
 - The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript).
 - No requirement but bonus points if you know what movie is in the gif
 
-- Bonus points: The movie is Hackers from 1995 staring among others Angelina Jolie.
+- Bonus points: The movie is Hackers from 1995 starring among others Angelina Jolie.
 
 ## Background
 
