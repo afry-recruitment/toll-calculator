@@ -63,15 +63,7 @@ namespace TollFeeCalculator
 
         private bool IsTollFreeVehicle(IVehicle vehicle)
         {
-            if (vehicle == null) return false;
-            return vehicle.IsTollFree;
-
-            // return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-            //        vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-            //        vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-            //        vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-            //        vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-            //        vehicleType.Equals(TollFreeVehicles.Military.ToString());
+            return vehicle?.IsTollFree ?? false;
         }
         private Boolean IsTollFreeDate(DateTime date)
         {
@@ -96,16 +88,6 @@ namespace TollFeeCalculator
                 }
             }
             return false;
-        }
-
-        private enum TollFreeVehicles
-        {
-            Motorbike = 0,
-            Tractor = 1,
-            Emergency = 2,
-            Diplomat = 3,
-            Foreign = 4,
-            Military = 5
         }
     }
 }
