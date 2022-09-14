@@ -33,18 +33,17 @@ namespace TollFeeCalculator
             {
                 TimeOnly time = sortedTimes[i];
                 var elapsed = time - windowStart;
+                var lastFee = currentWindowFee;
+
+                var feeForPassage = GetTollFee(GetDateTime(date, time), vehicle);
+                currentWindowFee = Math.Max(feeForPassage, currentWindowFee);
 
                 if (elapsed > TimeSpan.FromHours(1))
                 {
-                    totalFee += currentWindowFee;
+                    totalFee += lastFee;
                     windowStart = time;
-                    currentWindowFee = GetTollFee(GetDateTime(date, time), vehicle);
                 }
-                else
-                {
-                    var feeForPassage = GetTollFee(GetDateTime(date, time), vehicle);
-                    currentWindowFee = Math.Max(feeForPassage, currentWindowFee);
-                }
+
                 if (i == sortedTimes.Length - 1)
                 {
                     currentWindowFee = GetTollFee(GetDateTime(date, time), vehicle);

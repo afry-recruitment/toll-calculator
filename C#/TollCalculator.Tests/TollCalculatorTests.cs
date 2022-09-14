@@ -259,6 +259,26 @@ public class TollCalculatorTests
     }
 
     [Test]
+    public void GetTotalTollFee_Returns_Max_60_for_one_day_and_out_of_order_times()
+    {
+        var date = DateOnly.Parse("2022-09-08");
+        var times = new TimeOnly[]
+        {
+            TimeOnly.Parse("06:00"), // 8
+            TimeOnly.Parse("11:35"), // + 8 = 64
+            TimeOnly.Parse("07:01"), // + 18 = 26
+            TimeOnly.Parse("10:34"), // + 8 = 56
+            TimeOnly.Parse("08:02"), // + 13 = 39
+            TimeOnly.Parse("09:33"), // + 8 = 47
+        };
+        var vehicle = new Car();
+
+        var actual = _sut.GetTotalTollFee(vehicle, date, times);
+
+        Assert.That(actual, Is.EqualTo(60));
+    }
+
+    [Test]
     public void GetTotalTollFee_Returns_26_for_passage_6_00_and_07_01()
     {
         var date = DateOnly.Parse("2022-09-08");
