@@ -46,6 +46,7 @@ namespace TollFeeCalculator
 
         public int GetTollFee(DateTime date, IVehicle vehicle)
         {
+            CheckDate(date);
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
                 return 0;
 
@@ -76,6 +77,14 @@ namespace TollFeeCalculator
                 return 8;
             else
                 return 0;
+        }
+
+        private void CheckDate(DateTime date)
+        {
+            if (date.Kind != DateTimeKind.Local)
+            {
+                throw new InvalidOperationException("Only local dates supported");
+            }
         }
 
         private bool IsTollFreeVehicle(IVehicle vehicle)

@@ -220,4 +220,22 @@ public class TollCalculatorTests
         Assert.That(actual, Is.EqualTo(0));
     }
 
+    [Test]
+    public void GetTollFee_Throws_for_Unspecified_Date()
+    {
+        var date = DateTime.Parse("2022-09-08T18:30:00");
+        var vehicle = new Car();
+
+        Assert.Throws<InvalidOperationException>(() => _sut.GetTollFee(date, vehicle));
+    }
+
+    [Test]
+    public void GetTollFee_Throws_for_UTC_Date()
+    {
+        var date = DateTime.SpecifyKind(DateTime.Parse("2022-09-08T18:30:00"), DateTimeKind.Utc);
+        var vehicle = new Car();
+
+        Assert.Throws<InvalidOperationException>(() => _sut.GetTollFee(date, vehicle));
+    }
+
 }
