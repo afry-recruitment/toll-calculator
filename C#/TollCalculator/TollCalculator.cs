@@ -11,18 +11,19 @@ namespace TollFeeCalculator
         /// </summary>
         /// <returns>the total toll fee for that day</returns>
         /// <param name="vehicle">the vehicle</param>
-        /// <param name="dates">date and time of all passes on one day</param>
+        /// <param name="times">date and time of all passes on one day</param>
 
-        public int GetTotalTollFee(IVehicle vehicle, DateTime[] dates)
+        public int GetTotalTollFee(IVehicle vehicle, DateOnly date, TimeOnly[] times)
         {
-            DateTime intervalStart = dates[0];
+            var intervalStart = date.ToDateTime(times[0]);
             int totalFee = 0;
-            foreach (DateTime date in dates)
+            foreach (var time in times)
             {
-                int nextFee = GetTollFee(date, vehicle);
+                var dateTime = date.ToDateTime(time);
+                int nextFee = GetTollFee(dateTime, vehicle);
                 int tempFee = GetTollFee(intervalStart, vehicle);
 
-                long diffInMillies = date.Millisecond - intervalStart.Millisecond;
+                long diffInMillies = dateTime.Millisecond - intervalStart.Millisecond;
                 long minutes = diffInMillies / 1000 / 60;
 
                 if (minutes <= 60)
