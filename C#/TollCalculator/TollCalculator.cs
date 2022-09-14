@@ -13,7 +13,7 @@ namespace TollFeeCalculator
         /// <param name="vehicle">the vehicle</param>
         /// <param name="dates">date and time of all passes on one day</param>
 
-        public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+        public int GetTotalTollFee(IVehicle vehicle, DateTime[] dates)
         {
             DateTime intervalStart = dates[0];
             int totalFee = 0;
@@ -59,7 +59,9 @@ namespace TollFeeCalculator
                 return 18;
             else if (hour == 8 && minute >= 0 && minute <= 29)
                 return 13;
-            else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59)
+            else if (hour == 8 && minute <= 30)
+                return 8;
+            else if (hour >= 9 && hour <= 14)
                 return 8;
             else if (hour == 15 && minute >= 0 && minute <= 29)
                 return 13;
@@ -77,7 +79,6 @@ namespace TollFeeCalculator
         {
             return vehicle?.IsTollFree ?? false;
         }
-
         private Boolean IsTollFreeDate(DateTime date)
         {
             int year = date.Year;
