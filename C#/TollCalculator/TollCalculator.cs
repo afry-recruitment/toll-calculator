@@ -7,45 +7,60 @@ namespace TollFeeCalculator
     public class TollCalculator : ITollCalculator
     {
         /// <summary>
-        /// Calculate the total toll fee for one day
+        /// Calculate the total toll fee for one day.
         /// </summary>
         /// <returns>the total toll fee for that day</returns>
         /// <param name="vehicle">the vehicle</param>
-        /// <param name="times">date and time of all passes on one day</param>
+        /// <param name="date">the date</param>
+        /// <param name="times">times (local time) of all passes on one day</param>
 
         public int GetTotalTollFee(IVehicle vehicle, DateOnly date, TimeOnly[] times)
         {
-            var intervalStart = date.ToDateTime(times[0]);
-            int totalFee = 0;
-            foreach (var time in times)
+            if (vehicle is null)
             {
-                var dateTime = date.ToDateTime(time);
-                int nextFee = GetTollFee(dateTime, vehicle);
-                int tempFee = GetTollFee(intervalStart, vehicle);
+                throw new ArgumentNullException(nameof(vehicle));
+            }
+            if (times.Length == 0)
+                return 0;
 
-                long diffInMillies = dateTime.Millisecond - intervalStart.Millisecond;
-                long minutes = diffInMillies / 1000 / 60;
+            int totalFee = 0;
 
-                if (minutes <= 60)
+            var sortedTimes = times.OrderBy(t => t).ToArray();
+            var windowStart = sortedTimes[0];
+            int currentWindowFee = 0;
+
+            for (int i = 0; i < sortedTimes.Length; i++)
+            {
+                TimeOnly time = sortedTimes[i];
+                var elapsed = time - windowStart;
+
+                if (elapsed > TimeSpan.FromHours(1))
                 {
-                    if (totalFee > 0)
-                        totalFee -= tempFee;
-                    if (nextFee >= tempFee)
-                        tempFee = nextFee;
-                    totalFee += tempFee;
+                    totalFee += currentWindowFee;
+                    windowStart = time;
+                    currentWindowFee = GetTollFee(GetDateTime(date, time), vehicle);
                 }
                 else
                 {
-                    totalFee += nextFee;
+                    var feeForPassage = GetTollFee(GetDateTime(date, time), vehicle);
+                    currentWindowFee = Math.Max(feeForPassage, currentWindowFee);
+                }
+                if (i == sortedTimes.Length - 1)
+                {
+                    currentWindowFee = GetTollFee(GetDateTime(date, time), vehicle);
+                    totalFee += currentWindowFee;
                 }
             }
-            if (totalFee > 60)
-                totalFee = 60;
-            return totalFee;
+
+            return Math.Min(totalFee, 60);
         }
 
         public int GetTollFee(DateTime date, IVehicle vehicle)
         {
+            if (vehicle is null)
+            {
+                throw new ArgumentNullException(nameof(vehicle));
+            }
             CheckDate(date);
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
                 return 0;
@@ -79,11 +94,16 @@ namespace TollFeeCalculator
                 return 0;
         }
 
+        private DateTime GetDateTime(DateOnly date, TimeOnly time)
+        {
+            return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Local);
+        }
+
         private void CheckDate(DateTime date)
         {
             if (date.Kind != DateTimeKind.Local)
             {
-                throw new InvalidOperationException("Only local dates supported");
+                throw new InvalidOperationException("Only local DateTimes supported");
             }
         }
 
