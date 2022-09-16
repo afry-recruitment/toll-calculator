@@ -16,6 +16,12 @@
             {
                 throw new ArgumentNullException(nameof(vehicle));
             }
+
+            if (times is null)
+            {
+                throw new ArgumentNullException(nameof(times));
+            }
+
             if (times.Length == 0)
                 return 0;
 
@@ -25,28 +31,20 @@
             var windowStart = sortedTimes[0];
             int currentWindowFee = 0;
 
-            for (int i = 0; i < sortedTimes.Length; i++)
+            foreach (TimeOnly time in sortedTimes)
             {
-                TimeOnly time = sortedTimes[i];
                 var elapsed = time - windowStart;
-                var lastFee = currentWindowFee;
-
-                var feeForPassage = GetTollFee(GetDateTime(date, time), vehicle);
-                currentWindowFee = Math.Max(feeForPassage, currentWindowFee);
-
                 if (elapsed > TimeSpan.FromHours(1))
                 {
-                    totalFee += lastFee;
+                    totalFee += currentWindowFee;
                     windowStart = time;
                 }
-
-                if (i == sortedTimes.Length - 1)
-                {
-                    currentWindowFee = GetTollFee(GetDateTime(date, time), vehicle);
-                    totalFee += currentWindowFee;
-                }
+                var feeForPassage = GetTollFee(GetDateTime(date, time), vehicle);
+                currentWindowFee = Math.Max(feeForPassage, currentWindowFee);
             }
-
+            var lastTime = sortedTimes.Last();
+            currentWindowFee = GetTollFee(GetDateTime(date, lastTime), vehicle);
+            totalFee += currentWindowFee;
             return Math.Min(totalFee, 60);
         }
 
@@ -56,7 +54,6 @@
             {
                 throw new ArgumentNullException(nameof(vehicle));
             }
-
             CheckDate(date);
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
                 return 0;

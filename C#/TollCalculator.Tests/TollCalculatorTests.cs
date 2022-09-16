@@ -308,4 +308,46 @@ public class TollCalculatorTests
 
         Assert.That(actual, Is.EqualTo(8));
     }
+    [Test]
+    public void GetTotalTollFee_Returns_31_for_passage_6_00_and_6_45_and_7_01()
+    {
+        var date = DateOnly.Parse("2022-09-08");
+        var times = new TimeOnly[]
+        {
+            TimeOnly.Parse("06:00"), // 8
+            TimeOnly.Parse("06:45"), // 13
+            TimeOnly.Parse("07:01"), // 18
+        };
+        var vehicle = new Car();
+
+        var actual = _sut.GetTotalTollFee(vehicle, date, times);
+
+        Assert.That(actual, Is.EqualTo(31));
+    }
+
+    [Test]
+    public void GetTotalTollFee_Returns_13_for_passage_6_00_and_6_45()
+    {
+        var date = DateOnly.Parse("2022-09-08");
+        var times = new TimeOnly[]
+        {
+            TimeOnly.Parse("06:00"), // 8
+            TimeOnly.Parse("06:45"), // 13
+        };
+        var vehicle = new Car();
+
+        var actual = _sut.GetTotalTollFee(vehicle, date, times);
+
+        Assert.That(actual, Is.EqualTo(13));
+    }
+
+    [Test]
+    public void GetTotalTollFee_NullValue_for_times_throws_ArgumentNullException()
+    {
+        var date = DateOnly.Parse("2022-09-08");
+        TimeOnly[] times = null;
+        var vehicle = new Car();
+
+        Assert.Throws<ArgumentNullException>(() => _sut.GetTotalTollFee(vehicle, date, times));
+    }
 }
