@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using TollFeeCalculator;
-
-namespace TollFeeCalculator
+﻿namespace TollFeeCalculator
 {
     public class TollCalculator : ITollCalculator
     {
@@ -60,6 +56,7 @@ namespace TollFeeCalculator
             {
                 throw new ArgumentNullException(nameof(vehicle));
             }
+
             CheckDate(date);
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
                 return 0;

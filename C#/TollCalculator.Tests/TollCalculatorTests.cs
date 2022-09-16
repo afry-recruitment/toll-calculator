@@ -294,4 +294,18 @@ public class TollCalculatorTests
         Assert.That(actual, Is.EqualTo(26));
     }
 
+    [Test]
+    public void GetTotalTollFee_Returns_8_for_passage_6_00()
+    {
+        var date = DateOnly.Parse("2022-09-08");
+        var times = new TimeOnly[]
+        {
+            TimeOnly.Parse("06:00"), // 8
+        };
+        var vehicle = new Car();
+
+        var actual = _sut.GetTotalTollFee(vehicle, date, times);
+
+        Assert.That(actual, Is.EqualTo(8));
+    }
 }
