@@ -350,4 +350,32 @@ public class TollCalculatorTests
 
         Assert.Throws<ArgumentNullException>(() => _sut.GetTotalTollFee(vehicle, date, times));
     }
+
+    [Test]
+    public void GetTollFee_Returns_0_for_provided_holiday()
+    {
+        var sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
+        var date = DateTime.Parse("2022-01-2T06:29:00+02:00");
+        var vehicle = new Car();
+
+        var actual = _sut.GetTollFee(date, vehicle);
+        Assert.That(actual, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetTotalTollFee_Returns_0_for_provided_holiday()
+    {
+        var sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
+        var date = DateOnly.Parse("2022-01-01");
+        var times = new TimeOnly[]
+        {
+            TimeOnly.Parse("06:00"), // 8
+            TimeOnly.Parse("06:45"), // 13
+        };
+        var vehicle = new Car();
+
+        var actual = sut.GetTotalTollFee(vehicle, date, times);
+
+        Assert.That(actual, Is.EqualTo(0));
+    }
 }
