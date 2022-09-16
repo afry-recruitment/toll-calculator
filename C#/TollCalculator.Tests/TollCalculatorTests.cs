@@ -354,7 +354,7 @@ public class TollCalculatorTests
     [Test]
     public void GetTollFee_Returns_0_for_provided_holiday()
     {
-        var sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
+        ITollCalculator sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
         var date = DateTime.Parse("2022-01-2T06:29:00+02:00");
         var vehicle = new Car();
 
@@ -365,7 +365,7 @@ public class TollCalculatorTests
     [Test]
     public void GetTotalTollFee_Returns_0_for_provided_holiday()
     {
-        var sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
+        ITollCalculator sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
         var date = DateOnly.Parse("2022-01-01");
         var times = new TimeOnly[]
         {

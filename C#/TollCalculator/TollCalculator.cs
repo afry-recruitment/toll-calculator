@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace TollFeeCalculator
+﻿namespace TollFeeCalculator
 {
     public class TollCalculator : ITollCalculator
     {
