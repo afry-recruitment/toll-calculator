@@ -345,7 +345,7 @@ public class TollCalculatorTests
     public void GetTotalTollFee_NullValue_for_times_throws_ArgumentNullException()
     {
         var date = DateOnly.Parse("2022-09-08");
-        TimeOnly[] times = null;
+        TimeOnly[] times = null!;
         var vehicle = new Car();
 
         Assert.Throws<ArgumentNullException>(() => _sut.GetTotalTollFee(vehicle, date, times));

@@ -2,13 +2,31 @@
 {
     public class TollCalculator : ITollCalculator
     {
+        private readonly DateOnly[] _holidays;
+
+        /// <summary>
+        /// Create a new TollCalculator with a list of holidays that are exempt from toll.
+        /// </summary>
+        /// <param name="holidays">Array of date of holidays that are exempt from toll.</param>
+        public TollCalculator(DateOnly[] holidays)
+        {
+            _holidays = holidays ?? new DateOnly[0];
+        }
+        /// <summary>
+        /// Create a new TollCalculator without specifying holidays that are exempt from toll.
+        /// </summary>
+        public TollCalculator()
+        : this(new DateOnly[0])
+        {
+        }
+
         /// <summary>
         /// Calculate the total toll fee for one day.
         /// </summary>
-        /// <returns>the total toll fee for that day</returns>
-        /// <param name="vehicle">the vehicle</param>
-        /// <param name="date">the date</param>
-        /// <param name="times">times (local time) of all passes on one day</param>
+        /// <returns>The total toll fee for that day</returns>
+        /// <param name="vehicle">The vehicle</param>
+        /// <param name="date">The date</param>
+        /// <param name="times">Times (local time) of all passes on one day</param>
 
         public int GetTotalTollFee(IVehicle vehicle, DateOnly date, TimeOnly[] times)
         {
@@ -48,6 +66,12 @@
             return Math.Min(totalFee, 60);
         }
 
+        /// <summary>
+        /// Calculate the toll fee for one pass.
+        /// </summary>
+        /// <returns>The toll fee for the pass.</returns>
+        /// <param name="vehicle">The vehicle</param>
+        /// <param name="date">The date, must be of DateTimeKind Local.</param>
         public int GetTollFee(DateTime date, IVehicle vehicle)
         {
             if (vehicle is null)
@@ -55,6 +79,7 @@
                 throw new ArgumentNullException(nameof(vehicle));
             }
             CheckDate(date);
+
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle))
                 return 0;
 
