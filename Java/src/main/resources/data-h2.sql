@@ -1,0 +1,2 @@
+INSERT INTO rush_hour VALUES (1,10,12);
+INSERT INTO rush_hour VALUES (2,16,18);
