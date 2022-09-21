@@ -11,7 +11,13 @@ public class TollCalculator {
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
+  public int getTollFee(Vehicle vehicle, Date... dates,String lisencePlate) {
+    public String getlisencePlate(){
+    return lisencePlate 
+      }
+    public void setlisencePlate(String lisencePlate){
+    return lisencePlate;
+    }
     Date intervalStart = dates[0];
     int totalFee = 0;
     for (Date date : dates) {
@@ -30,8 +36,8 @@ public class TollCalculator {
         totalFee += nextFee;
       }
     }
-    if (totalFee > 60) totalFee = 60;
-    return totalFee;
+    if (totalFee > 60 || isLocalVehchile(getlisencePlate()) totalFee = 60;
+    return totalFee*2;
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
@@ -63,8 +69,13 @@ public class TollCalculator {
     else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
     else return 0;
   }
+        
+  private boolean isLocalVehchile(String lisencePlate){
+  if(lisencePlate.equals("MZU891"))return true;
+    return false;
+  }
 
-  private Boolean isTollFreeDate(Date date) {
+  private boolean isTollFreeDate(Date date) {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
     int year = calendar.get(Calendar.YEAR);
