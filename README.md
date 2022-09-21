@@ -3,6 +3,7 @@
 # Toll fee calculator 1.0
 A calculator for vehicle toll fees.
 
+## had updated if the vechile is having local station number plate then dare will remain same otherwise it will increase 2x.
 * Make sure you read these instructions carefully
 * The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
 * No requirement but bonus points if you know what movie is in the gif
