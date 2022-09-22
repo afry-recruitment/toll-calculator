@@ -1,3 +1,4 @@
+package com.toll.model;
 
 public class Emergency implements Vehicle {
   private String number;

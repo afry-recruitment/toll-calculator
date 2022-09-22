@@ -1,3 +1,6 @@
+package com.toll.controller;
+
+import com.toll.model.Vehicle;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -12,9 +15,20 @@ public class TollCalculator {
    * @return - the total toll fee for that day
    */
   Map<String, Integer> map = new HashMap<String, Integer>();
+  int totalFee;
   public int getTollFee(Vehicle vehicle, Date... dates) {
     Date intervalStart = dates[0];
-    int totalFee = 0;
+
+    if(map.containsKey(vehicle.getNumber())){
+      for (Map.Entry<String, Integer> entry : map.entrySet()) {
+        String key = entry.getKey();
+        Integer values = entry.getValue();
+        totalFee=values;
+    }}
+    else{
+       totalFee = 0;
+    }
+
 
 
     for (Date date : dates) {
@@ -25,27 +39,22 @@ public class TollCalculator {
       long diffInMillies = date.getTime() - intervalStart.getTime();
       long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
+   //   if (minutes <= 60) {
+   //     if (totalFee > 0) totalFee -= tempFee;
         if (nextFee >= tempFee) tempFee = nextFee;
         totalFee += tempFee;
         if(vehicle.getType()=="Car"){
           map.put(vehicle.getNumber(),totalFee);
         }
-      } else {
+
+    else {
         totalFee += nextFee;
         if(vehicle.getType()=="Car"){
           map.put(vehicle.getNumber(),totalFee);
         }
       }
     }
-    for (Map.Entry<String, Integer> entry : map.entrySet()) {
-      String key = entry.getKey();
-      Integer values = entry.getValue();
-      totalFee=values+totalFee;
-      if (totalFee > 60) totalFee = 60;
-      return totalFee;
-    }
+
 
     return totalFee;
   }
@@ -90,7 +99,7 @@ public class TollCalculator {
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
-    if (year == 2013) {
+    if (year == 2022) {
       if (month == Calendar.JANUARY && day == 1 ||
           month == Calendar.MARCH && (day == 28 || day == 29) ||
           month == Calendar.APRIL && (day == 1 || day == 30) ||
