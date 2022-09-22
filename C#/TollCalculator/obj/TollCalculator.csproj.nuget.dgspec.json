@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj": {}
+    "D:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj": {}
   },
   "projects": {
-    "d:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj": {
+    "D:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj",
+        "projectUniqueName": "D:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj",
         "projectName": "TollCalculator",
-        "projectPath": "d:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj",
+        "projectPath": "D:\\toll-calculator\\C#\\TollCalculator\\TollCalculator.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "d:\\toll-calculator\\C#\\TollCalculator\\obj\\",
+        "outputPath": "D:\\toll-calculator\\C#\\TollCalculator\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"

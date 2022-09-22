@@ -1,0 +1,15 @@
+D:\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollCalculator.exe
+D:\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollCalculator.deps.json
+D:\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollCalculator.runtimeconfig.json
+D:\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollCalculator.dll
+D:\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollCalculator.pdb
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.csproj.AssemblyReference.cache
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.GeneratedMSBuildEditorConfig.editorconfig
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.AssemblyInfoInputs.cache
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.AssemblyInfo.cs
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.csproj.CoreCompileInputs.cache
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.dll
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\refint\TollCalculator.dll
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.pdb
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollCalculator.genruntimeconfig.cache
+D:\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\ref\TollCalculator.dll

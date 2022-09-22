@@ -1,4 +1,4 @@
-namespace TollCalculator;
+namespace TollFeeCalculator;
 
 public interface IVehicle
 {

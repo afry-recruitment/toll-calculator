@@ -1,0 +1,69 @@
+namespace TollFeeCalculator;
+public class TollCalculator : ITollCalculator
+{
+    private readonly DateOnly[] _holidays;
+
+    /// <summary>
+    /// Create a new TollCalculator with a list of holidays that are exempt from toll.
+    /// </summary>
+    /// <param name="holidays">Array of date of holidays that are exempt from toll.</param>
+    public TollCalculator(DateOnly[] holidays)
+    {
+        _holidays = holidays ?? new DateOnly[0];
+    }
+    /// <summary>
+    /// Create a new TollCalculator without specifying holidays that are exempt from toll.
+    /// </summary>
+    public TollCalculator()
+    : this(new DateOnly[0])
+    {
+    }
+
+    /// <summary>
+    /// Calculate the total toll fee for a day.
+    /// </summary>
+    /// <returns>The total toll fee for that day</returns>
+    /// <param name="vehicle">The vehicle</param>
+    /// <param name="dates">The date</param>
+    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+    {
+        try
+        {
+            if (TollCalculationHelper.IsTollFreeDate(dates[0], _holidays) || TollCalculationHelper.IsTollFreeVehicle(vehicle)) return 0;
+            int totalCharges = 0;
+            var date = DateOnly.FromDateTime(dates[0]);
+            var sortedTimes = dates.Select(dateTime => TimeOnly.FromDateTime(dateTime)).OrderBy(time => time).ToArray();
+            var startTime = sortedTimes[0];
+            int currentCharges = 0;
+
+            foreach (TimeOnly time in sortedTimes)
+            {
+                var elapsed = time - startTime;
+                if (elapsed > TimeSpan.FromHours(1))
+                {
+                    totalCharges += currentCharges;
+                    startTime = time;
+                }
+                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(GetDateTime(date, time));
+                currentCharges = Math.Max(ChargesPerPass, currentCharges);
+            }
+            var lastTime = sortedTimes.Last();
+            currentCharges = TollCalculationHelper.TollChargesPerPass(GetDateTime(date, lastTime));
+            totalCharges += currentCharges;
+            return Math.Min(totalCharges, 60);
+        }
+        catch (ArgumentException ex)
+        {
+            throw new ArgumentException(ex.Message.ToString());
+        }
+        catch (Exception)
+        {
+            throw new Exception("Error encountered, please contact the admin");
+        }
+    }
+
+    private DateTime GetDateTime(DateOnly date, TimeOnly time)
+    {
+        return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Local);
+    }
+}

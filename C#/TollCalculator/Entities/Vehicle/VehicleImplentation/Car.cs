@@ -1,5 +1,4 @@
-namespace TollCalculator;
-
+namespace TollFeeCalculator;
 public class Car : IVehicle
 {
     public string VehicleType { get => nameof(Car); }
