@@ -8,32 +8,32 @@ public class TollCalculatorTests
     ITollCalculator tollCalculator = new TollCalculator();
 
     [Test]
-    public void GetTollFee_Returns_0_for_saturday()
+    public void GetTollFee_Returns_0_for_sunday()
     {
-        var date = DateTime.Parse("2022-09-10T06:29:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 25, 07, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(0));
     }
 
     [Test]
     public void GetTollFee_Returns_0_for_cars_weekday_5_59()
     {
-        var date = DateTime.Parse("2022-09-22T05:59:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 05, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(0));
     }
 
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_6_00()
     {
-        var date = DateTime.Parse("2022-09-22T06:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 06, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
 
@@ -41,182 +41,183 @@ public class TollCalculatorTests
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_6_29()
     {
-        var date = DateTime.Parse("2022-09-22T06:29:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 06, 29, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_6_30()
     {
-        var date = DateTime.Parse("2022-09-22T06:30:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 06, 30, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_6_59()
     {
-        var date = DateTime.Parse("2022-09-22T06:59:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 06, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
 
     [Test]
     public void GetTollFee_Returns_18_for_cars_weekday_7_00()
     {
-        var date = DateTime.Parse("2022-09-22T07:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 07, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(18));
     }
     [Test]
     public void GetTollFee_Returns_18_for_cars_weekday_7_59()
     {
-        var date = DateTime.Parse("2022-09-22T07:59:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 07, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(18));
     }
 
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_8_00()
     {
-        var date = DateTime.Parse("2022-09-22T08:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 08, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
 
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_8_29()
     {
-        var date = DateTime.Parse("2022-09-22T08:29:29");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 08, 29, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
 
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_8_30()
     {
-        var date = DateTime.Parse("2022-09-22T08:30:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 08, 30, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
 
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_9_00()
     {
-        var date = DateTime.Parse("2022-09-22T09:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 09, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
 
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_14_59()
     {
-        var date = DateTime.Parse("2022-09-22T14:59:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 14, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
 
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_15_00()
     {
-        var date = DateTime.Parse("2022-09-22T15:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 15, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
 
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_15_29()
     {
-        var date = DateTime.Parse("2022-09-22T15:29:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 15, 29, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
 
     [Test]
     public void GetTollFee_Returns_18_for_cars_weekday_15_30()
     {
-        var date = DateTime.Parse("2022-09-22T15:30:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 15, 30, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(18));
     }
 
     [Test]
     public void GetTollFee_Returns_18_for_cars_weekday_16_59()
     {
-        var date = DateTime.Parse("2022-09-22T16:59:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 16, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(18));
     }
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_17_00()
     {
-        var date = DateTime.Parse("2022-09-22T17:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 17, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
     [Test]
     public void GetTollFee_Returns_13_for_cars_weekday_17_59()
     {
-        var date = DateTime.Parse("2022-09-22T17:59:59");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 17, 59, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(13));
     }
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_18_00()
     {
-        var date = DateTime.Parse("2022-09-22T18:00:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 18, 00, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
     [Test]
     public void GetTollFee_Returns_8_for_cars_weekday_18_29()
     {
-        var date = DateTime.Parse("2022-09-22T18:29:29");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 18, 29, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(8));
     }
+
     [Test]
     public void GetTollFee_Returns_0_for_cars_weekday_18_30()
     {
-        var date = DateTime.Parse("2022-09-22T18:30:00");
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 18, 30, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(0));
     }
 
@@ -313,10 +314,10 @@ public class TollCalculatorTests
     public void GetTollFee_Returns_0_for_provided_holiday()
     {
         ITollCalculator sut = new TollCalculator(new DateOnly[] { new DateOnly(2022, 1, 2) });
-        var date = DateTime.Parse("2022-01-2T06:29:00");
+        var dates = new DateTime[] { new DateTime(2022, 01, 02, 06, 29, 00) };
         var vehicle = new Car();
 
-        var actual = tollCalculator.GetTollFee(vehicle, new DateTime[] { date });
+        var actual = tollCalculator.GetTollFee(vehicle, dates);
         Assert.That(actual, Is.EqualTo(0));
     }
 

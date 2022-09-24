@@ -31,10 +31,11 @@ public class TollCalculator : ITollCalculator
         {
             if (TollCalculationHelper.IsTollFreeDate(dates[0], _holidays) || TollCalculationHelper.IsTollFreeVehicle(vehicle)) return 0;
             var totalCharges = 0;
+            var currentCharges = 0;
             var date = DateOnly.FromDateTime(dates[0]);
             var sortedTimes = dates.Select(dateTime => TimeOnly.FromDateTime(dateTime)).OrderBy(time => time).ToArray();
             var startTime = sortedTimes[0];
-            var currentCharges = 0;
+
 
             foreach (TimeOnly time in sortedTimes)
             {
@@ -44,11 +45,11 @@ public class TollCalculator : ITollCalculator
                     totalCharges += currentCharges;
                     startTime = time;
                 }
-                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(TollCalculationHelper.GetDateTime(date, time));
+                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(date.ToDateTime(time));
                 currentCharges = Math.Max(ChargesPerPass, currentCharges);
             }
             var lastTime = sortedTimes.Last();
-            currentCharges = TollCalculationHelper.TollChargesPerPass(TollCalculationHelper.GetDateTime(date, lastTime));
+            currentCharges = TollCalculationHelper.TollChargesPerPass(date.ToDateTime(lastTime));
             totalCharges += currentCharges;
             return Math.Min(totalCharges, 60);
         }

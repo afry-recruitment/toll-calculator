@@ -2,6 +2,16 @@ namespace TollFeeCalculator;
 public static class TollCalculationHelper
 {
     /// <summary>
+    /// Check If Vehicle Type is Toll Free
+    /// </summary>
+    /// <param name="vehicle"></param>
+    /// <returns></returns>
+    public static bool IsTollFreeVehicle(IVehicle vehicle)
+    {
+        return vehicle?.IsTollFree ?? false;
+    }
+
+    /// <summary>
     /// Calculate Toll Fee Based On Hour
     /// </summary>
     /// <returns>The toll fee at given hour.</returns>
@@ -48,33 +58,12 @@ public static class TollCalculationHelper
     }
 
     /// <summary>
-    /// Check If Vehicle Type is Toll Free
-    /// </summary>
-    /// <param name="vehicle"></param>
-    /// <returns></returns>
-    public static bool IsTollFreeVehicle(IVehicle vehicle)
-    {
-        return vehicle?.IsTollFree ?? false;
-    }
-
-    /// <summary>
-    /// Specify Kind of DateTime
-    /// </summary>
-    /// <param name="date"></param>
-    /// <param name="time"></param>
-    /// <returns></returns>
-    public static DateTime GetDateTime(DateOnly date, TimeOnly time)
-    {
-        return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Local);
-    }
-
-    /// <summary>
     /// Rush Hour Timings
     /// </summary>
     /// <returns>If Given Time Is Rush Hour</returns>
     /// <param name="hour">Given Hour</param>
     /// <param name="minute">Given Minute</param>
-    private static bool RushHours(int hour, int minute)
+    public static bool RushHours(int hour, int minute)
     {
         return (hour == 7 || (hour == 15 && minute >= 30) || hour == 16);
     }
@@ -85,12 +74,12 @@ public static class TollCalculationHelper
     /// <returns>If Given Time Is Minimun Fee Hour</returns>
     /// <param name="hour">Given Hour</param>
     /// <param name="minute">Given Minute</param>
-    private static bool MinimumFeeHours(int hour, int minute)
+    public static bool MinimumFeeHours(int hour, int minute)
     {
-        return ((hour == 6 && minute >= 0 && minute <= 29)
+        return ((hour == 6 && minute <= 29)
         || (hour == 8 && minute <= 30)
         || (hour >= 9 && hour <= 14)
-        || (hour == 18 && minute >= 0 && minute <= 29));
+        || (hour == 18 && minute <= 29));
     }
 
     /// <summary>
@@ -99,11 +88,11 @@ public static class TollCalculationHelper
     /// <returns>If Given Time Is Average Fee Hour</returns>
     /// <param name="hour">Given Hour</param>
     /// <param name="minute">Given Minute</param>
-    private static bool AverageFeeHours(int hour, int minute)
+    public static bool AverageFeeHours(int hour, int minute)
     {
         return ((hour == 6 && minute >= 30 && minute <= 59)
-        || (hour == 8 && minute >= 0 && minute <= 29)
-        || (hour == 15 && minute >= 0 && minute <= 29)
+        || (hour == 8 && minute <= 29)
+        || (hour == 15 && minute <= 29)
         || hour == 17);
     }
 }
