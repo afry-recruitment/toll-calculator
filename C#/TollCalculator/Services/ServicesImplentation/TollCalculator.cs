@@ -4,9 +4,9 @@ public class TollCalculator : ITollCalculator
     private readonly DateOnly[] _holidays;
 
     /// <summary>
-    /// Create a new TollCalculator with a list of holidays that are exempt from toll.
+    /// TollCalculator with a array of holidays that are exempt from paying toll.
     /// </summary>
-    /// <param name="holidays">Array of date of holidays that are exempt from toll.</param>
+    /// <param name="holidays">Array of holiday dates that are exempt from paying toll.</param>
     public TollCalculator(DateOnly[] holidays)
     {
         _holidays = holidays ?? new DateOnly[0];
@@ -30,11 +30,11 @@ public class TollCalculator : ITollCalculator
         try
         {
             if (TollCalculationHelper.IsTollFreeDate(dates[0], _holidays) || TollCalculationHelper.IsTollFreeVehicle(vehicle)) return 0;
-            int totalCharges = 0;
+            var totalCharges = 0;
             var date = DateOnly.FromDateTime(dates[0]);
             var sortedTimes = dates.Select(dateTime => TimeOnly.FromDateTime(dateTime)).OrderBy(time => time).ToArray();
             var startTime = sortedTimes[0];
-            int currentCharges = 0;
+            var currentCharges = 0;
 
             foreach (TimeOnly time in sortedTimes)
             {
@@ -44,11 +44,11 @@ public class TollCalculator : ITollCalculator
                     totalCharges += currentCharges;
                     startTime = time;
                 }
-                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(GetDateTime(date, time));
+                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(TollCalculationHelper.GetDateTime(date, time));
                 currentCharges = Math.Max(ChargesPerPass, currentCharges);
             }
             var lastTime = sortedTimes.Last();
-            currentCharges = TollCalculationHelper.TollChargesPerPass(GetDateTime(date, lastTime));
+            currentCharges = TollCalculationHelper.TollChargesPerPass(TollCalculationHelper.GetDateTime(date, lastTime));
             totalCharges += currentCharges;
             return Math.Min(totalCharges, 60);
         }
@@ -60,10 +60,5 @@ public class TollCalculator : ITollCalculator
         {
             throw new Exception("Error encountered, please contact the admin");
         }
-    }
-
-    private DateTime GetDateTime(DateOnly date, TimeOnly time)
-    {
-        return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Local);
     }
 }

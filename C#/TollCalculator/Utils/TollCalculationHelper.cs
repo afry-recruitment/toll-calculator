@@ -8,54 +8,64 @@ public static class TollCalculationHelper
     /// <param name="date">The date, must be of DateTimeKind Local.</param>
     public static int TollChargesPerPass(DateTime date)
     {
-        int hour = date.Hour;
-        int minute = date.Minute;
+        var hour = date.Hour;
+        var minute = date.Minute;
 
+        if (RushHours(hour, minute))
+            return 18;
+        if (AverageFeeHours(hour, minute))
+            return 13;
         if (MinimumFeeHours(hour, minute))
             return 8;
-        else if (AverageFeeHours(hour, minute))
-            return 13;
-        else if (RushHours(hour, minute))
-            return 18;
-        else
-            return 0;
+        return 0;
     }
 
     /// <summary>
-    /// Calculate Toll Free Dates
+    /// if Holiday list is passed, Calculate If the day is Toll Free
+    /// Else check the annual dates to find Yearly Holiday
     /// </summary>
     /// <returns>If date is toll free</returns>
     /// <param name="date">The date, must be of DateTimeKind Local.</param>
     public static bool IsTollFreeDate(DateTime date, DateOnly[] _holidayList)
     {
-        int month = date.Month;
-        int day = date.Day;
+        var month = date.Month;
+        var day = date.Day;
 
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
 
         if (_holidayList.Count() > 1)
         {
-            var datePart = DateOnly.FromDateTime(date);
-            if (_holidayList.Count(d => d == datePart) > 0)
-                return true;
+            return (_holidayList.Count(d => d == DateOnly.FromDateTime(date)) > 0);
         }
-        else if (month == 1 && day == 1 ||
+        return (month == 1 && day == 1 ||
                 month == 3 && (day == 28 || day == 29) ||
                 month == 4 && (day == 1 || day == 30) ||
                 month == 5 && (day == 1 || day == 8 || day == 9) ||
                 month == 6 && (day == 5 || day == 6 || day == 21) ||
                 month == 7 ||
                 month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-        {
-            return true;
-        }
-        return false;
+                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31));
     }
 
+    /// <summary>
+    /// Check If Vehicle Type is Toll Free
+    /// </summary>
+    /// <param name="vehicle"></param>
+    /// <returns></returns>
     public static bool IsTollFreeVehicle(IVehicle vehicle)
     {
         return vehicle?.IsTollFree ?? false;
+    }
+
+    /// <summary>
+    /// Specify Kind of DateTime
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static DateTime GetDateTime(DateOnly date, TimeOnly time)
+    {
+        return DateTime.SpecifyKind(date.ToDateTime(time), DateTimeKind.Local);
     }
 
     /// <summary>
@@ -66,8 +76,7 @@ public static class TollCalculationHelper
     /// <param name="minute">Given Minute</param>
     private static bool RushHours(int hour, int minute)
     {
-        if (hour == 7 || (hour == 15 && minute >= 30) || hour == 16) return true;
-        return false;
+        return (hour == 7 || (hour == 15 && minute >= 30) || hour == 16);
     }
 
     /// <summary>
@@ -78,11 +87,10 @@ public static class TollCalculationHelper
     /// <param name="minute">Given Minute</param>
     private static bool MinimumFeeHours(int hour, int minute)
     {
-        if ((hour == 6 && minute >= 0 && minute <= 29)
+        return ((hour == 6 && minute >= 0 && minute <= 29)
         || (hour == 8 && minute <= 30)
         || (hour >= 9 && hour <= 14)
-        || (hour == 18 && minute >= 0 && minute <= 29)) return true;
-        return false;
+        || (hour == 18 && minute >= 0 && minute <= 29));
     }
 
     /// <summary>
@@ -93,10 +101,9 @@ public static class TollCalculationHelper
     /// <param name="minute">Given Minute</param>
     private static bool AverageFeeHours(int hour, int minute)
     {
-        if ((hour == 6 && minute >= 30 && minute <= 59)
+        return ((hour == 6 && minute >= 30 && minute <= 59)
         || (hour == 8 && minute >= 0 && minute <= 29)
         || (hour == 15 && minute >= 0 && minute <= 29)
-        || hour == 17) return true;
-        return false;
+        || hour == 17);
     }
 }
