@@ -1,52 +1,23 @@
-import com.toll.controller.TollCalculator;
+import com.toll.manager.TollCalculator;
 import com.toll.model.Car;
 import com.toll.model.Vehicle;
-
-import java.util.Calendar;
-import java.util.Date;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class TestTollCalculator {
-    public static void main(String[] args){
-        TollCalculator calc=new TollCalculator();
-        Vehicle veh=new Car();
-        veh.setNumber("100");
-        Calendar c1 = Calendar.getInstance();
+    public static void main(String[] args) throws IOException {
+        TollCalculator a = new TollCalculator(2022);
 
+        Vehicle car = new Car();
 
-        c1.set(2022,8,21,8,15);
+        LocalDateTime[] list = {LocalDateTime.parse("2022-09-26T07:50:00"),//normal working day
+                //LocalDateTime.parse("2022-12-26T07:50:00"),//holiday date
+                //  LocalDateTime.parse("2022-09-25T07:59:00"),//sunday(weekend)
+                    LocalDateTime.parse("2022-09-26T08:28:28")//normal working day
+                  };
+        System.out.println(a.getTotalDailyFee(car, list));
 
-        // creating a date object with specified time.
-        Date dateOne = c1.getTime();
-
-        System.out.println("Date initially: "
-                + dateOne);
-        System.out.println("get toll 1st time: "+calc.getTollFee(veh, dateOne)+ " SEK");
-
-
-        Calendar c2 = Calendar.getInstance();
-
-
-        c1.set(2022,8,21,8,18);
-
-        // creating a date object with specified time.
-        Date dateOne1 = c1.getTime();
-
-        System.out.println("Date initially: " + dateOne1);
-        System.out.println("get toll 2nd time: "+calc.getTollFee(veh, dateOne1)+ " SEK");
-
-        Calendar c3 = Calendar.getInstance();
-
-
-        c1.set(2022,8,21,23,17);
-
-        // creating a date object with specified time.
-        Date dateOne2 = c1.getTime();
-
-        System.out.println("Date initially: "
-                + dateOne2);
-
-
-        System.out.println("get toll 3rd time: "+calc.getTollFee(veh, dateOne2)+ " SEK");
     }
+
 
 }
