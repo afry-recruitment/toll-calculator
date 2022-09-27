@@ -1,9 +1,11 @@
 package com.toll.util;
 
-import com.toll.enums.TollFreeVehicles;
+import com.toll.enums.TollFreeVehiclesEnum;
 import com.toll.model.Vehicle;
 
 public class TollFreeCalculatorUtil {
+    private TollFreeCalculatorUtil() {
+    }
 
     /**
      * @param vehicle The vehicle in question
@@ -13,12 +15,12 @@ public class TollFreeCalculatorUtil {
         if (vehicle == null)
             return false;
         String vehicleType = vehicle.getType();
-        return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType())
-                || vehicleType.equals(TollFreeVehicles.TRACTOR.getType())
-                || vehicleType.equals(TollFreeVehicles.EMERGENCY.getType())
-                || vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType())
-                || vehicleType.equals(TollFreeVehicles.FOREIGN.getType())
-                || vehicleType.equals(TollFreeVehicles.MILITARY.getType());
+        return vehicleType.equals(TollFreeVehiclesEnum.MOTORBIKE.getType())
+                || vehicleType.equals(TollFreeVehiclesEnum.TRACTOR.getType())
+                || vehicleType.equals(TollFreeVehiclesEnum.EMERGENCY.getType())
+                || vehicleType.equals(TollFreeVehiclesEnum.DIPLOMAT.getType())
+                || vehicleType.equals(TollFreeVehiclesEnum.FOREIGN.getType())
+                || vehicleType.equals(TollFreeVehiclesEnum.MILITARY.getType());
     }
 
 

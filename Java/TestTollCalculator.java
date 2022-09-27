@@ -1,12 +1,15 @@
-import com.toll.manager.TollCalculator;
+import com.toll.manager.TollCalculatorManager;
 import com.toll.model.Car;
 import com.toll.model.Vehicle;
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+/**
+ * This is just an initial test class and only for reference source for test data to test the TollCalculator application.
+ *
+ **/
 public class TestTollCalculator {
     public static void main(String[] args) throws IOException {
-        TollCalculator a = new TollCalculator(2022);
+        TollCalculatorManager a = new TollCalculatorManager(2022);
 
         Vehicle car = new Car();
 

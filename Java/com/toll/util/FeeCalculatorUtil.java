@@ -1,18 +1,21 @@
 package com.toll.util;
 
 import com.toll.model.Vehicle;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class FeeCalculatorUtil {
+    private FeeCalculatorUtil() {
+    }
+
     /**
-     *
-     * @param vehicle The vehicle in question
+     * @param vehicle  The vehicle in question
      * @param dateTime The date and time of registered fee
      * @return Returns an int representing the fee the vehicle will receive based on the dateTime
      */
     public static Integer getFee(Vehicle vehicle, final LocalDateTime dateTime, int year) throws IOException {
-        if (TollFreeCalculatorUtil.isTollFreeVehicle(vehicle)|| GetHolidayDateUtil.isTollFreeHolidayDate(dateTime,year))
+        if (TollFreeCalculatorUtil.isTollFreeVehicle(vehicle) || GetHolidayDateUtil.isTollFreeHolidayDate(dateTime, year))
             return 0;
         int hour = dateTime.getHour();
         int minute = dateTime.getMinute();

@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class GetHolidayDateUtil {
-    public static Boolean isTollFreeHolidayDate(LocalDateTime date,int years) throws IOException {
-
-
+    private GetHolidayDateUtil() {
+    }
+    public static Boolean isTollFreeHolidayDate(LocalDateTime date, int years) throws IOException {
 
         String year = String.valueOf(years);
         String month = String.valueOf(date.getMonthValue());
@@ -17,7 +17,7 @@ public class GetHolidayDateUtil {
         String day = String.valueOf(date.getDayOfMonth());
         if(day.length() == 1) day = "0"+day;
 
-        File file = new File("E:\\Repos\\toll-calculator\\Java\\com\\toll\\holidaylist.txt");
+        File file = new File("E:\\Repos\\toll-calculator\\Java\\holidaylist.txt");
         Scanner sc = new Scanner(file);
 
         String datesplit= sc.next();
@@ -29,12 +29,9 @@ public class GetHolidayDateUtil {
             }
         }
 
-
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)
             return true;
-
-
 
         return false;
     }

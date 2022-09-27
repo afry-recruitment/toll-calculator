@@ -1,12 +1,12 @@
 package com.toll.enums;
 
-public enum TollFreeVehicles {
+public enum TollFreeVehiclesEnum {
     MOTORBIKE("Motorbike"), TRACTOR("Tractor"), EMERGENCY("Emergency"), DIPLOMAT("Diplomat"), FOREIGN("Foreign"),
     MILITARY("Military");
 
     private final String type;
 
-    TollFreeVehicles(String type) {
+    TollFreeVehiclesEnum(String type) {
         this.type = type;
     }
 

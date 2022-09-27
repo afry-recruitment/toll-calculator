@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class TollCalculator {
+public class TollCalculatorManager {
 
     /**
      * Calculate the total toll fee for one day
@@ -23,7 +23,7 @@ public class TollCalculator {
      *
      * @param year The year for which fees will be calculated from. Depending on  years have different dates for holidays and .txt file need to be updated accordingly.
      */
-    public TollCalculator(int year) {
+    public TollCalculatorManager(int year) {
         this.year = year;
 
     }
@@ -63,14 +63,11 @@ public class TollCalculator {
                     if (fee > occupiedRange[1][0]) {
                         occupiedRange[1][0] = fee;
                     }
-
-
                     concurrent = true;
                     break;
                 }
                 sizes--;
             }
-
 
             if (!concurrent) {
                 range.add(feeForPeriod);
