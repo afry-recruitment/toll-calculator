@@ -1,102 +1,118 @@
 package calculator;
 
-
 import calculator.calendar.CalendarService;
-import calculator.calendar.CalendarServiceInterface;
-import calculator.vehicles.VehicleType;
+import calculator.fees.*;
+import calculator.vehicle.Vehicle;
+import calculator.vehicle.VehicleService;
+import calculator.vehicle.VehicleType;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Slf4j
-public class TollCalculator
+public record TollCalculator(CalendarService calendarService, VehicleService vehicleService,
+                             TollRateService tollRateService)
 {
-    private final HashSet<VehicleType> tollFreeVehicleTypes;
-    private final CalendarServiceInterface calendarService;
-
-    public TollCalculator(CalendarServiceInterface calendarService)
-    {
-        this.tollFreeVehicleTypes = new HashSet<>();
-        this.calendarService = calendarService;
-        loadTollFreeVehicles();
-    }
-
-    private void loadTollFreeVehicles()
-    {
-        Properties properties =
-                PropertiesService.getProperties(PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES);
-        Set<String> propertySet = properties.stringPropertyNames();
-        boolean parsedAtLeastOne = false;
-        for (String property : propertySet)
-        {
-            boolean isToolFree = Boolean.parseBoolean(properties.getProperty(property));
-            if (isToolFree)
-            {
-                try
-                {
-                    tollFreeVehicleTypes.add(VehicleType.valueOf(property));
-                    parsedAtLeastOne = true;
-                } catch (IllegalArgumentException ex)
-                {
-                    log.error("Miss match between property name in " +
-                              PropertiesService.TOOL_FREE_VEHICLES_PROPERTIES + " and the enum name. " +
-                              property + " could not be matched. " + ex.getMessage());
-                }
-            }
-        }
-        if (parsedAtLeastOne) log.info("Successfully parsed toll free vehicles. ");
-    }
 
     /**
      * Calculate the total toll fee for one day
      *
-     * @param vehicleType - the vehicle
-     * @param dates       - date and time of all passes on one day
+     * @param vehicle    - String name of VehicleType
+     * @param tollPasses - date and time of all passes
      * @return - the total toll fee for that day
      */
-    public int getTollFee(VehicleType vehicleType, List<ZonedDateTime> dates)
+    public Result getTollFee(String vehicle, List<ZonedDateTime> tollPasses)
     {
-        ZonedDateTime intervalStart = dates.get(0);
-        int totalFee = 0;
-        for (ZonedDateTime date : dates)
+        return getTollFee(new Vehicle(vehicleService.getVehicleType(vehicle), "NO REG ID"), tollPasses);
+    }
+
+
+    /**
+     * Calculate the total toll fee given period. Note that if the there is a toll passage within the
+     * trailing hour or day intervals of the last intervals in the given tollPasses - then they will
+     * probably not be priced correctly unless verified against returned data here.
+     *
+     * @param vehicle    - the vehicle
+     * @param tollPasses - date and time of all passes
+     * @return - the total toll fee for that day
+     */
+    public Result getTollFee(Vehicle vehicle, List<ZonedDateTime> tollPasses)
+    {
+
+        final List<ZonedDateTime> sortedTollPasses = new ArrayList<>(tollPasses);
+        sortedTollPasses.sort(Comparator.naturalOrder());
+        ZonedDateTime hourIntervalStart = tollPasses.get(0);
+        ZonedDateTime dayIntervalStart = tollPasses.get(0);
+        List<ZonedDateTime> passesInHour = new ArrayList<>();
+        int currHourFee = 0;
+        int currHourFeeTotal = 0;
+        List<HourInterval> passesInDay = new ArrayList<>();
+        int currDayFee = 0;
+        int currDayFeeTotal = 0;
+        final int maxDailyFee = 60;
+        final List<DayInterval> passesByDays = new ArrayList<>();
+        int feeAtTime = 0;
+        for (final ZonedDateTime tollPass : sortedTollPasses)
         {
-            int nextFee = getHourlyRate(date, vehicleType);
-            int tempFee = getHourlyRate(intervalStart, vehicleType);
-            long minutes = ChronoUnit.MINUTES.between(intervalStart, date);
-            if (minutes <= 60)
+            feeAtTime = getHourlyRate(vehicle.getType(), tollPass);
+            if (!tollPass.isBefore(hourIntervalStart.plus(1, ChronoUnit.HOURS)))
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                // new hour interval
+                hourIntervalStart = tollPass;
+                // price for current day is never more than maxDailyFee
+                currDayFee = Math.min(currDayFee + currHourFee, maxDailyFee);
+                currDayFeeTotal += currHourFee;
+                // make hour interval with fee and all passes
+                passesInDay.add(new HourInterval(currHourFee, currHourFeeTotal, passesInHour));
+                // reset
+                passesInHour = new ArrayList<>();
+                currHourFee = 0;
+                currHourFeeTotal = 0;
+                // new hour
+                passesInHour.add(tollPass);
+                currHourFee = Math.max(feeAtTime, currHourFee);
+                currHourFeeTotal += feeAtTime;
+                // is new day?
+                if (!tollPass.isBefore(dayIntervalStart.plus(1, ChronoUnit.DAYS)))
+                {
+                    // new day interval
+                    dayIntervalStart = tollPass;
+                    // add previous day
+                    passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
+                    // reset
+                    passesInDay = new ArrayList<>();
+                    currDayFee = 0;
+                    currDayFeeTotal = 0;
+                }
             }
             else
             {
-                totalFee += nextFee;
+                passesInHour.add(tollPass);
+                currHourFee = Math.max(feeAtTime, currHourFee);
+                currHourFeeTotal += feeAtTime;
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+        if (!passesInHour.isEmpty())
+        {
+            currDayFee = Math.min(currDayFee + currHourFee, maxDailyFee);
+            currDayFeeTotal += currHourFee;
+
+            passesInDay.add(new HourInterval(currHourFee, currHourFeeTotal, passesInHour));
+            passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
+        }
+        else if (!passesInDay.isEmpty())
+        {
+            passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
+        }
+        return new ResultImpl(passesByDays, vehicle, ZonedDateTime.now());
     }
 
-    private int getHourlyRate(final ZonedDateTime dateTime, VehicleType vehicleType)
+    private int getHourlyRate(VehicleType vehicleType, final ZonedDateTime dateTime)
     {
-        if (isTollFreeDate(dateTime.toLocalDate()) || tollFreeVehicleTypes.contains(vehicleType)) return 0;
-        int hour = dateTime.getHour();
-        int minute = dateTime.getMinute();
-        if (hour == 6 && minute <= 29) return 8;
-        else if (hour == 6) return 13;
-        else if (hour == 7) return 18;
-        else if (hour == 8 && minute <= 29) return 13;
-        else if ((hour >= 8 && minute >= 30) && hour <= 14) return 8;
-        else if (hour == 15 && minute <= 29) return 13;
-        else if (hour == 15 || hour == 16) return 18;
-        else if (hour == 17) return 13;
-        else if (hour == 18 && minute <= 29) return 8;
-        else return 0;
+        if (isTollFreeDate(dateTime.toLocalDate()) || vehicleType.isTollFree()) return 0;
+        return this.tollRateService.getTollFeeAtTime(dateTime.toLocalTime());
     }
 
     private Boolean isTollFreeDate(LocalDate date)

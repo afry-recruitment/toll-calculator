@@ -1,4 +1,4 @@
-# Toll fee calculator 1.1
+# Toll fee calculator 1.2
 
 ### Installation
 
@@ -21,15 +21,27 @@ Note: if you run from IDE or terminal/.class files make sure that you have _java
 
 ### Upcoming:
 
-- Get the toll fee algorithm working
-- Externalize fee table.
-- Take csv input for tollcalculator
-- Separate testing environment from using actual vehicles
+- Generalised intervals (instead of just hour/biggest fee and day/fee roof)
+- Fractional prices (currently only integers)
+- Untangle scary TollFeeCalculator.getTollfee function
+- Currency units
+- Wider command support
+- Persistent CLI application
+- Better reports (which passage are you paying for, which are free)
+- DB with ability to apply fee consistently between app runs.
+- Better multi-threading
+- More tests
 
 ### Fixes:
 
-- The hourly pass rate is now 8 between 8:30 - 15:00. Earlier every first half hour of each hour between 8 -
-  15 was free.
-- Holiday date where only checked for the year 2013 and did not even seem to be correct for that year. Check
-  removed for now but the holiday data will not be correct.
+- Report system.
+- Service interfaces for TollCalculator supporting services to: make consistent testing easier, allow for 
+  easier updates in the future.
+- Use apache commons csv parser.
+- Multithreaded csv parser.
+- Unique vehicles.
+- Externalised vehicle types to csv
+- Parse csv data files and make reports based on calculations.
+- Command system (Not fully implemented).
+- Updated tests
 

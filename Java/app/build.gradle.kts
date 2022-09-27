@@ -25,7 +25,7 @@ dependencies {
     implementation("com.google.guava:guava:31.0.1-jre")
     // handle json
     implementation("com.google.code.gson:gson:2.9.1")
-
+    implementation("org.apache.commons:commons-csv:1.9.0")
     // logging
     implementation("ch.qos.logback:logback-core:1.4.0")
     implementation("org.slf4j:slf4j-api:2.0.0")

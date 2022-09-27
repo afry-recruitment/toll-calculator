@@ -3,6 +3,7 @@ package calculator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.Properties;
 
 @Slf4j
@@ -24,16 +25,16 @@ public class PropertiesService
 
     private static Properties loadProperties(String fileName)
     {
-        Properties prop = null;
+        Properties properties = null;
         try (InputStream input = new FileInputStream(SETTINGS_FOLDER + fileName))
         {
-            prop = new Properties();
-            prop.load(input);
+            properties = new Properties();
+            properties.load(input);
         } catch (IOException ex)
         {
             log.error(ex.getMessage());
         }
-        return prop;
+        return properties;
     }
 
     private static boolean saveProperties(Properties properties, String fileName)
@@ -91,15 +92,16 @@ public class PropertiesService
                            "Unable to load: " + CALENDAR_REGIONS_PROPERTIES_NAME);
     }
 
-    public static Properties getProperties(String propertiesName)
+    public static Properties getProperties(String propertiesName) throws NoSuchFileException
     {
-        Properties prop = loadProperties(propertiesName);
-        if (prop == null)
+        Properties properties = loadProperties(propertiesName);
+        if (properties == null)
         {
             log.error("Unable to load: " + propertiesName);
-            return new Properties();
+//            return new Properties();
+            throw new NoSuchFileException(propertiesName);
         }
-        return prop;
+        return properties;
     }
 
     public static String getToolFreeVehiclesProperty(String name, String defaultValue)

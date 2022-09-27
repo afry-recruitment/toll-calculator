@@ -66,7 +66,7 @@ public class GoogleCalendarFetcher implements CalendarFetcher
         String baseUrl = PropertiesService.getSettingsProperty("BASE_CALENDAR_URL", "NOT_FOUND");
         String calendarId =
                 PropertiesService.getSettingsProperty("BASE_CALENDAR_ID_FOR_PUBLIC_HOLIDAY", "NOT_FOUND");
-        String apiKey = PropertiesService.getSecretProperty("GOOGLE_API_KEY", "NOT_FOUND");
+        String apiKey = PropertiesService.getSecretProperty("GOOGLE_CALENDAR_API_KEY", "NOT_FOUND");
         // singleEvents have no has no meaning in this case other than allowing time sorting
         String urlStr =
                 baseUrl + calendarRegion + "%23" + calendarId + "/events?key=" + apiKey + "&singleEvents" +

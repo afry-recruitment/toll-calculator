@@ -1,0 +1,9 @@
+# Vehicle types and if they are required paying toll fee
+type,toll-free
+MOTORBIKE,true
+TRACTOR,true
+EMERGENCY,true
+DIPLOMAT,true
+FOREIGN,true
+MILITARY,true
+CAR,false
