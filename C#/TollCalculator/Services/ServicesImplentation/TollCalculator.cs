@@ -11,6 +11,7 @@ public class TollCalculator : ITollCalculator
     {
         _holidays = holidays ?? new DateOnly[0];
     }
+
     /// <summary>
     /// Create a new TollCalculator without specifying holidays that are exempt from toll.
     /// </summary>
@@ -29,13 +30,13 @@ public class TollCalculator : ITollCalculator
     {
         try
         {
-            if (TollCalculationHelper.IsTollFreeDate(dates[0], _holidays) || TollCalculationHelper.IsTollFreeVehicle(vehicle)) return 0;
+            if (TollFreeHelper.IsTollFreeDate(dates[0], _holidays) || TollFreeHelper.IsTollFreeVehicle(vehicle)) return 0;
+
             var totalCharges = 0;
             var currentCharges = 0;
             var date = DateOnly.FromDateTime(dates[0]);
             var sortedTimes = dates.Select(dateTime => TimeOnly.FromDateTime(dateTime)).OrderBy(time => time).ToArray();
             var startTime = sortedTimes[0];
-
 
             foreach (TimeOnly time in sortedTimes)
             {
@@ -45,11 +46,11 @@ public class TollCalculator : ITollCalculator
                     totalCharges += currentCharges;
                     startTime = time;
                 }
-                var ChargesPerPass = TollCalculationHelper.TollChargesPerPass(date.ToDateTime(time));
+                var ChargesPerPass = TollFeeCalculatorHelper.TollChargesPerPass(date.ToDateTime(time).Hour, date.ToDateTime(time).Minute);
                 currentCharges = Math.Max(ChargesPerPass, currentCharges);
             }
             var lastTime = sortedTimes.Last();
-            currentCharges = TollCalculationHelper.TollChargesPerPass(date.ToDateTime(lastTime));
+            currentCharges = TollFeeCalculatorHelper.TollChargesPerPass(date.ToDateTime(lastTime).Hour, date.ToDateTime(lastTime).Minute);
             totalCharges += currentCharges;
             return Math.Min(totalCharges, 60);
         }
