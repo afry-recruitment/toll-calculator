@@ -2,8 +2,7 @@
 
 ### Installation
 
-First you need a google api key to get up-to-date holiday calendar and/or one matching a different region.
-Checkout https://developers.google.com/calendar/api/guides/auth for details on generating one.
+First, if you want to load holiday lists for any other regions, other than the ones provided at app/data/holidays_*. you need a google api key to get up-to-date holiday calendar and/or one matching a different region. Checkout https://developers.google.com/calendar/api/guides/auth for details on generating one.
 
 Open file _settings/secrets.properties_.
 
