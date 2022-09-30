@@ -50,9 +50,9 @@ public class TollFeeCalculatorHelperTest
     }
 
     [Test]
-    public void IsMinimumFeeHours_Return_true_for_08_10()
+    public void IsMinimumFeeHours_Return_true_for_08_30()
     {
-        var date = new DateTime(2022, 09, 25, 08, 10, 00);
+        var date = new DateTime(2022, 09, 25, 08, 30, 00);
 
         var actual = TollFeeCalculatorHelper.IsMinimumFeeHours(date.Hour, date.Minute);
         Assert.That(actual, Is.EqualTo(true));

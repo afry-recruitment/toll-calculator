@@ -224,7 +224,8 @@ public class TollCalculatorTests
     [Test]
     public void GetTotalTollFee_Returns_Max_60_for_one_day()
     {
-        var dates = new DateTime[] { new DateTime(2022, 09, 22, 08, 29, 29), new DateTime(2022, 09, 22, 09, 30, 29),
+        var dates = new DateTime[] { new DateTime(2022, 09, 22, 08, 29, 29),
+        new DateTime(2022, 09, 22, 09, 30, 29),
         new DateTime(2022, 09, 22, 10, 31, 29),
         new DateTime(2022, 09, 22, 11, 40, 29),
         new DateTime(2022, 09, 22, 15, 29, 29),

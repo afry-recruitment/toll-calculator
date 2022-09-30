@@ -2,13 +2,14 @@ namespace TollFeeCalculator;
 public static class TollFeeCalculatorHelper
 {
     /// <summary>
-    /// Toll Charges Category
+    /// Toll Charges based on timings
     /// </summary>
     public enum TollCharges
     {
-        MaxCharge = 18,
+        NoCharges,
         MinimumCharge = 8,
-        AverageChange = 13
+        AverageChange = 13,
+        MaxCharge = 18
     }
 
     /// <summary>
@@ -24,7 +25,7 @@ public static class TollFeeCalculatorHelper
             return (int)TollCharges.AverageChange;
         if (IsMinimumFeeHours(hour, minute))
             return (int)TollCharges.MinimumCharge;
-        return 0;
+        return (int)TollCharges.NoCharges;
     }
 
     /// <summary>
@@ -47,7 +48,7 @@ public static class TollFeeCalculatorHelper
     public static bool IsMinimumFeeHours(int hour, int minute)
     {
         return ((hour == 6 && minute <= 29)
-        || (hour == 8 && minute <= 30)
+        || (hour == 8 && minute >= 30)
         || (hour >= 9 && hour <= 14)
         || (hour == 18 && minute <= 29));
     }
