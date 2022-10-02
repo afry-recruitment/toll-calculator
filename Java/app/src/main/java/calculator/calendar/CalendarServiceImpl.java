@@ -25,12 +25,6 @@ public class CalendarServiceImpl implements CalendarService
         loadHolidays(calendarRegion);
     }
 
-    public CalendarServiceImpl()
-    {
-        this(CalendarRegion.valueOf(PropertiesService.getSettingsProperty("CALENDAR_REGION", "SWEDISH")));
-    }
-
-
     private void loadHolidays(CalendarRegion calendarRegion)
     {
         String lastUpdatedHolidays =

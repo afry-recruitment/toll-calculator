@@ -1,6 +1,6 @@
-package calculator.reports;
+package calculator.report;
 
-import calculator.fees.Result;
+import calculator.result.Result;
 
 public interface Report
 {

@@ -1,4 +1,4 @@
-package calculator.fees;
+package calculator.result;
 
 import java.time.ZonedDateTime;
 

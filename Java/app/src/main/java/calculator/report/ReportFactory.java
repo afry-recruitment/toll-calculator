@@ -1,4 +1,7 @@
-package calculator.reports;
+package calculator.report;
+
+import calculator.report.reports.FullReport;
+import calculator.report.reports.ShortReport;
 
 public class ReportFactory
 {

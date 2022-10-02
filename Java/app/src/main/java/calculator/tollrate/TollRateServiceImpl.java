@@ -1,4 +1,4 @@
-package calculator.fees;
+package calculator.tollrate;
 
 import calculator.exceptions.IncompleteTollRateTableException;
 import lombok.extern.slf4j.Slf4j;

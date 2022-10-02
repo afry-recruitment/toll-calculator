@@ -44,7 +44,7 @@ public class Help implements Command
     public boolean execute()
     {
         if (!isViable()) return false;
-        log.info(this.response);
+        System.out.println(this.response);
         return true;
     }
 

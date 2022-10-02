@@ -19,6 +19,8 @@ public interface Command
 
     boolean execute();
 
+//    String getReason();
+
     static Optional<String> getArgument(String argKey, List<String> args)
     {
         String response = null;

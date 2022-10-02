@@ -1,4 +1,4 @@
-# Toll fee calculator 1.2
+# Toll fee calculator 1.2.1
 
 ### Installation
 
@@ -18,11 +18,22 @@ This will create a runnable fat jar with settings and data in _app/build/executa
 
 Note: if you run from IDE or terminal/.class files make sure that you have _java/app/_ as working directory.
 
+### Running
+
+> java -jar [COMMAND] [ARGUMENTS...]
+
+example:
+
+> java -jar help
+
+or:
+
+> java -jar calculate -in data/toll-passes.csv -r sweden
+
 ### Upcoming:
 
 - Generalised intervals (instead of just hour/biggest fee and day/fee roof)
 - Fractional prices (currently only integers)
-- Untangle scary TollFeeCalculator.getTollfee function
 - Currency units
 - Wider command support
 - Persistent CLI application
@@ -30,6 +41,18 @@ Note: if you run from IDE or terminal/.class files make sure that you have _java
 - DB with ability to apply fee consistently between app runs.
 - Better multi-threading
 - More tests
+
+## Toll fee calculator 1.2.1
+
+### Fixes:
+
+- Refactored TollFeeCalculator.getTollfee and added HourFee, DayFee instead of DayInterval and 
+  HourInterval. These replacements will handle most their corresponding logic when calculating tollfee. 
+  Also keeps and exposes more information for report making.
+- Default and Unknown command types now give responses. Default - when no command is given. Unknown - when 
+  no command can be interpreted.
+
+## Toll fee calculator 1.2
 
 ### Fixes:
 

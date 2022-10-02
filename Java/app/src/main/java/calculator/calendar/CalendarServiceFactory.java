@@ -2,8 +2,12 @@ package calculator.calendar;
 
 public class CalendarServiceFactory
 {
-    private CalendarService getCalendarService(CalendarRegion calendarRegion)
+    private CalendarServiceFactory()
     {
-        return new CalendarServiceImpl(calendarRegion);
+    }
+
+    public static CalendarService getCalendarService(String calendarRegion)
+    {
+        return new CalendarServiceImpl(CalendarRegion.valueOf(calendarRegion));
     }
 }

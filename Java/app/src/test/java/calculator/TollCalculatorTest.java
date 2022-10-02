@@ -1,8 +1,8 @@
 package calculator;
 
 import calculator.calendar.CalendarService;
-import calculator.fees.IntervalTollRate;
-import calculator.fees.TollRateService;
+import calculator.tollrate.IntervalTollRate;
+import calculator.tollrate.TollRateService;
 import calculator.vehicle.VehicleService;
 import calculator.vehicle.VehicleType;
 import lombok.extern.slf4j.Slf4j;

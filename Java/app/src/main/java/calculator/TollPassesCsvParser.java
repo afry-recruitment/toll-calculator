@@ -1,8 +1,8 @@
 package calculator;
 
 import calculator.exceptions.IllegalFileFormatException;
-import calculator.fees.Result;
-import calculator.reports.ReportFactory;
+import calculator.result.Result;
+import calculator.report.ReportFactory;
 import calculator.vehicle.Vehicle;
 import calculator.vehicle.VehicleType;
 import lombok.extern.slf4j.Slf4j;

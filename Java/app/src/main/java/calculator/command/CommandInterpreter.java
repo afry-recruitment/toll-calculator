@@ -8,7 +8,7 @@ public class CommandInterpreter
 {
     public final static String CALCULATE_COMMAND = "calculate";
     public final static String HELP_COMMAND = "help";
-
+//    public final static String UNKNOWN_COMMAND = "help";
 
     public static Command interpret(List<String> args)
     {

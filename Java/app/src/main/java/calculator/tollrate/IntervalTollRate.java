@@ -1,4 +1,4 @@
-package calculator.fees;
+package calculator.tollrate;
 
 import java.time.LocalTime;
 
@@ -7,9 +7,9 @@ import java.time.LocalTime;
  */
 public class IntervalTollRate
 {
-    private LocalTime start;
-    private LocalTime end;
-    private int rate;
+    private final LocalTime start;
+    private final LocalTime end;
+    private final int rate;
 
     public IntervalTollRate(LocalTime start, LocalTime end, int rate)
     {

@@ -1,4 +1,4 @@
-package calculator.fees;
+package calculator.tollrate;
 
 import java.time.LocalTime;
 

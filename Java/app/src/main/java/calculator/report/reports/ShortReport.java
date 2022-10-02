@@ -1,6 +1,7 @@
-package calculator.reports;
+package calculator.report.reports;
 
-import calculator.fees.Result;
+import calculator.result.Result;
+import calculator.report.Report;
 
 public class ShortReport implements Report
 {

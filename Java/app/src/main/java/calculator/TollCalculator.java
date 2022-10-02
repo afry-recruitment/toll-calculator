@@ -2,13 +2,16 @@ package calculator;
 
 import calculator.calendar.CalendarService;
 import calculator.fees.*;
+import calculator.result.Result;
+import calculator.result.ResultFactory;
+import calculator.result.ResultImpl;
+import calculator.tollrate.TollRateService;
 import calculator.vehicle.Vehicle;
 import calculator.vehicle.VehicleService;
 import calculator.vehicle.VehicleType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Slf4j
@@ -36,77 +39,51 @@ public record TollCalculator(CalendarService calendarService, VehicleService veh
      *
      * @param vehicle    - the vehicle
      * @param tollPasses - date and time of all passes
-     * @return - the total toll fee for that day
+     * @return - result detailing all passages with all rates paid
      */
-    public Result getTollFee(Vehicle vehicle, List<ZonedDateTime> tollPasses)
+    public Result getTollFee(final Vehicle vehicle, final List<ZonedDateTime> tollPasses)
     {
-
         final List<ZonedDateTime> sortedTollPasses = new ArrayList<>(tollPasses);
         sortedTollPasses.sort(Comparator.naturalOrder());
-        ZonedDateTime hourIntervalStart = tollPasses.get(0);
-        ZonedDateTime dayIntervalStart = tollPasses.get(0);
-        List<ZonedDateTime> passesInHour = new ArrayList<>();
-        int currHourFee = 0;
-        int currHourFeeTotal = 0;
-        List<HourInterval> passesInDay = new ArrayList<>();
-        int currDayFee = 0;
-        int currDayFeeTotal = 0;
-        final int maxDailyFee = 60;
-        final List<DayInterval> passesByDays = new ArrayList<>();
-        int feeAtTime = 0;
+
+        int maxDailyFee = 60;
+        HourFee hourFee = new HourFee(sortedTollPasses.get(0));
+        DayFee dayFee = new DayFee(sortedTollPasses.get(0), maxDailyFee);
+        final List<DayFee> passesByDays = new ArrayList<>();
+        int feeAtTime;
         for (final ZonedDateTime tollPass : sortedTollPasses)
         {
             feeAtTime = getHourlyRate(vehicle.getType(), tollPass);
-            if (!tollPass.isBefore(hourIntervalStart.plus(1, ChronoUnit.HOURS)))
+            if (hourFee.contains(tollPass))
             {
-                // new hour interval
-                hourIntervalStart = tollPass;
-                // price for current day is never more than maxDailyFee
-                currDayFee = Math.min(currDayFee + currHourFee, maxDailyFee);
-                currDayFeeTotal += currHourFee;
-                // make hour interval with fee and all passes
-                passesInDay.add(new HourInterval(currHourFee, currHourFeeTotal, passesInHour));
-                // reset
-                passesInHour = new ArrayList<>();
-                currHourFee = 0;
-                currHourFeeTotal = 0;
-                // new hour
-                passesInHour.add(tollPass);
-                currHourFee = Math.max(feeAtTime, currHourFee);
-                currHourFeeTotal += feeAtTime;
-                // is new day?
-                if (!tollPass.isBefore(dayIntervalStart.plus(1, ChronoUnit.DAYS)))
-                {
-                    // new day interval
-                    dayIntervalStart = tollPass;
-                    // add previous day
-                    passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
-                    // reset
-                    passesInDay = new ArrayList<>();
-                    currDayFee = 0;
-                    currDayFeeTotal = 0;
-                }
+                hourFee.addFee(tollPass, feeAtTime);
             }
             else
             {
-                passesInHour.add(tollPass);
-                currHourFee = Math.max(feeAtTime, currHourFee);
-                currHourFeeTotal += feeAtTime;
+                dayFee.add(hourFee);
+                hourFee = new HourFee(tollPass, feeAtTime);
+                if (!dayFee.contains(tollPass))
+                {
+                    passesByDays.add(dayFee);
+                    dayFee = new DayFee(tollPass, maxDailyFee);
+                }
             }
         }
-        if (!passesInHour.isEmpty())
+        // we have not added hourfee to any dayfee
+        if (!hourFee.isEmpty())
         {
-            currDayFee = Math.min(currDayFee + currHourFee, maxDailyFee);
-            currDayFeeTotal += currHourFee;
-
-            passesInDay.add(new HourInterval(currHourFee, currHourFeeTotal, passesInHour));
-            passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
+            if (dayFee.contains(hourFee.getStart()))
+            {
+                dayFee.add(hourFee);
+            }
+            else
+            {
+                passesByDays.add(dayFee);
+                dayFee = new DayFee(hourFee, maxDailyFee);
+            }
         }
-        else if (!passesInDay.isEmpty())
-        {
-            passesByDays.add(new DayInterval(currDayFee, currDayFeeTotal, passesInDay));
-        }
-        return new ResultImpl(passesByDays, vehicle, ZonedDateTime.now());
+        if (!dayFee.isEmpty()) passesByDays.add(dayFee);
+        return ResultFactory.getResult(passesByDays, vehicle, ZonedDateTime.now());
     }
 
     private int getHourlyRate(VehicleType vehicleType, final ZonedDateTime dateTime)

@@ -4,10 +4,11 @@ import calculator.TollCalculator;
 import calculator.TollPassesCsvParser;
 import calculator.calendar.CalendarRegion;
 import calculator.calendar.CalendarService;
+import calculator.calendar.CalendarServiceFactory;
 import calculator.calendar.CalendarServiceImpl;
 import calculator.exceptions.IllegalFileFormatException;
-import calculator.fees.TollRateService;
-import calculator.fees.TollRateServiceFactory;
+import calculator.tollrate.TollRateService;
+import calculator.tollrate.TollRateServiceFactory;
 import calculator.vehicle.VehicleService;
 import calculator.vehicle.VehicleServiceFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static calculator.PropertiesService.*;
@@ -30,10 +32,6 @@ public class Calculate implements Command
     private String responseMessage;
     private boolean viable;
 
-    private CalendarService calendarService;
-    private VehicleService vehicleService;
-    private TollRateService tollRateService;
-    private TollCalculator tollCalculator;
     private TollPassesCsvParser csvParser;
     private String input;
     private String output;
@@ -41,8 +39,8 @@ public class Calculate implements Command
     public Calculate(List<String> args)
     {
         this.viable = true;
-        this.vehicleService = getVehicleService();
-        this.tollRateService = getTollRateService();
+        VehicleService vehicleService = getVehicleService();
+        TollRateService tollRateService = getTollRateService();
         String input;
         String output;
         String calendarRegion;
@@ -101,16 +99,14 @@ public class Calculate implements Command
             this.viable = false;
             return;
         }
-        this.calendarService = getCalendarService(calendarRegion);
-        this.tollCalculator =
-                new TollCalculator(this.calendarService, this.vehicleService, this.tollRateService);
+        CalendarService calendarService = CalendarServiceFactory.getCalendarService(calendarRegion);
+        TollCalculator tollCalculator =
+                new TollCalculator(calendarService, vehicleService, tollRateService);
         this.input = input;
-
         this.output = output;
-
         try
         {
-            this.csvParser = new TollPassesCsvParser(this.tollCalculator);
+            this.csvParser = new TollPassesCsvParser(tollCalculator);
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -118,7 +114,7 @@ public class Calculate implements Command
 
     }
 
-    private CalendarServiceImpl getCalendarService(String region)
+/*    private CalendarServiceImpl getCalendarService(String region)
     {
         CalendarRegion calendarRegion = CalendarRegion.valueOf(region.toUpperCase());
         return new CalendarServiceImpl(calendarRegion);
@@ -129,7 +125,7 @@ public class Calculate implements Command
         String region = getSettingsProperty("CALENDAR_REGION", "SWEDISH");
         CalendarRegion calendarRegion = CalendarRegion.valueOf(region.toUpperCase());
         return new CalendarServiceImpl(calendarRegion);
-    }
+    }*/
 
     private VehicleService getVehicleService()
     {
@@ -206,12 +202,10 @@ public class Calculate implements Command
                         this.output);
                 return true;
             }
-        } catch (IllegalFileFormatException e)
+        } catch (IllegalFileFormatException | FileNotFoundException e)
         {
-            e.printStackTrace();
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
+            System.out.println("Failed to execute toll calculation. ");
+            log.trace(Arrays.toString(e.getStackTrace()));
         }
         return false;
     }
