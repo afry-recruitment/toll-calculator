@@ -1,6 +1,8 @@
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TollCalculator {
 
@@ -11,6 +13,63 @@ public class TollCalculator {
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
+  public int getTollFeeWithCustomInput(){
+      Vehicle vehicle = new Car();
+      System.out.println("Please enter vehicle type : \n");
+      Scanner scanner = new Scanner(System.in);
+      String vehicleInput = scanner.nextLine();
+      switch(vehicleInput){
+          case "Car":
+               vehicle = new Car();
+              break;
+          case "Diplomat":
+               vehicle = new Diplomat();
+              break;
+          case "Emergency":
+               vehicle = new Emergency();
+              break;
+          case "Foreign":
+               vehicle = new Foreign();
+              break;
+          case "Military":
+               vehicle = new Military();
+              break;
+          case "Motorbike":
+               vehicle = new Motorbike();
+              break;
+          case "Tractor":
+               vehicle = new Tractor();
+              break;
+          default:
+              System.out.println("Invalid vehicle name. Please select from: Car, Diplomat, Emergency, Foreign, Military, Motorbike, Tractor.");
+              return;
+      }
+      System.out.println("Enter number of toll entries of the vehicle \n");
+      String input = scanner.nextLine();
+      try{
+        Integer totalEntries =Integer.parseInt(input);
+      }catch(ParseException e){
+        System.out.println("Invalid number of entries. Please provide an integer number.");
+        return;
+      }
+      System.out.println("Enter date time of the entry in the format: dd-MM-yyyy HH:mm:ss \n");
+      
+      SimpleDateFormat dateformatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+      Date[] entryDates = new Date[totalEntries];
+      for (int i = 0; i < totalEntries; i++){
+          String str = scanner.nextLine();
+          try{
+          Date date = dateformatter.parse(str);
+          entryDates[i] = date;
+          }catch(ParseException e){
+            System.out.println("Invalid date format. Please try again.");
+            return;
+          }
+      }
+      int fee = getTollFee(vehicle, entryDates);
+      return fee;
+  }
+
   public int getTollFee(Vehicle vehicle, Date... dates) {
     Date intervalStart = dates[0];
     int totalFee = 0;
