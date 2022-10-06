@@ -45,12 +45,8 @@ public class TollCalculator
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        // It returns true if VehicleType name or given integral value exists in enum.
+        return Enum.IsDefined(typeof(TollFreeVehicles), vehicleType);
     }
 
     public int GetTollFee(DateTime date, IVehicle vehicle)
