@@ -75,22 +75,25 @@ public class TollCalculator
 
     private Boolean IsTollFreeDate(DateTime date)
     {
+        //It returns true if date is weekend or holiday
+        return (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday || IsHoliday(date)) ? true : false;
+    }
+
+
+    private Boolean IsHoliday(DateTime date)
+    {
         int year = date.Year;
         int month = date.Month;
         int day = date.Day;
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
+        if (year == 2022)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
+            if (month == 1 && day == 6 ||
+                month == 4 && (day == 15 || day == 17 || day == 18) ||
+                month == 5 && (day == 1 || day == 26) ||
+                month == 6 && (day == 5 || day == 6 || day == 25) ||
+                month == 11 && day == 5 ||
+                month == 12 && (day == 25 || day == 26))
             {
                 return true;
             }
