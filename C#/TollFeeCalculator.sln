@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculator", "TollFeeCalculator.csproj", "{F91383FB-C739-4A72-A52E-451C1FE6C6A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_TollCalculator", "Test_TollCalculator\Test_TollCalculator.csproj", "{B8368360-A423-4A3F-B68E-3988A01A646E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F91383FB-C739-4A72-A52E-451C1FE6C6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F91383FB-C739-4A72-A52E-451C1FE6C6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F91383FB-C739-4A72-A52E-451C1FE6C6A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8368360-A423-4A3F-B68E-3988A01A646E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8368360-A423-4A3F-B68E-3988A01A646E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8368360-A423-4A3F-B68E-3988A01A646E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8368360-A423-4A3F-B68E-3988A01A646E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\C#",
+    "\\C#\\Test_TollCalculator"
   ],
-  "SelectedNode": "\\C#",
+  "SelectedNode": "\\C#\\Test_TollCalculator\\UnitTest1.cs",
   "PreviewInSolutionExplorer": false
 }
