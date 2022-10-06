@@ -43,9 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Car.cs" />
+    <Compile Include="Diplomat.cs" />
+    <Compile Include="Emergency.cs" />
+    <Compile Include="Foreign.cs" />
+    <Compile Include="Military.cs" />
     <Compile Include="Motorbike.cs" />
     <Compile Include="TollCalculator.cs" />
-    <Compile Include="Vehicle.cs" />
+    <Compile Include="Tractor.cs" />
+    <Compile Include="IVehicle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
