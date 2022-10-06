@@ -5,13 +5,6 @@ using TollFeeCalculator;
 public class TollCalculator
 {
 
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
 
     public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
@@ -22,18 +15,26 @@ public class TollCalculator
             int nextFee = GetTollFee(date, vehicle);
             int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            //updated minutes by using Timespan struct.
+            TimeSpan minutes = date - intervalStart;
 
-            if (minutes <= 60)
+            if (minutes.TotalMinutes <= 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
+                if (totalFee > 0)
+                {
+                    totalFee -= tempFee;
+                }
+                if (nextFee >= tempFee)
+                {
+                    tempFee = nextFee;
+                }
                 totalFee += tempFee;
             }
             else
             {
                 totalFee += nextFee;
+
+                intervalStart = date;
             }
         }
         if (totalFee > 60) totalFee = 60;
