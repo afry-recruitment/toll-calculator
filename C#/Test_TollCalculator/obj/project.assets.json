@@ -1660,6 +1660,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "TollFeeCalculator/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TollFeeCalculator.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TollFeeCalculator.dll": {}
+        }
       }
     }
   },
@@ -6197,6 +6206,11 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "TollFeeCalculator/1.0.0": {
+      "type": "project",
+      "path": "../TollFeeCalculator.csproj",
+      "msbuildProject": "../TollFeeCalculator.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6204,6 +6218,7 @@
       "MSTest.TestAdapter >= 2.2.8",
       "MSTest.TestFramework >= 2.2.8",
       "Microsoft.NET.Test.Sdk >= 17.1.0",
+      "TollFeeCalculator >= 1.0.0",
       "coverlet.collector >= 3.1.2"
     ]
   },
@@ -6233,7 +6248,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj": {
+              "projectPath": "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

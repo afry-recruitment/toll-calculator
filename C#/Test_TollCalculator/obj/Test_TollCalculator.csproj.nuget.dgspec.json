@@ -27,7 +27,11 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj": {
+                "projectPath": "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -74,6 +78,21 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
+      }
+    },
+    "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj",
+        "projectName": "TollFeeCalculator",
+        "projectPath": "C:\\Users\\samir\\source\\repos\\toll-calculator\\C#\\TollFeeCalculator.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
       }
     }
   }
