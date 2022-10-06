@@ -1,0 +1,6 @@
+C:\Users\samir\source\repos\toll-calculator\C#\bin\Debug\ClassLibrary.dll
+C:\Users\samir\source\repos\toll-calculator\C#\bin\Debug\ClassLibrary.pdb
+C:\Users\samir\source\repos\toll-calculator\C#\obj\Debug\TollFeeCalculator.csproj.AssemblyReference.cache
+C:\Users\samir\source\repos\toll-calculator\C#\obj\Debug\TollFeeCalculator.csproj.CoreCompileInputs.cache
+C:\Users\samir\source\repos\toll-calculator\C#\obj\Debug\ClassLibrary.dll
+C:\Users\samir\source\repos\toll-calculator\C#\obj\Debug\ClassLibrary.pdb
