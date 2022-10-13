@@ -13,57 +13,19 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    // return toll cost for 1 pass
+    public int GetTollFee(DateTime tollPass, Vehicle vehicle)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
-        {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+        if (IsTollFreeDate(tollPass) || IsTollFreeVehicle(vehicle)) return 0;
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
-        }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
-    }
-
-    private bool IsTollFreeVehicle(Vehicle vehicle)
-    {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
-    }
-
-    public int GetTollFee(DateTime date, Vehicle vehicle)
-    {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
+        int hour = tollPass.Hour;
+        int minute = tollPass.Minute;
 
         if (hour == 6 && minute >= 0 && minute <= 29) return 8;
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
         else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
         else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
+        else if (hour >= 8 && minute >= 30 && minute <= 59) return 8;
         else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
         else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
         else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
@@ -71,6 +33,64 @@ public class TollCalculator
         else return 0;
     }
 
+    // return toll cost for 1 day
+    public int GetTollFee(Vehicle vehicle, List<DateTime> tollPasses)
+    {
+        int totalFee = 0;
+
+        //get list of tollpasses made today
+        DateTime today = DateTime.Today;
+        List<DateTime> todaysPasses = tollPasses.Where(p => p.Date == today).ToList();
+
+        while (todaysPasses.Count() > 0)
+        {
+            //get first tollpass
+            DateTime firstPass = todaysPasses.FirstOrDefault();
+            DateTime maxFreeTime = firstPass.AddHours(1);
+
+            //get list of passes inside of current hour
+            List<DateTime> currentHour = todaysPasses.Where(p => 0 >= p.CompareTo(maxFreeTime)).ToList();
+
+            //get highest fee and add to totalFee
+            int highestFee = 0;
+            foreach (var pass in currentHour)
+            {
+                int tempFee = GetTollFee(pass, vehicle);
+                if (tempFee > highestFee)
+                {
+                    highestFee = tempFee;
+                }
+            }
+
+            totalFee += highestFee;
+            highestFee = 0;
+
+            //get list of passes outside of current hour
+            List<DateTime> passes = todaysPasses.Where(p => 0 < p.CompareTo(maxFreeTime)).ToList();
+
+            //loops through list of passes untill list is empty
+            todaysPasses = passes;
+        }
+
+        // returns 60 if fee is over max limit
+        if (totalFee > 60) totalFee = 60;
+        return totalFee;
+    }
+
+    // returns true if vehicle-type is free
+    private bool IsTollFreeVehicle(Vehicle vehicle)
+    {
+        if (vehicle == null) return false;
+        String vehicleType = vehicle.GetVehicleType();
+        return vehicleType.Equals(TollVehicles.Motorbike.ToString()) ||
+               vehicleType.Equals(TollVehicles.Tractor.ToString()) ||
+               vehicleType.Equals(TollVehicles.Emergency.ToString()) ||
+               vehicleType.Equals(TollVehicles.Diplomat.ToString()) ||
+               vehicleType.Equals(TollVehicles.Foreign.ToString()) ||
+               vehicleType.Equals(TollVehicles.Military.ToString());
+    }
+
+    //returns true if toll is free for the current date
     private Boolean IsTollFreeDate(DateTime date)
     {
         int year = date.Year;
@@ -96,13 +116,17 @@ public class TollCalculator
         return false;
     }
 
-    private enum TollFreeVehicles
+    //the vehicle-types that are free
+    private enum TollVehicles
     {
+        //free
         Motorbike = 0,
         Tractor = 1,
         Emergency = 2,
         Diplomat = 3,
         Foreign = 4,
-        Military = 5
+        Military = 5,
+        //not free
+        Car = 6
     }
 }
