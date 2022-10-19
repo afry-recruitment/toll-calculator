@@ -12,6 +12,15 @@ public class TollCalculator {
    * @return - the total toll fee for that day
    */
   public int getTollFee(Vehicle vehicle, Date... dates) {
+    //Check for null pointers
+    if(vehicle == null || dates == null){
+      throw new NullPointerException("Hi there");
+    }
+    //Check if needed to run at all
+    if(!tollable(vehicle, dates)){
+      return 0;
+    }
+
     Date intervalStart = dates[0];
     int totalFee = 0;
     for (Date date : dates) {
@@ -34,6 +43,21 @@ public class TollCalculator {
     return totalFee;
   }
 
+  //Check whether a vehicle and set of dates can be tolled
+  private boolean tollable(Vehicle vehicle, Date... dates) {
+    if(isTollFreeVehicle(vehicle)){
+      return false;
+    }
+
+    for (Date date:dates) {
+      if(!isTollFreeDate(date)){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private boolean isTollFreeVehicle(Vehicle vehicle) {
     if(vehicle == null) return false;
     String vehicleType = vehicle.getType();
@@ -46,7 +70,7 @@ public class TollCalculator {
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
+    //if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
     int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -72,7 +96,8 @@ public class TollCalculator {
     int day = calendar.get(Calendar.DAY_OF_MONTH);
 
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
+    //if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) { return true;}
+    if (isWeekendDay(dayOfWeek)) { return true;}
 
     if (year == 2013) {
       if (month == Calendar.JANUARY && day == 1 ||
@@ -87,6 +112,10 @@ public class TollCalculator {
       }
     }
     return false;
+  }
+
+  private boolean isWeekendDay(int dayOfWeek) {
+    return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
   }
 
   private enum TollFreeVehicles {

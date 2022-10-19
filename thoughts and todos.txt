@@ -1,0 +1,7 @@
+*Ideas
+Dynamically generate test data, vehicles and dates
+Algorithm for fees, sort dates into subsets and pick highest fee.'
+
+For timelimit, hour I interpret it as first time + 60 minutes. In case of overlapping, just cut after 60 and start anew.
+
+
