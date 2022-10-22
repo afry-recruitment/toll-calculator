@@ -1,19 +1,18 @@
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
 public class Main {
+    static Random rnd = new Random();
+
     public static void main(String[] args){
         run();
     }
 
     private static void run() {
-        for (int i = 0; i <100 ; i++) {
+        for (int i = 0; i <2 ; i++) {
             testTollCalculator();
         }
     }
@@ -22,37 +21,59 @@ public class Main {
         TollCalculator tc = new TollCalculator();
         Car c1 = new Car();
         Motorbike m1 = new Motorbike();
-        Date[] dates = new Date[0];
-        Date[] dates2 = getRandomDates(15);
+        Date[] dates = getTollFreeDates();
+        Date[] dates2 = getRandomDates(30);
 
+        //Free dates
         int result = tc.getTollFee(c1,dates);
-        int result2 = tc.getTollFee(c1,dates2);
+        //Free vehicle
+        int result2 = tc.getTollFee(m1,dates2);
+        //Tollable (probalby)
+        int result3 = tc.getTollFee(c1,dates2);
+        dates2[2] = dates[2];
+        dates2[3] = dates[3];
+        //TOllable with same or smaller res than result3
+        int result4 = tc.getTollFee(c1,dates2);
         //int result2 = tc.getTollFee(c1,null);
         System.out.println("Result1: " + result);
         System.out.println("Resuklt2: " + result2);
+        System.out.println("Resuklt3: " + result3);
+        System.out.println("Resuklt4: " + result4);
 
         System.out.println();
     }
 
+    private static Date[] getTollFreeDates() {
+        ArrayList<Date> dates = new ArrayList<Date>();
+        for (MonthDay md:Toll.tollFreeMonthDays) {
+            LocalDate localDate = LocalDate.of(getRandomYear(), md.getMonth(), md.getDayOfMonth());
+            dates.add(getDateFromLocalDate(localDate, getRandomHour(), getRandomMinute()));
+        }
+        return dates.toArray(new Date[dates.size()]);
+    }
+
     private static Date[] getRandomDates(int amount) {
         ArrayList<Date> dates = new ArrayList<Date>();
-        Random rnd = new Random();
         for (int i = 0; i < amount; i++) {
-            int year = rnd.nextInt(22)+2000+1;
-            int month = rnd.nextInt(12)+1;
-            int day = rnd.nextInt(28)+1;
-            int hour = rnd.nextInt(24);
-            int minute = rnd.nextInt(60);
-            LocalDate localDate = LocalDate.of(year, month, day);
-            ZoneId zoneid = ZoneId.of("Europe/Stockholm");
-            Date date = Date.from(localDate.atStartOfDay(zoneid).toInstant());
-            date.setHours(hour);
-            date.setMinutes(minute);
-            dates.add(date);
+            LocalDate localDate = LocalDate.of(getRandomYear(), getRandomMotnh(), getRandomDay());
+            dates.add(getDateFromLocalDate(localDate, getRandomHour(),getRandomMinute()));
         }
-        Date[] d =  dates.toArray(new Date[dates.size()]);
-        return d;
+        return dates.toArray(new Date[dates.size()]);
     }
+
+    private static Date getDateFromLocalDate(LocalDate localDate, int hour,int minute) {
+        ZoneId zoneid = ZoneId.of("Europe/Stockholm");
+        Date date = Date.from(localDate.atStartOfDay(zoneid).toInstant());
+        date.setHours(hour);
+        date.setMinutes(minute);
+        return date;
+    }
+
+    private static int getRandomMinute(){ return rnd.nextInt(60); }
+    private static int getRandomHour(){ return rnd.nextInt(24); }
+    private static int getRandomDay(){ return rnd.nextInt(28)+1;}
+    private static int getRandomMotnh(){ return rnd.nextInt(12)+1;}
+    private static int getRandomYear(){ return rnd.nextInt(22)+2000+1;}
 
     static void test() {
         //Testing time

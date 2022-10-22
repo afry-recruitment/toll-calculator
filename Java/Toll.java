@@ -1,39 +1,5 @@
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.MonthDay;
+import java.time.*;
 import java.util.*;
-
-
-/***  if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-            else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-            else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-
-            else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-
-            else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-
-            else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-            else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-            else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-            else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-            else return 0;
-            ***/
-
-/***
- *     if (year == 2013) {
- *       if (month == Calendar.JANUARY && day == 1 ||
- *           month == Calendar.MARCH && (day == 28 || day == 29) ||
- *           month == Calendar.APRIL && (day == 1 || day == 30) ||
- *           month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
- *           month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
- *           month == Calendar.JULY ||
- *           month == Calendar.NOVEMBER && day == 1 ||
- *           month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
- *         return true;
- *       }
- *     }
- */
 
 public class Toll {
     static int lowFee = 0;
@@ -43,8 +9,9 @@ public class Toll {
 
     //Map of start-times for toll-fees
     static Map<LocalTime, Integer> tollFeeMap = getTollFeeMap();
+
     //Array of MonthDay that is toll-free
-    static MonthDay[] tollFreeMonthDays = {
+    public static MonthDay[] tollFreeMonthDays = {
                     MonthDay.of(Month.JANUARY,1),
                     MonthDay.of(Month.MARCH,28),
                     MonthDay.of(Month.MARCH,29),
@@ -101,9 +68,16 @@ public class Toll {
         return 0;
     }
 
+    public static int getCost(Date date){
+        LocalTime time = LocalDateTime.ofInstant(date.toInstant(),
+                ZoneId.systemDefault()).toLocalTime();
+        return getCost(time);
+    }
+
     public static boolean isTollFreeDateMonthDay(MonthDay monthDay){
         return isTollFreeMonth(monthDay.getMonth()) || Arrays.asList(tollFreeMonthDays).contains(monthDay);
     }
+
     public static boolean isTollFreeMonth(Month month){
         return Arrays.asList(tollFreeMonths).contains(month);
     }

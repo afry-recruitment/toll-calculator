@@ -6,3 +6,8 @@ For timelimit, hour I interpret it as first time + 60 minutes. In case of overla
 
 Since tollfees probably gonna change, it´s a good thing to give it it´s own class
 And also, TollCalculator should use a class Toll for it's calculations, Toll may be used for other tasks too.
+
+Making toll-fees into a map where new time-windows and fees can be easily changed without affecting functionality of the code seems like a good thing to do.
+
+Converting between different kinds of date/time datastructures feels a little sketchy
+
