@@ -11,3 +11,11 @@ Making toll-fees into a map where new time-windows and fees can be easily change
 
 Converting between different kinds of date/time datastructures feels a little sketchy
 
+Finilizing:
+Documentation comments
+Nullchecking/errorhandling
+Values/ghostnumbers
+
+Suggestions:
+-Make test data and write tests
+-Implement all sorts of vehicles

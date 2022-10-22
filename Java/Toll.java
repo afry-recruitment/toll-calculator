@@ -7,10 +7,10 @@ public class Toll {
     static int midHighFee = 13;
     static int highFee = 18;
 
-    //Map of start-times for toll-fees
+    /**Map of start-times for toll-fees*/
     static Map<LocalTime, Integer> tollFeeMap = getTollFeeMap();
 
-    //Array of MonthDay that is toll-free
+    /**Array of MonthDay that is toll-free*/
     public static MonthDay[] tollFreeMonthDays = {
                     MonthDay.of(Month.JANUARY,1),
                     MonthDay.of(Month.MARCH,28),
@@ -30,12 +30,18 @@ public class Toll {
                     MonthDay.of(Month.DECEMBER,31),
             };
 
+    /**An array of tollfree months*/
     static Month[] tollFreeMonths = {
             Month.JULY,
     };
 
 
-    //Generates the tollFeeMap
+    /**
+     *  Generates the tollFeeMap that contains information on what time
+     *  different fees starts to apply
+     *
+     * @return HashMap<LocalTime, Integer> - Localtime paired with the fee
+     */
     public static HashMap<LocalTime, Integer> getTollFeeMap(){
         HashMap<LocalTime, Integer> map = new HashMap<>();
         map.put(LocalTime.of(0,0), lowFee);
@@ -53,8 +59,14 @@ public class Toll {
         return map;
     }
 
-    public static int getCost(LocalTime time){
-        List<LocalTime> keys = new ArrayList<LocalTime>(tollFeeMap.keySet());
+    /**
+     *  Returns the toll fee that corresponds to the given time
+     *
+     * @param time - the time to get fee from
+     * @return int - the fee for that time
+     */
+    public static int getFee(LocalTime time){
+        List<LocalTime> keys = new ArrayList<>(tollFeeMap.keySet());
         Collections.sort(keys);
         int toll = 0;
 
@@ -68,19 +80,36 @@ public class Toll {
         return 0;
     }
 
-    public static int getCost(Date date){
+    /**
+     *  Returns the toll fee that corresponds tp the given date
+     *
+     * @param date - the time to get fee from
+     * @return int - the fee for that time
+     */
+    public static int getFee(Date date){
         LocalTime time = LocalDateTime.ofInstant(date.toInstant(),
                 ZoneId.systemDefault()).toLocalTime();
-        return getCost(time);
+        return getFee(time);
     }
 
+    /**
+     *  Checks if the day is tollfree or not
+     *
+     * @param monthDay - the day to check if tollfree
+     * @return boolean - true if day is tollfree
+     */
     public static boolean isTollFreeDateMonthDay(MonthDay monthDay){
         return isTollFreeMonth(monthDay.getMonth()) || Arrays.asList(tollFreeMonthDays).contains(monthDay);
     }
 
+    /**
+     *  Checks if the month is tollfree or not
+     *
+     * @param month - the month to check if tollfree
+     * @return boolean - true if month is tollfree
+     */
     public static boolean isTollFreeMonth(Month month){
         return Arrays.asList(tollFreeMonths).contains(month);
     }
-
 
   }

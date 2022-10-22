@@ -1,18 +1,21 @@
+import Vehicles.Car;
+import Vehicles.Motorbike;
+
 import java.time.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
 public class Main {
     static Random rnd = new Random();
+    static int timesToRun = 2;
 
     public static void main(String[] args){
         run();
     }
 
     private static void run() {
-        for (int i = 0; i <2 ; i++) {
+        for (int i = 0; i <timesToRun ; i++) {
             testTollCalculator();
         }
     }
@@ -28,7 +31,7 @@ public class Main {
         int result = tc.getTollFee(c1,dates);
         //Free vehicle
         int result2 = tc.getTollFee(m1,dates2);
-        //Tollable (probalby)
+        //Tollable (probably)
         int result3 = tc.getTollFee(c1,dates2);
         dates2[2] = dates[2];
         dates2[3] = dates[3];
@@ -69,33 +72,11 @@ public class Main {
         return date;
     }
 
+    //TODO get rid of ghostnumbers?
     private static int getRandomMinute(){ return rnd.nextInt(60); }
     private static int getRandomHour(){ return rnd.nextInt(24); }
     private static int getRandomDay(){ return rnd.nextInt(28)+1;}
     private static int getRandomMotnh(){ return rnd.nextInt(12)+1;}
     private static int getRandomYear(){ return rnd.nextInt(22)+2000+1;}
 
-    static void test() {
-        //Testing time
-//        LocalTime t  = LocalTime.now();
-//        LocalTime t2  = LocalTime.now();
-//        LocalTime t3  = LocalTime.of(12,15,0,0);
-//        System.out.println(t);
-//        System.out.println(t2);
-//        System.out.println(t2.compareTo(t));
-//        System.out.println(t.compareTo(t2));
-//        System.out.println(t3);
-
-//        Toll v = new Toll();
-//        for (int i = 0; i < 24; i++) {
-//            LocalTime t1 = LocalTime.of(i,1,0);
-//            LocalTime t2 = LocalTime.of(i,31,0);
-//            int toll = v.getCost(t1);
-//            int toll2 = v.getCost(t2);
-//
-//            System.out.println(t1 +" " +toll);
-//            System.out.println(t2 +" " +toll2);
-//        }
-
-    }
 }

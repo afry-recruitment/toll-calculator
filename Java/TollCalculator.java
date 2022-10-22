@@ -1,7 +1,7 @@
 
-import java.lang.reflect.Array;
+import Vehicles.Vehicle;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.MonthDay;
 import java.util.*;
 
@@ -19,34 +19,39 @@ public class TollCalculator {
    *
    * @param vehicle - the vehicle
    * @param dates   - date and time of all passes on one day
-   * @return - the total toll fee for that day
+   * @return int - the total toll fee for that day
    */
   public int getTollFee(Vehicle vehicle, Date... dates) {
+
     //Check for null pointers
-    //TODO make this cleaner
-    if(vehicle == null || dates == null){
-      throw new NullPointerException("Hi there");
+    if(vehicle == null){
+      throw new NullPointerException("vehicle cannot be null");
     }
+
+    if(dates == null){
+      throw new NullPointerException("dates cannot be null");
+    }
+
     //Check if needed to run at all
     if(!tollable(vehicle, dates)){
       return 0;
     }
+
     //Remove free dates as they are not to be counted
     dates = removeTollFreeDates(dates);
 
     //Sort dates into sets of days
     HashMap<LocalDate, ArrayList<Date>> datesByDay = getDaysHashmap(dates);
 
-    int totalToll = 0;
-
     //Doing the toll calculations
+    int totalToll = 0;
     for (LocalDate day:datesByDay.keySet()) {
       Date[][] daySegmentedByHour = getSegmentedDay(datesByDay.get(day),hourInSeconds);
 
       int tollForDay = 0;
 
       for (Date[] segment:daySegmentedByHour) {
-        tollForDay += getMaxTollFeeFromDates(segment);//We could break if tollForADay >=dayMaxFee since it´s the limit
+        tollForDay += getMaxTollFeeAmongDates(segment); //We could break if tollForADay >=dayMaxFee since it´s the limit
       }
       if(tollForDay>dayMaxFee){
         tollForDay = dayMaxFee;
@@ -56,6 +61,12 @@ public class TollCalculator {
     return totalToll;
   }
 
+  /**
+   * Removes the tollfree dates from an array of dates
+   *
+   * @param dates - the dates to clear from tollfree dates
+   * @return Date[] - a datearray without tollfree dates
+   */
   private Date[] removeTollFreeDates(Date[] dates) {
     ArrayList<Date> result = new ArrayList<>();
     for (Date date:dates) {
@@ -63,31 +74,35 @@ public class TollCalculator {
         result.add(date);
       }
     }
-    Date[] resArr = new Date[result.size()];
-    resArr = result.toArray(resArr);
-    return result.toArray(resArr);
+    Date[] resArr = result.toArray(new Date[0]);
+    return resArr;
   }
 
-  private int getMaxTollFeeFromDates(Date[] dates) {
+  /**
+   * Returns the highest fee that can be tolled from dates
+   *
+   * @param dates - the dates to find highest toll value from
+   * @return int - the highest toll from one date in the dates array
+   */
+  private int getMaxTollFeeAmongDates(Date[] dates) {
     int toll = 0;
     for (Date d:dates) {
-      int fee = Toll.getCost(d);
+      int fee = Toll.getFee(d);
       if(fee>toll){
         toll = fee;
       }
     }
-
     return toll;
   }
 
-  private void printArrayListDates(ArrayList<Date> dates) {
-    for (Date d:dates) {
-      System.out.println("  " + d.toString());
-    }
-  }
-
-  //Segments Dates of one day into chunks spanning over param: seconds
-  private /*HashMap<Integer, ArrayList<Date>>*/ Date[][] getSegmentedDay(ArrayList<Date> dates, int segmentLimitSeconds) {
+  /**
+   * Segments Dates of one day into chunks spanning over param:segmentLimitSeconds seconds
+   *
+   * @param dates - the dates that should be segmented
+   * @param segmentLimitSeconds - the limit in seconds on how large time a segment can span
+   * @return Date[][] - the day segmented into groups spanning over segmentLimitSeconds time ([group][individualValue])
+   */
+  private Date[][] getSegmentedDay(ArrayList<Date> dates, int segmentLimitSeconds) {
 
     //Sort to easily loop through
     dates.sort((d1, d2) -> d1.compareTo(d2));
@@ -116,11 +131,15 @@ public class TollCalculator {
     for (int i = 0; i < lenght; i++) {
       result[i] = segmentedDay.get(i).toArray(new Date[0]);
     }
-
     return result;
   }
 
-  //TODO test
+  /**
+   * Groups dates into groups of same day and puts them into a map with the day as key
+   *
+   * @param dates - the dates that should be mapped into days
+   * @return HashMap<LocalDate, ArrayList<Date>> - A list of dates for each unique day
+   */
   private HashMap<LocalDate, ArrayList<Date>> getDaysHashmap(Date[] dates) {
     HashMap<LocalDate, ArrayList<Date>> dateMap = new HashMap<>();
     for (Date date:dates) {
@@ -136,6 +155,12 @@ public class TollCalculator {
     return dateMap;
   }
 
+  /**
+   * Takes a date and offset it's month so January is 1 instead of 0 and returns a LocalDate.
+   *
+   * @param date - the date to be used for the localDate
+   * @return LocalDate - the local date of same date as parameter
+   */
   private LocalDate getLocalDateWithOffset(Date date) {
     gregorianCalendar.setTime(date);
     int year = gregorianCalendar.get(Calendar.YEAR);
@@ -144,9 +169,14 @@ public class TollCalculator {
     return LocalDate.of(year, month, day);
   }
 
-  //Check whether a vehicle and set of dates can be tolled
+  /**
+   *  Checks whether a vehicle and set of dates can be tolled.
+   *
+   * @param dates - the dates to check for tollability
+   * @param vehicle - the vehicle on which to check if tollable
+   * @return boolean - if vehicle and dates are toghether tollable
+   */
   private boolean tollable(Vehicle vehicle, Date... dates) {
-
     //Check if vehicle not tollable
     if(isTollFreeVehicle(vehicle)){
       return false;
@@ -158,16 +188,16 @@ public class TollCalculator {
         return true;
       }
     }
-
     return false;
   }
 
+  /**
+   *  Checks whether a vehicle is toll free
+   *
+   * @param vehicle - the vehicle on which to check if tollfree
+   * @return boolean - tollfree vehicle
+   */
   private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null)
-    {
-      throw new NullPointerException("Parameter vehicle was null in method isTollFreeVehicle");
-    }
-
     String vehicleType = vehicle.getType();
     for (TollFreeVehicles tf:TollFreeVehicles.values()) {
       if(vehicleType.equals(tf.getType())){
@@ -177,41 +207,44 @@ public class TollCalculator {
     return false;
   }
 
-  public int getTollFee(Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) {
-      return 0;
-    }
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
-
-    return Toll.getCost(LocalTime.of(hour,minute,0));
-  }
-
+  /**
+   *  Checks whether a date is toll free
+   *
+   * @param date - the date to check if tollfree
+   * @return boolean - tollfree date
+   */
   private Boolean isTollFreeDate(Date date) {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
 
-    int year = calendar.get(Calendar.YEAR);
+    //int year = calendar.get(Calendar.YEAR);
     int month = calendar.get(Calendar.MONTH) + 1; //Offset 1 to make January 1 instrad of 0
     int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+    //note Sunday = 1 .... saturday = 7
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
     if (isWeekendDay(dayOfWeek)) {
       return true;
     }
-
-    //TODO, is yearcheck needed?
     return Toll.isTollFreeDateMonthDay(MonthDay.of(month, day));
   }
 
+  /**
+   *  Checks whether a date is toll free
+   *
+   * @param dayOfWeek - the day of the week from Calender enum
+   * @return boolean - true if day belongs too weekend
+   */
   private boolean isWeekendDay(int dayOfWeek) {
     return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
   }
 
+  /**
+   *  Vehicles that are tollfree
+   */
   private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
+    MOTORBIKE("Vehicles.Motorbike"),
     TRACTOR("Tractor"),
     EMERGENCY("Emergency"),
     DIPLOMAT("Diplomat"),
