@@ -1,13 +1,16 @@
-*Ideas
+Thoughts:
 Dynamically generate test data, vehicles and dates
 Algorithm for fees, sort dates into subsets and pick highest fee.'
 
 For timelimit, hour I interpret it as first time + 60 minutes. In case of overlapping, just cut after 60 and start anew.
 
+Timelimit 60 minutes for one fee might be changed in future, best to take that into considaration
+
 Since tollfees probably gonna change, it´s a good thing to give it it´s own class
 And also, TollCalculator should use a class Toll for it's calculations, Toll may be used for other tasks too.
 
-Making toll-fees into a map where new time-windows and fees can be easily changed without affecting functionality of the code seems like a good thing to do.
+Making toll-fees into a map where new time-windows and fees can be easily changed without affecting functionality of the code
+seems like a good thing to do.
 
 Converting between different kinds of date/time datastructures feels a little sketchy
 
@@ -16,6 +19,22 @@ Documentation comments
 Nullchecking/errorhandling
 Values/ghostnumbers
 
-Suggestions:
--Make test data and write tests
--Implement all sorts of vehicles
+Suggestions (that i left out of this scope):
+    -Make test data and write tests
+    -Implement all sorts of vehicles
+    -Choose some Date/time datastructure to use that is not depricated
+
+Comments
+    -The calculation method is not the most efficient (as dates is processed more than once).
+     The reason i choosed my strategy is that it feelt clean to solve one problem at a time, easy for debugging,
+     also easily to rewrite if any "Rules" changes.
+     1. sort by days
+     2. sort days into segments
+     3. get fee for segment and add up
+
+    -Converting between many different kinds of date/time datastructures feels a little sketchy.
+     Reasons for doing this is that some functions don't need all info Date provides, and also Date methods like getDay() is depricated.
+
+    -Not sure what is best practise of error-handling in projects like these.. Just doing nullchecks in beginning of TollCalculator for now.
+
+    -

@@ -8,9 +8,11 @@ import java.util.*;
 public class TollCalculator {
 
   Calendar gregorianCalendar = GregorianCalendar.getInstance();
+  /**Offset for converting Date into localdate*/
   final int monthOffset = 1;
-  final int minuteInSeconds = 60;
-  final int hourInSeconds = 3600;
+  final int secondsInAMinute = 60;
+  final int secondsInAnHour = 3600;
+  /**Maxfee for one day*/
   final int dayMaxFee = 60;
 
 
@@ -45,18 +47,21 @@ public class TollCalculator {
 
     //Doing the toll calculations
     int totalToll = 0;
+
     for (LocalDate day:datesByDay.keySet()) {
-      Date[][] daySegmentedByHour = getSegmentedDay(datesByDay.get(day),hourInSeconds);
+      //Sort day into segments spanning 60 minutes
+      Date[][] daySegmentedByHour = getSegmentedDay(datesByDay.get(day), secondsInAnHour);
 
       int tollForDay = 0;
 
+      //Get max fee for each segment and add to daily toll
       for (Date[] segment:daySegmentedByHour) {
         tollForDay += getMaxTollFeeAmongDates(segment); //We could break if tollForADay >=dayMaxFee since it´s the limit
       }
-      if(tollForDay>dayMaxFee){
+      if(tollForDay > dayMaxFee){
         tollForDay = dayMaxFee;
       }
-      totalToll +=tollForDay;
+      totalToll += tollForDay;
     }
     return totalToll;
   }
