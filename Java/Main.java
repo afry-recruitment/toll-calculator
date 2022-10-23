@@ -1,11 +1,7 @@
 import Vehicles.Car;
 import Vehicles.Motorbike;
 
-import java.time.*;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 public class Main {
     static int timesToRun = 3;

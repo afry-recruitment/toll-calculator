@@ -32,6 +32,7 @@ public class DateGenerator {
     }
 
     /**
+     *Generates an arry with random dates.
      *
      * @param amount the number of random dates to generate
      * @return Date[] - The random dates
