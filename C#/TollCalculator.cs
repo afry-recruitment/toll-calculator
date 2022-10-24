@@ -4,6 +4,7 @@ using TollFeeCalculator;
 
 public class TollCalculator
 {
+    private const int MAXIMUM_FEE_FOR_ONE_DAY = 60;
 
     /**
      * Calculate the total toll fee for one day
@@ -12,97 +13,95 @@ public class TollCalculator
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(iVehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
         int totalFee = 0;
-        foreach (DateTime date in dates)
+
+        if (IsTollFreeVehicle(vehicle))
+            return totalFee;
+
+        if (dates != null && dates.Length > 0)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            dates = dates.OrderBy(x => x).ToArray();
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= 60)
+            int hour = dates[0].Hour;
+            int hourFee = 0;
+            foreach (DateTime date in dates)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                if (totalFee < MAXIMUM_FEE_FOR_ONE_DAY)
+                {
+                    int Fee = GetTollFee(date);
+                    int hr = date.Hour;
+                    if (hour == hr)
+                    {
+                        hourFee = Math.Max(hourFee, Fee);
+                    }
+                    else
+                    {
+                        totalFee += hourFee;
+                        hour = hr;
+                        hourFee = Fee;
+                    }
+                }
             }
-            else
+            if (totalFee < MAXIMUM_FEE_FOR_ONE_DAY)
             {
-                totalFee += nextFee;
+                totalFee += hourFee; // Since the fees for last hour will not be added in the foreach loop when the totalFee < MAXIMUM_FEE_FOR_ONE_DAY and loop has completed
             }
         }
-        if (totalFee > 60) totalFee = 60;
+        totalFee = Math.Min(totalFee, MAXIMUM_FEE_FOR_ONE_DAY);
+
         return totalFee;
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    private bool IsTollFreeVehicle(iVehicle vehicle)
     {
         if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        return vehicle.FeeFree;
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public class Price
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
+        public int Fee { get; set; }
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    public int GetTollFee(DateTime datetime)
     {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
+        DateOnly date = DateOnly.FromDateTime(datetime);
+        if (IsTollFreeDate(date))
+            return 0;
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
+        TimeOnly time = TimeOnly.FromDateTime(datetime);
+        List<Price> lstPrice = GetPrices();
+        if (lstPrice != null && lstPrice.Count > 0 && lstPrice.Any(x => x.StartTime <= time && x.EndTime >= time))
+            return lstPrice.Where(x => x.StartTime <= time && x.EndTime >= time).Select(x => x.Fee).FirstOrDefault();
 
-        if (year == 2013)
-        {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
-        }
+        return 0;
+    }
+
+    private Boolean IsTollFreeDate(DateOnly date)
+    {
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            return true;
+
+        List<DateOnly> lstHolidays = GetHolidaysForTheYear(date.Year);
+        if (lstHolidays != null && lstHolidays.Count > 0 && lstHolidays.Any(x => x == date))
+            return true;
+
         return false;
     }
 
-    private enum TollFreeVehicles
+    private List<DateOnly> GetHolidaysForTheYear(int year)
     {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
+        // Retrieve the list of hoilidays for the year from the db
+        throw new NotImplementedException();
+    }
+
+    private List<Price> GetPrices()
+    {
+        // Retrieve the Prices from the db
+        throw new NotImplementedException();
     }
 }
