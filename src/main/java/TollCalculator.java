@@ -34,7 +34,7 @@ public class TollCalculator {
     return totalFee;
   }
 
-  private boolean isTollFreeVehicle(Vehicle vehicle) {
+  public boolean isTollFreeVehicle(Vehicle vehicle) {
     if(vehicle == null) return false;
     String vehicleType = vehicle.getType();
     return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
@@ -64,7 +64,7 @@ public class TollCalculator {
     else return 0;
   }
 
-  private Boolean isTollFreeDate(Date date) {
+  public Boolean isTollFreeDate(Date date) {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
     int year = calendar.get(Calendar.YEAR);
