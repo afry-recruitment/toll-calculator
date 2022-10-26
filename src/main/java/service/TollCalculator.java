@@ -59,16 +59,12 @@ public class TollCalculator {
 
 
   public Boolean isTollFreeDate(LocalDateTime date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(localDateTimeToCalendar(date));
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+    int year = date.getYear();
+    int month = date.getMonthValue();
+    int day = date.getDayOfMonth();
+    int dayOfWeek = date.getDayOfWeek().getValue();
     if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
-    // change the logic of the year to use a lib or implement
     if (year == 2013) {
       return month == Calendar.JANUARY && day == 1 ||
               month == Calendar.MARCH && (day == 28 || day == 29) ||
@@ -83,16 +79,9 @@ public class TollCalculator {
   }
 
 
-
   public static Date localDateTimeToDate(final LocalDateTime dateTime) {
     final Instant instant = dateTime.atZone(ZoneId.systemDefault())
             .toInstant();
-    return Date.from(instant);
-  }
-
-  public static Date localDateTimeToCalendar(LocalDateTime date) {
-    LocalDateTime localDateTime = LocalDateTime.now();
-    Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
   }
 

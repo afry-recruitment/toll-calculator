@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import static config.TollConfiguration.getTollFeeAtPeakTimes;
-import static service.TollCalculator.localDateTimeToCalendar;
-
 
 public class RushHoursHub {
 
@@ -17,11 +15,9 @@ public class RushHoursHub {
 
         TollCalculator tollCalculator = new TollCalculator();
 
-        if(Boolean.TRUE.equals(tollCalculator.isTollFreeDate(date)) || tollCalculator.isTollFreeVehicle(vehicle)) return 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(localDateTimeToCalendar(date));
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+         if(Boolean.TRUE.equals(tollCalculator.isTollFreeDate(date)) || tollCalculator.isTollFreeVehicle(vehicle)) return 0;
+        int hour = date.getHour();
+        int minute = date.getMinute();
 
         int hourMinute = Integer.parseInt(String.format("%d%d", hour, minute));
         if(hourMinute < 100) {

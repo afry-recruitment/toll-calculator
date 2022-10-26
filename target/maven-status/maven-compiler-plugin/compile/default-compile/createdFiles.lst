@@ -1,6 +1,5 @@
 model/Car.class
 service/TollCalculator.class
-App.class
 model/TollFreeVehicles.class
 config/TollConfiguration.class
 model/Motorbike.class
