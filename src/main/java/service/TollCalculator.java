@@ -21,6 +21,8 @@ public class TollCalculator {
 
   RushHoursHub rushHoursHub = new RushHoursHub();
 
+  
+
   public int getTollFee(Vehicle vehicle, final LocalDateTime... dates) {
     LocalDateTime intervalStart = dates[0];
     int totalFee = 0;
@@ -66,6 +68,7 @@ public class TollCalculator {
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
+    // change the logic of the year to use a lib or implement
     if (year == 2013) {
       return month == Calendar.JANUARY && day == 1 ||
               month == Calendar.MARCH && (day == 28 || day == 29) ||

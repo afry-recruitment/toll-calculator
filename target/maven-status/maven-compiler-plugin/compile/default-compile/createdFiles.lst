@@ -1,6 +1,8 @@
-Car.class
-TollCalculator$TollFreeVehicles.class
-RushHoursDatabase.class
-TollCalculator.class
-Vehicle.class
-Motorbike.class
+model/Car.class
+service/TollCalculator.class
+App.class
+model/TollFreeVehicles.class
+config/TollConfiguration.class
+model/Motorbike.class
+service/RushHoursHub.class
+model/Vehicle.class
