@@ -1,7 +1,15 @@
 
+
 public class Motorbike implements Vehicle {
   @Override
-  public String getType() {
-    return "Motorbike";
+  public boolean isTollFreeVechicle()
+  {
+	  return true;
+  }
+  
+  @Override
+  public String vehicleType()
+  {
+	  return "Motorbike";
   }
 }

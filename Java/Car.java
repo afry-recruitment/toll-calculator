@@ -1,7 +1,14 @@
 
+
 public class Car implements Vehicle {
   @Override
-  public String getType() {
-    return "Car";
+  public boolean isTollFreeVechicle()
+  {
+	  return false;
+  }
+  @Override
+  public String vehicleType()
+  {
+	  return "car";
   }
 }
