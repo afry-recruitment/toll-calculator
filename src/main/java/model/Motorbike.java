@@ -1,6 +1,7 @@
+package model;
 
 public class Motorbike implements Vehicle {
   public String getType() {
-    return "Motorbike";
+    return "model.Motorbike";
   }
 }

@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="toll-calculator" target="1.5" />
+      <module name="toll-calculator" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

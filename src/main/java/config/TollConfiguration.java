@@ -1,11 +1,11 @@
+package config;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
-public class RushHoursDatabase {
+public class TollConfiguration {
 
-    public ArrayList<HashMap<String, Integer>> getTollFeeAtPeakTimes() {
+    public static ArrayList<HashMap<String, Integer>> getTollFeeAtPeakTimes() {
 
         HashMap<String, Integer> rushHour1 = new HashMap<String, Integer>();
         rushHour1.put("from", 600);
@@ -66,35 +66,4 @@ public class RushHoursDatabase {
 
         return options;
     }
-
-    public int getTollFeeAtPeakTimesCauculus(final Date date, Vehicle vehicle) {
-
-        TollCalculator tollCalculator = new TollCalculator();
-
-        if(Boolean.TRUE.equals(tollCalculator.isTollFreeDate(date)) || tollCalculator.isTollFreeVehicle(vehicle)) return 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        int hourMinute = Integer.parseInt(String.format("%d%d", hour, minute));
-        if(hourMinute < 100) {
-            hourMinute = hour * 100;
-        }
-        int finalResult = 0;
-
-        for (HashMap<String, Integer> option : getTollFeeAtPeakTimes()) {
-            int from  = option.get("from");
-            int to  = option.get("to");
-            int result  = option.get("result");
-
-            if (hourMinute >= from && hourMinute <= to) {
-                finalResult = result;
-                break;
-            }
-        }
-        return finalResult;
-
-    }
-
 }
