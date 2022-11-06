@@ -1,4 +1,6 @@
-First of all, the gif is from the movie Hackers (1995) 
+
+
+First of all, the gif is from the movie Hackers (1995) :)
 
 Some changes and fixes in the code;
 1.	There was no main() method, which tells the JVM where to start program execution.
