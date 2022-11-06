@@ -12,8 +12,6 @@ public class Main {
 public static void main(String[] args) { //the main() method, to start executing the program
 	
 		
-	
-	
 /*	Testing the program by creating a Car object to insert it as an argument
  *  to a TollCalculator object with random time*/
 	  
