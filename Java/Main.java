@@ -9,7 +9,7 @@ as well as code to test that the program works well.*/
 
 public class Main {
 	
-public static void main(String[] args) {
+public static void main(String[] args) { //the main() method, to start executing the program
 	
 		
 	
@@ -17,7 +17,7 @@ public static void main(String[] args) {
 /*	Testing the program by creating a Car object to insert it as an argument
  *  to a TollCalculator object with random time*/
 	  
-        Car car1 = new Car();
+        Car car1 = new Car(); //Create an instance of the Car class
        
         //car1.setType("Tractor");
 		Calendar cal = Calendar.getInstance();
@@ -44,19 +44,20 @@ public static void main(String[] args) {
 		Date d2 = cal2.getTime();
 				
 		Calendar cal3 = Calendar.getInstance();
-	    cal3.set(Calendar.HOUR_OF_DAY,16);
-	    cal3.set(Calendar.MINUTE,50); 
-	    cal3.set(Calendar.SECOND,0);
-	    cal3.set(Calendar.MILLISECOND,0);
+	        cal3.set(Calendar.HOUR_OF_DAY,16);
+	        cal3.set(Calendar.MINUTE,50); 
+	        cal3.set(Calendar.SECOND,0);
+	        cal3.set(Calendar.MILLISECOND,0);
 		Date d3 = cal3.getTime();
 		  
 		
-		TollCalculator test = new TollCalculator();
+		TollCalculator test = new TollCalculator(); //Create an instance of TollCalculator class
+		
 		//String s = TollCalculator.TollFreeVehicles.DIPLOMAT.toString();
 		
-		System.out.println(car1.type);
+		System.out.println(car1.type); 
 						
-		System.out.println(test.getTollFee(car1,d,d1, d2,d3 ));
+		System.out.println(test.getTollFee(car1,d,d1, d2,d3 )); //Print the result
 		
 	}
 
