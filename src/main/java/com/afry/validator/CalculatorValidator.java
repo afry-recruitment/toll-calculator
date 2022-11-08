@@ -26,8 +26,7 @@ public class CalculatorValidator {
             passageDates.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
         if (passageDates.size() == 2) {
-            if (!passageDates.get(0).equals(passageDates.get(1)))
-                return "All times must be on same day!";
+            if (!passageDates.get(0).equals(passageDates.get(1))) return "All times must be on same day!";
         }
         if (passageDates.size() > 2) {
             for (int i = 0; i < passageDates.size(); i++) {
