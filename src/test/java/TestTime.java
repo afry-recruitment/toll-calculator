@@ -10,8 +10,6 @@ public class TestTime {
             2022, 11, 7, 8, 27).atZone(ZoneId.systemDefault()).toInstant());
     public Date lowPriceTime = java.util.Date.from(LocalDateTime.of(
             2022, 11, 7, 11, 17).atZone(ZoneId.systemDefault()).toInstant());
-    public Date midPriceLessThanHourFromRush = java.util.Date.from(LocalDateTime.of(
-            2022, 11, 7, 15, 27).atZone(ZoneId.systemDefault()).toInstant());
     public Date rushHourPriceTime2 = java.util.Date.from(LocalDateTime.of(
             2022, 11, 7, 16, 4).atZone(ZoneId.systemDefault()).toInstant());
     public Date midPriceTime2 = java.util.Date.from(LocalDateTime.of(
@@ -20,4 +18,15 @@ public class TestTime {
             2022, 11, 7, 18, 35).atZone(ZoneId.systemDefault()).toInstant());
     public Date nextDayTime = java.util.Date.from(LocalDateTime.of(
             2022, 11, 8, 7, 27).atZone(ZoneId.systemDefault()).toInstant());
+
+    public Date sameHour1 = java.util.Date.from(LocalDateTime.of(
+            2022, 11, 7, 15, 54).atZone(ZoneId.systemDefault()).toInstant());
+    public Date sameHour2 = java.util.Date.from(LocalDateTime.of(
+            2022, 11, 7, 16, 4).atZone(ZoneId.systemDefault()).toInstant());
+    public Date sameHour3 = java.util.Date.from(LocalDateTime.of(
+            2022, 11, 7, 16, 24).atZone(ZoneId.systemDefault()).toInstant());
+    public Date sameHour4 = java.util.Date.from(LocalDateTime.of(
+            2022, 11, 7, 16, 34).atZone(ZoneId.systemDefault()).toInstant());
+    public Date sameHour5 = java.util.Date.from(LocalDateTime.of(
+            2022, 11, 7, 16, 44).atZone(ZoneId.systemDefault()).toInstant());
 }

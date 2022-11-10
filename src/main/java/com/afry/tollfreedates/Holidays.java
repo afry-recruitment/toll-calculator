@@ -83,7 +83,7 @@ public class Holidays {
 
     public LocalDate getAllSaintsDay(int year) {
         LocalDate allSaintsDay = (LocalDate.of(2013, 11, 1));
-        List<LocalDate> midsummerWeek = new ArrayList<>(Arrays.asList(
+        List<LocalDate> allSaintsDayWeek = new ArrayList<>(Arrays.asList(
                 (LocalDate.of(year, 10, 31)),
                 (LocalDate.of(year, 11, 1)),
                 (LocalDate.of(year, 11, 2)),
@@ -93,7 +93,7 @@ public class Holidays {
                 (LocalDate.of(year, 11, 6))
         ));
 
-        for (LocalDate day : midsummerWeek) {
+        for (LocalDate day : allSaintsDayWeek) {
             if (day.getDayOfWeek() == DayOfWeek.SATURDAY) {
                 allSaintsDay = day;
             }

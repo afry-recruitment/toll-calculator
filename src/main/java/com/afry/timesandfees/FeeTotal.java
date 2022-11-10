@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -23,23 +24,25 @@ public class FeeTotal {
                 passageTimes.add(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             }
 
-            LocalDateTime intervalStart = passageTimes.get(0);
+            if (passageTimes.size() == 1) return new Fee().calculate(passageTimes.get(0), vehicle);
+
+            // Sort passage times. Chronology important when checking time between passages!
+            Collections.sort(passageTimes);
 
             int totalFee = 0;
-            for (LocalDateTime date : passageTimes) {
-                int nextFee = new Fee().calculate(date, vehicle);
-                int tempFee = new Fee().calculate(intervalStart, vehicle);
-
-                long minutes = ChronoUnit.MINUTES.between(intervalStart, date);
-
-                if (minutes <= 60) {
-                    if (totalFee > 0) totalFee -= tempFee;
-                    if (nextFee >= tempFee) tempFee = nextFee;
-                    totalFee += tempFee;
-                } else {
-                    totalFee += nextFee;
+            for (int i = 0; i < passageTimes.size(); i++) {
+                int nextFee = new Fee().calculate(passageTimes.get(i), vehicle);
+                for (int j = i + 1; j < passageTimes.size(); j++) {
+                    long minutes = ChronoUnit.MINUTES.between(passageTimes.get(i), passageTimes.get(j));
+                    if (minutes < 60) {
+                        int tempFee = new Fee().calculate(passageTimes.get(j), vehicle);
+                        if (tempFee > nextFee) nextFee = tempFee;
+                        i++;
+                    }
                 }
+                totalFee += nextFee;
             }
+
             if (totalFee > TollTimesAndFees.maxTotal) totalFee = TollTimesAndFees.maxTotal;
             return totalFee;
         }

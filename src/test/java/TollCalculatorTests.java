@@ -93,16 +93,20 @@ public class TollCalculatorTests {
     public void testMultipleFee() {
         // test adding fees, 13 + 18 + 8.
         Assertions.assertEquals(new FeeTotal().calculate(
-                new Car(), new TestTime().midPriceTime, new TestTime().rushHourPriceTime2,
-                new TestTime().lowPriceTime), 39);
+                new Car(), new TestTime().midPriceTime, new TestTime().lowPriceTime,
+                new TestTime().rushHourPriceTime2), 39);
+        // Also works with reverse chronology.
+        Assertions.assertEquals(new FeeTotal().calculate(
+                new Car(), new TestTime().rushHourPriceTime2, new TestTime().lowPriceTime,
+                new TestTime().midPriceTime), 39);
     }
 
     @Test
     public void testSingleFeeInSameHour() {
         // test that only highest fee is charged within same hour
         Assertions.assertEquals(new FeeTotal().calculate(
-                new Car(), new TestTime().midPriceLessThanHourFromRush,
-                new TestTime().rushHourPriceTime2), 18);
+                new Car(), new TestTime().sameHour1, new TestTime().sameHour2, new TestTime().sameHour3,
+                new TestTime().sameHour4, new TestTime().sameHour5), 18);
     }
 
     @Test

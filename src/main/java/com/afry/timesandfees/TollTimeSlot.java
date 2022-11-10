@@ -1,4 +1,6 @@
 package com.afry.timesandfees;
 
-public record TollTimeSlot(int startHour, int startMinute, int endHour, int endMinute, int fee) {
+import java.time.LocalTime;
+
+public record TollTimeSlot(LocalTime startTime, LocalTime endTime, int fee) {
 }

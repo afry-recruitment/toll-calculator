@@ -23,15 +23,10 @@ public class Fee {
 
     public int getFee(LocalTime time) {
 
-        int hour = time.getHour();
-        int minute = time.getMinute();
-
         List<TollTimeSlot> timeSlots = new ArrayList<>(new TollTimesAndFees().timesAndFees());
 
         for (TollTimeSlot slot : timeSlots) {
-            if ((hour == slot.startHour() && minute >= slot.startMinute()) && minute <= slot.endMinute())
-                return slot.fee();
-            else if (hour > slot.startHour() && (hour <= slot.endHour() && minute <= slot.endMinute()))
+            if (!time.isBefore(slot.startTime()) && time.isBefore(slot.endTime()))
                 return slot.fee();
         }
         return 0;
