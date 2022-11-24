@@ -44,8 +44,8 @@ public class Main {
 		Date dateStart = null, entry2 = null, entry3 = null, entry4 = null, entry5 = null, dateEnd = null;
 
 		// first entry
-		//dateNow.add(Calendar.HOUR, -6);
-		dateNow.add(Calendar.HOUR, 3);
+		dateNow.add(Calendar.HOUR, 0);
+		//dateNow.add(Calendar.HOUR, 3);
 		
 		dateStart = dateNow.getTime();
 		 System.out.println(("First entry" + dateStart));
