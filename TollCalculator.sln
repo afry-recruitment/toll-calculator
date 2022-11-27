@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculator", "TollCalculator\TollCalculator.csproj", "{A1041724-0A33-4DB7-AA87-BC11356B9634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculatorTests", "TollCalculatorTests\TollCalculatorTests.csproj", "{E2365535-10D2-4428-8C7A-235487B24D43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1041724-0A33-4DB7-AA87-BC11356B9634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1041724-0A33-4DB7-AA87-BC11356B9634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1041724-0A33-4DB7-AA87-BC11356B9634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1041724-0A33-4DB7-AA87-BC11356B9634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2365535-10D2-4428-8C7A-235487B24D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2365535-10D2-4428-8C7A-235487B24D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2365535-10D2-4428-8C7A-235487B24D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2365535-10D2-4428-8C7A-235487B24D43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F82A48E8-CB7C-4926-9454-871933D2DCB6}
+	EndGlobalSection
+EndGlobal
