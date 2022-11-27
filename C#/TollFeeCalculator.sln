@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculator", "TollFeeCalculator\TollFeeCalculator.csproj", "{AF91DB6D-0AAC-495B-8678-6DFFD3662A0F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF91DB6D-0AAC-495B-8678-6DFFD3662A0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF91DB6D-0AAC-495B-8678-6DFFD3662A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF91DB6D-0AAC-495B-8678-6DFFD3662A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF91DB6D-0AAC-495B-8678-6DFFD3662A0F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {003FBAD5-D4CA-47FE-8049-B72B2DF69223}
+	EndGlobalSection
+EndGlobal
