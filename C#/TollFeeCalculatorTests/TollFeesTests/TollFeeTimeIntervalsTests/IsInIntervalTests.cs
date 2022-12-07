@@ -30,7 +30,7 @@ namespace TollFeeCalculatorTests.TollFeesTests.TollFeeTimeIntervalsTests
         }
 
         [Fact]
-        public void ShouldReturnFalse_WhenDateTimeTimeIsNotInInterval()
+        public void ShouldReturnTrue_WhenTimeOnlyTimeIsInInterval()
         {
             var timeToTest = new TimeOnly(12, 34);
 
@@ -41,7 +41,7 @@ namespace TollFeeCalculatorTests.TollFeesTests.TollFeeTimeIntervalsTests
         }
 
         [Fact]
-        public void ShouldReturnTrue_WhenTimeOnlyTimeIsInInterval()
+        public void ShouldReturnFalse_WhenDateTimeTimeIsNotInInterval()
         {
             var timeToTest = new DateTime(2022, 1, 1, 09, 12, 34);
 

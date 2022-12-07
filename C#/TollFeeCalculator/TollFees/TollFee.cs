@@ -24,6 +24,7 @@ namespace TollFeeCalculator.TollFees
                 return 0;
             }
 
+            dates = dates.OrderBy(d => d).ToList();
             var currentDay = dates.First();
             var intervalStart = currentDay;
             var currentMaxIntervalFee = GetTollFeeForTimeOfDay(intervalStart, vehicle, tollFeeRepository);
