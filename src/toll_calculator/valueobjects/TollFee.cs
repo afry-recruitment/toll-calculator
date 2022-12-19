@@ -1,6 +1,6 @@
-﻿namespace toll_calculator;
+﻿namespace toll_calculator.valueobjects;
 
-internal static class Toll
+internal static class TollFee
 {
     public static int LowTraffic = 8;
     public static int MidTraffic = 13;

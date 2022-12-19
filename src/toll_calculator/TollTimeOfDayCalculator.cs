@@ -1,35 +1,26 @@
-﻿namespace toll_calculator
+﻿using toll_calculator.valueobjects;
+using static toll_calculator.valueobjects.TollTime;
+
+namespace toll_calculator
 {
     internal static class TollTimeOfDayCalculator
     {
-        public static int GetTollFee(DateTime date)
-        {
 
-            int hour = date.Hour;
-            int minute = date.Minute;
+        public static int GetTollFee(DateTime tollDateTime)
+        {
+            if (_0000_0600.Contains(tollDateTime)) return 0;
+            if (_0600_0630.Contains(tollDateTime)) return TollFee.LowTraffic;
+            if (_0630_0700.Contains(tollDateTime)) return TollFee.MidTraffic;
+            if (_0700_0800.Contains(tollDateTime)) return TollFee.RushHourTraffic;
+            if (_0800_0830.Contains(tollDateTime)) return TollFee.MidTraffic;
+            if (_0830_1500.Contains(tollDateTime)) return TollFee.LowTraffic;
+            if (_1500_1530.Contains(tollDateTime)) return TollFee.MidTraffic;
+            if (_1530_1700.Contains(tollDateTime)) return TollFee.RushHourTraffic;
+            if (_1700_1800.Contains(tollDateTime)) return TollFee.MidTraffic;
+            if (_1800_1830.Contains(tollDateTime)) return TollFee.LowTraffic;
+            if (_1830_2400.Contains(tollDateTime)) return 0;
 
-            if (Is_6_00_to_6_29(date)) return Toll.LowTraffic;
-            else if (Is_6_30_to_6_59(date)) return Toll.MidTraffic;
-            else if (hour == 7 && minute >= 0 && minute <= 59) return Toll.RushHourTraffic;
-            else if (hour == 8 && minute >= 0 && minute <= 29) return Toll.MidTraffic;
-            else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return Toll.LowTraffic;
-            else if (hour == 15 && minute >= 0 && minute <= 29) return Toll.MidTraffic;
-            else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return Toll.RushHourTraffic;
-            else if (hour == 17 && minute >= 0 && minute <= 59) return Toll.MidTraffic;
-            else if (hour == 18 && minute >= 0 && minute <= 29) return Toll.LowTraffic;
-            else return 0;
-        }
-        private static bool Is_6_00_to_6_29(DateTime date)
-        {
-            int hour = date.Hour;
-            int minute = date.Minute;
-            return (hour == 6 && minute >= 0 && minute <= 29);
-        }
-        private static bool Is_6_30_to_6_59(DateTime date)
-        {
-            int hour = date.Hour;
-            int minute = date.Minute;
-            return (hour == 6 && minute >= 30 && minute <= 59);
+            throw new NotImplementedException();
         }
     }
 }
