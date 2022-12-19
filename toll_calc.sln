@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "toll_calculator", "src\toll_calculator\toll_calculator.csproj", "{2E8A371A-82CC-4F40-B4C0-E469536158B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "toll_calculator.test", "test\toll_calculator.test\toll_calculator.test.csproj", "{1BCBF309-B4DA-4E9D-B80B-9C727B5D3506}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "toll_calculator.tests", "test\toll_calculator.test\toll_calculator.tests.csproj", "{1BCBF309-B4DA-4E9D-B80B-9C727B5D3506}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

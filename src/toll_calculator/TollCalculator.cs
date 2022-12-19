@@ -1,7 +1,7 @@
-﻿using System;
-using System.Globalization;
-using toll_calculator.models;
+﻿using toll_calculator.models;
+using toll_calculator.enums;
 
+namespace toll_calculator;
 public class TollCalculator
 {
 
@@ -52,23 +52,10 @@ public class TollCalculator
                vehicleType.Equals(TollFreeVehicles.Military.ToString());
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    private int GetTollFee(DateTime date, Vehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        return TollTimeOfDayCalculator.GetTollFee(date);
     }
 
     private Boolean IsTollFreeDate(DateTime date)
@@ -94,15 +81,5 @@ public class TollCalculator
             }
         }
         return false;
-    }
-
-    private enum TollFreeVehicles
-    {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
     }
 }
