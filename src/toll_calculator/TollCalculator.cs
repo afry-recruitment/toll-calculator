@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using TollFeeCalculator;
+using toll_calculator.models;
 
 public class TollCalculator
 {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TollFeeCalculator
+namespace toll_calculator.models
 {
     public interface Vehicle
     {
-        String GetVehicleType();
+        string GetVehicleType();
     }
 }
