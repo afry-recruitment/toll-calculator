@@ -2,6 +2,7 @@
   "ValidFrom": "2013-01-01T00:00:00",
   "ValidUntil": "2013-12-31T00:00:00",
   "MaximumDailyFee": 60,
+  "ValidTollTime": "00:01:00",
   "DailyTollTimePrizes": [
     {
       "Start": "00:00:00",

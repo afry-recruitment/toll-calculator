@@ -13,7 +13,7 @@
 //     * @return - the total toll fee for that day
 //     */
 
-//    public static GetTollFee(VehicleType vehicle, DateTime[] dates)
+//    public static int GetTollFee(VehicleType vehicle, DateTime[] dates)
 //    {
 //        DateTime intervalStart = dates[0];
 //        int totalFee = 0;

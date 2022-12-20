@@ -27,13 +27,14 @@ public class TrafficTollRepositoryTests
         trafficTollSpec.ValidFrom.Year.Should().Be(2013);
     }
 
-        [Fact]
+    [Fact]
     public void Create_traffic_toll_for_2013()
     {
         var trafficToll2013 = new TrafficTollSpecification(
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
             maximumDailyFee: 60,
+            validTollTime: new TimeSpan(0,1,0),
             dailyTollTimePrizes: new[]
             {
                new TollTimePrize(
