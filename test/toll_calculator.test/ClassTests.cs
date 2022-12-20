@@ -1,5 +1,4 @@
 using FluentAssertions;
-using toll_calculator.models;
 using toll_calculator.valueobjects;
 using Xunit;
 

@@ -1,5 +1,5 @@
 ﻿using toll_calculator.valueobjects;
-using static toll_calculator.valueobjects.TollTime;
+using static toll_calculator.valueobjects.DailyToll;
 
 namespace toll_calculator
 {
