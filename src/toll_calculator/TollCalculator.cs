@@ -27,9 +27,9 @@ internal static class TollCalculator
         if (IsTollFreeVehicle(tollCalculationInput.VehicleType) || IsTollFreeDate(tollCalculationInput.Date))
             return 0;
 
-        var groupedTimeSpans = GroupByMaxValidTollTime(tollCalculationInput.PassingTimes, TrafficTollSpecification.ValidTollTime);
-
-        throw new NotImplementedException();
+        var groupedTollTimes = GroupByMaxValidTollTime(tollCalculationInput.PassingTimes, TrafficTollSpecification.DailyTrafficTollSpecification.ValidTollTime);
+        var tollFees = groupedTollTimes.Select(x => CalculateHighestGroupFee(x)).Sum();
+        return tollFees < TrafficTollSpecification.DailyTrafficTollSpecification.MaximumDailyFee ? tollFees : TrafficTollSpecification.DailyTrafficTollSpecification.MaximumDailyFee;
     }
 
     private static bool IsTollFreeVehicle(VehicleType vehicle)
@@ -42,11 +42,12 @@ internal static class TollCalculator
         return TrafficTollSpecification.TollFreeDates.Contains(date);
     }
 
-    private static int CalculateHighestFee(IEnumerable<TimeSpan> groupedTimeSpans)
+    private static int CalculateHighestGroupFee(IEnumerable<TimeSpan> groupedTimeSpans)
     {
-        var tollTimePrizes = TrafficTollSpecification.DailyTollTimePrizes;
+        var tollTimePrizes = TrafficTollSpecification.DailyTrafficTollSpecification.DailyTollTimePrizes;
         var feeTypes = groupedTimeSpans.Select(x => tollTimePrizes.First(tollTime => tollTime.Start <= x && x < tollTime.End).FeeType).OfType<TollTrafficType>();
-
+        var highestFee = feeTypes.Select(feeType => TrafficTollSpecification.DailyTrafficTollSpecification.PriceMapping[(int)feeType]).Max();
+        return highestFee;
     }
 
     private static IEnumerable<IEnumerable<TimeSpan>> GroupByMaxValidTollTime(IEnumerable<TimeSpan> timeSpans, TimeSpan validTollTime)

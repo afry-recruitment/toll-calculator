@@ -33,12 +33,16 @@ public class TrafficTollRepositoryTests
         var trafficToll2013 = new TrafficTollSpecification(
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
+            dailyTrafficTollSpecification: new DailyTrafficTollSpecification(
             maximumDailyFee: 60,
-            priceMapping: new KeyValuePair<int, int>
+            priceMapping: new Dictionary<int, int>()
             {
-                (0,0)
+                { 0,0 },
+                { 1,8 },
+                { 2,13 },
+                { 3,18 }
             },
-            validTollTime: new TimeSpan(0,1,0),
+            validTollTime: new TimeSpan(0, 1, 0),
             dailyTollTimePrizes: new[]
             {
                new TollTimePrize(
@@ -85,7 +89,7 @@ public class TrafficTollRepositoryTests
                   new TimeSpan(18, 30, 0),
                   new TimeSpan(24, 0, 0),
                    (int)TollTrafficType.Free)
-            },
+            }),
             tollFreeDates: GetTollFreeDates2013(),
             tollFreeVehicleTypes: new int[]
             {
@@ -97,7 +101,7 @@ public class TrafficTollRepositoryTests
                 (int)VehicleType.Military
             });
 
-        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions {WriteIndented = true });
+        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions { WriteIndented = true });
         _testOutputHelper.WriteLine(trafficToll2022Json);
     }
 
