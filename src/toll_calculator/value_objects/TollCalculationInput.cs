@@ -5,22 +5,28 @@ namespace toll_calculator.value_objects
 {
     public record TollCalculationInput
     {
-        public DateTime[] PassingTimes { get; }
+        public TimeSpan[] PassingTimes { get; }
         public VehicleType VehicleType { get; }
+        public DateTime Date { get; }
         public TollCalculationInput(IEnumerable<DateTime> passings, int vehicleType)
         {
+            var passingsIsEmptyMessage = passings.Any() ? null : "DateTime passing collection i empty.";
             var dayMessage = EnsureAllDatesIsSameDay(passings);
             var uniqueDatesMessage = EnsureAllDatesIsUnique(passings);
             var vehicleMessage = EnsureVehicleExists(vehicleType);
 
-            if(dayMessage != null || vehicleMessage != null || uniqueDatesMessage != null) 
+            if(passingsIsEmptyMessage != null ||
+                dayMessage != null || 
+                vehicleMessage != null || 
+                uniqueDatesMessage != null) 
             {
                 throw new InvalidClientInputException(
                     $"While instantiating {nameof(TollCalculationInput)}:" +
-                    dayMessage + vehicleMessage + uniqueDatesMessage);
+                   passingsIsEmptyMessage + dayMessage + vehicleMessage + uniqueDatesMessage);
             }
 
-            PassingTimes = passings.ToArray();
+            PassingTimes = passings.Select(x => new TimeSpan(x.Hour, x.Minute, x.Second, x.Millisecond)).ToArray();
+            Date = passings.Select(x => new DateTime(x.Year, x.Month, x.Day)).First();
             VehicleType = (VehicleType)vehicleType;
         }
 

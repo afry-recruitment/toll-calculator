@@ -34,53 +34,57 @@ public class TrafficTollRepositoryTests
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
             maximumDailyFee: 60,
+            priceMapping: new KeyValuePair<int, int>
+            {
+                (0,0)
+            },
             validTollTime: new TimeSpan(0,1,0),
             dailyTollTimePrizes: new[]
             {
                new TollTimePrize(
                    new TimeSpan(0, 0, 0),
                    new TimeSpan(6, 0, 0),
-                   (int)TollType.Free),
+                   (int)TollTrafficType.Free),
                new TollTimePrize(
                    new TimeSpan(6, 0, 0),
                    new TimeSpan(6, 30,0),
-                   (int)TollType.LowTraffic),
+                   (int)TollTrafficType.LowTraffic),
                new TollTimePrize(
                   new TimeSpan(6, 30, 0),
                   new TimeSpan(7, 0,0),
-                   (int)TollType.MidTraffic),
+                   (int)TollTrafficType.MidTraffic),
                new TollTimePrize(
                   new TimeSpan(7, 0, 0),
                   new TimeSpan(8, 0,0),
-                   (int)TollType.RushHourTraffic),
+                   (int)TollTrafficType.RushHourTraffic),
                new TollTimePrize(
                   new TimeSpan(8, 0, 0),
                   new TimeSpan(8, 30,0),
-                   (int)TollType.MidTraffic),
+                   (int)TollTrafficType.MidTraffic),
                new TollTimePrize(
                   new TimeSpan(8, 30, 0),
                   new TimeSpan(15, 00,0),
-                   (int)TollType.LowTraffic),
+                   (int)TollTrafficType.LowTraffic),
                new TollTimePrize(
                   new TimeSpan(15, 0, 0),
                   new TimeSpan(15, 30,0),
-                   (int)TollType.MidTraffic),
+                   (int)TollTrafficType.MidTraffic),
                new TollTimePrize(
                   new TimeSpan(15, 30, 0),
                   new TimeSpan(17, 00,0),
-                   (int)TollType.RushHourTraffic),
+                   (int)TollTrafficType.RushHourTraffic),
                new TollTimePrize(
                   new TimeSpan(17, 0, 0),
                   new TimeSpan(18, 0,0),
-                   (int)TollType.MidTraffic),
+                   (int)TollTrafficType.MidTraffic),
                new TollTimePrize(
                   new TimeSpan(18, 0, 0),
                   new TimeSpan(18, 30,0),
-                   (int)TollType.LowTraffic),
+                   (int)TollTrafficType.LowTraffic),
                new TollTimePrize(
                   new TimeSpan(18, 30, 0),
                   new TimeSpan(24, 0, 0),
-                   (int)TollType.Free)
+                   (int)TollTrafficType.Free)
             },
             tollFreeDates: GetTollFreeDates2013(),
             tollFreeVehicleTypes: new int[]

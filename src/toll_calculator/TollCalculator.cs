@@ -1,8 +1,10 @@
-﻿using toll_calculator.models;
-using toll_calculator.enums;
+﻿using toll_calculator.enums;
+using toll_calculator.models;
+using toll_calculator.repository;
+using toll_calculator.value_objects;
 
 namespace toll_calculator;
-public static class TollCalculator
+internal static class TollCalculator
 {
 
     /**
@@ -13,73 +15,55 @@ public static class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public static int GetTollFee(VehicleType vehicle, DateTime[] dates)
+    private static TrafficTollSpecification TrafficTollSpecification { get; }
+
+    static TollCalculator()
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
-        {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
-
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies / 1000 / 60;
-
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
-        }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+        TrafficTollSpecification = TrafficTollSpecificationRepository.GetTrafficTollSpecification();
     }
 
-    //private bool IsTollFreeVehicle(Vehicle vehicle)
-    //{
-    //    if (vehicle == null) return false;
-    //    String vehicleType = vehicle.GetVehicleType();
-    //    return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-    //           vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-    //           vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-    //           vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-    //           vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-    //           vehicleType.Equals(TollFreeVehicles.Military.ToString());
-    //}
-
-    private static int GetTollFee(DateTime date, VehicleType vehicleType)
+    public static int GetTollFee(TollCalculationInput tollCalculationInput)
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-        return TollTimeOfDayCalculator.GetTollFee(date);
+        if (IsTollFreeVehicle(tollCalculationInput.VehicleType) || IsTollFreeDate(tollCalculationInput.Date))
+            return 0;
+
+        var groupedTimeSpans = GroupByMaxValidTollTime(tollCalculationInput.PassingTimes, TrafficTollSpecification.ValidTollTime);
+
+        throw new NotImplementedException();
     }
 
-    private static Boolean IsTollFreeDate(DateTime date)
+    private static bool IsTollFreeVehicle(VehicleType vehicle)
     {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
+        return TrafficTollSpecification.TollFreeVehicleTypes.Select(x => (VehicleType)x).Contains(vehicle);
+    }
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
+    private static bool IsTollFreeDate(DateTime date)
+    {
+        return TrafficTollSpecification.TollFreeDates.Contains(date);
+    }
 
-        if (year == 2013)
+    private static int CalculateHighestFee(IEnumerable<TimeSpan> groupedTimeSpans)
+    {
+        var tollTimePrizes = TrafficTollSpecification.DailyTollTimePrizes;
+        var feeTypes = groupedTimeSpans.Select(x => tollTimePrizes.First(tollTime => tollTime.Start <= x && x < tollTime.End).FeeType).OfType<TollTrafficType>();
+
+    }
+
+    private static IEnumerable<IEnumerable<TimeSpan>> GroupByMaxValidTollTime(IEnumerable<TimeSpan> timeSpans, TimeSpan validTollTime)
+    {
+        var groupList = new List<IEnumerable<TimeSpan>>();
+
+        while (true)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
+            var startTime = timeSpans.First();
+            var group = timeSpans.Where(x => x >= startTime && x < startTime + validTollTime);
+            timeSpans = timeSpans.Where(x => !group.Contains(x));
+            groupList.Add(timeSpans);
+
+            if (!timeSpans.Any())
+                break;
         }
-        return false;
+
+        return groupList;
     }
 }

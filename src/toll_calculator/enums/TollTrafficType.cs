@@ -1,6 +1,6 @@
 ﻿namespace toll_calculator.enums;
 
-internal enum TollType
+internal enum TollTrafficType
 {
     Free = 0,
     LowTraffic = 1,

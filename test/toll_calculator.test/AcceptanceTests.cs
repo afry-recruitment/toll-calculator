@@ -20,9 +20,8 @@ public class AcceptanceTests
     }
 
     [Fact]
-    public void A_vehicle_should_only_be_charged_once_an_hour()
+    public void A_vehicle_should_only_be_charged_once_an_hour_but_the_highest_fee()
     {
-        //In the case of multiple fees in the same hour period, the highest one applies.
         throw new NotImplementedException();
     }
 
