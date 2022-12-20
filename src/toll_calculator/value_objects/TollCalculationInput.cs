@@ -1,0 +1,60 @@
+﻿using toll_calculator.enums;
+using toll_calculator.exceptions;
+
+namespace toll_calculator.value_objects
+{
+    public record TollCalculationInput
+    {
+        public DateTime[] PassingTimes { get; }
+        public VehicleType VehicleType { get; }
+        public TollCalculationInput(IEnumerable<DateTime> passings, int vehicleType)
+        {
+            var dayMessage = EnsureAllDatesIsSameDay(passings);
+            var uniqueDatesMessage = EnsureAllDatesIsUnique(passings);
+            var vehicleMessage = EnsureVehicleExists(vehicleType);
+
+            if(dayMessage != null || vehicleMessage != null || uniqueDatesMessage != null) 
+            {
+                throw new InvalidClientInputException(
+                    $"While instantiating {nameof(TollCalculationInput)}:" +
+                    dayMessage + vehicleMessage + uniqueDatesMessage);
+            }
+
+            PassingTimes = passings.ToArray();
+            VehicleType = (VehicleType)vehicleType;
+        }
+
+        private static string? EnsureAllDatesIsSameDay(IEnumerable<DateTime> passings)
+        {
+            var daysInCalculation = passings.Select(x => x.Day).Distinct();
+            if (daysInCalculation.Count() == 1)
+                return null;
+
+            return $"The dates provided can only be from the same day, found: {string.Join(", ", daysInCalculation)}\n";
+        }
+
+        private static string? EnsureAllDatesIsUnique(IEnumerable<DateTime> passings)
+        {
+            var passingsAsTimeSpan = passings.Select(x => new TimeSpan(x.Hour, x.Minute, x.Second, x.Millisecond));
+            var uniquePassings = passingsAsTimeSpan.Distinct();
+
+            if (uniquePassings.Count() == passings.Count())
+                return null;
+
+            var duplications = passingsAsTimeSpan.GroupBy(x => x)
+              .Where(g => g.Count() > 1)
+              .Select(y => y.Key)
+              .ToList();
+
+            return $"The dates provided contains duplicates: {string.Join(", ", duplications)}\n";
+        }
+
+        private static string? EnsureVehicleExists(int vehicle)
+        {
+            var vehicles = Enum.GetValues(typeof(VehicleType)).OfType<int>();
+            if(vehicles.Contains(vehicle)) return null;
+
+            return "Vehicle type not found.\n";
+        }
+    }
+}
