@@ -1,15 +1,25 @@
 using FluentAssertions;
+using System;
+using System.Text.Json;
 using toll_calculator.enums;
 using toll_calculator.models;
 using toll_calculator.repository;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace toll_calculator.tests;
 
 
 public class TrafficTollRepositoryTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
     //Fees will differ between 8 SEK and 18 SEK, depending on the time of day
+
+    public TrafficTollRepositoryTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
 
     [Fact]
     public void Get_traffic_toll_from_repository_assert_no_exception()
@@ -19,11 +29,11 @@ public class TrafficTollRepositoryTests
     }
 
         [Fact]
-    public void Create_traffic_toll_for_2022()
+    public void Create_traffic_toll_for_2013()
     {
-        var trafficToll2022 = new TrafficTollSpecification(
-            validFrom: new DateTime(2022, 1, 1),
-            validUntil: new DateTime(2022, 12, 31),
+        var trafficToll2013 = new TrafficTollSpecification(
+            validFrom: new DateTime(2013, 1, 1),
+            validUntil: new DateTime(2013, 12, 31),
             dailyTollTimePrizes: new[]
             {
                new TollTimePrize(
@@ -71,7 +81,7 @@ public class TrafficTollRepositoryTests
                   new TimeSpan(24, 0, 0),
                    (int)TollType.Free)
             },
-            tollFreeDates: new DateTime[0],
+            tollFreeDates: GetTollFreeDates2013(),
             tollFreeVehicleTypes: new int[]
             {
                 (int)VehicleType.Motorbike,
@@ -82,6 +92,42 @@ public class TrafficTollRepositoryTests
                 (int)VehicleType.Military
             });
 
-        //File.WriteAllText("traffic_toll_2022.json", JsonSerializer.Serialize(trafficToll2022));
+        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013);
+        File.WriteAllText("traffic_toll_2013.json", trafficToll2022Json);
+        _testOutputHelper.WriteLine(Path.GetFullPath("traffic_toll_2013.json"));
+    }
+
+    private static DateTime[] GetTollFreeDates2013()
+    {
+        var singleDateHolidays = new[]
+            {
+                new DateTime(2023, 1, 1),
+                new DateTime(2023, 3, 28),
+                new DateTime(2023, 3, 29),
+                new DateTime(2023, 4, 1),
+                new DateTime(2023, 4, 20),
+                new DateTime(2023, 5, 1),
+                new DateTime(2023, 5, 8),
+                new DateTime(2023, 5, 9),
+                new DateTime(2023, 6, 5),
+                new DateTime(2023, 6, 6),
+                new DateTime(2023, 6, 21),
+                new DateTime(2023, 11, 1),
+                new DateTime(2023, 12, 24),
+                new DateTime(2023, 12, 25),
+                new DateTime(2023, 12, 26),
+                new DateTime(2023, 12, 31)
+        };
+
+        var year = 2013;
+        var month = 7;
+        var datesOfJuly = Enumerable.Range(1, DateTime.DaysInMonth(year, month))
+                         .Select(day => new DateTime(year, month, day))
+                         .ToArray();
+
+        var tollFreeDates2013 = new List<DateTime>();
+        tollFreeDates2013.AddRange(singleDateHolidays);
+        tollFreeDates2013.AddRange(datesOfJuly);
+        return tollFreeDates2013.OrderBy(day => day).ToArray();
     }
 }

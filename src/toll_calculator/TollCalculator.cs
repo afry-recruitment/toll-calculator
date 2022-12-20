@@ -2,7 +2,7 @@
 //using toll_calculator.enums;
 
 //namespace toll_calculator;
-//public class TollCalculator
+//public static class TollCalculator
 //{
 
 //    /**
@@ -13,7 +13,7 @@
 //     * @return - the total toll fee for that day
 //     */
 
-//    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+//    public static GetTollFee(VehicleType vehicle, DateTime[] dates)
 //    {
 //        DateTime intervalStart = dates[0];
 //        int totalFee = 0;
@@ -23,7 +23,7 @@
 //            int tempFee = GetTollFee(intervalStart, vehicle);
 
 //            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-//            long minutes = diffInMillies/1000/60;
+//            long minutes = diffInMillies / 1000 / 60;
 
 //            if (minutes <= 60)
 //            {
@@ -40,19 +40,19 @@
 //        return totalFee;
 //    }
 
-//    private bool IsTollFreeVehicle(Vehicle vehicle)
-//    {
-//        if (vehicle == null) return false;
-//        String vehicleType = vehicle.GetVehicleType();
-//        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-//               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-//               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-//               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-//               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-//               vehicleType.Equals(TollFreeVehicles.Military.ToString());
-//    }
+//    //private bool IsTollFreeVehicle(Vehicle vehicle)
+//    //{
+//    //    if (vehicle == null) return false;
+//    //    String vehicleType = vehicle.GetVehicleType();
+//    //    return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
+//    //           vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
+//    //           vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
+//    //           vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
+//    //           vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
+//    //           vehicleType.Equals(TollFreeVehicles.Military.ToString());
+//    //}
 
-//    private int GetTollFee(DateTime date, Vehicle vehicle)
+//    private int GetTollFee(DateTime date, VehicleType vehicleType)
 //    {
 //        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 //        return TollTimeOfDayCalculator.GetTollFee(date);

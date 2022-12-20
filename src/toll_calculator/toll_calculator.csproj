@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="repository\traffic_toll_2022.json" />
+    <None Remove="repository\traffic_toll_2013.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="repository\traffic_toll_2022.json">
+    <EmbeddedResource Include="repository\traffic_toll_2013.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

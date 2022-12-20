@@ -1,6 +1,6 @@
 ﻿namespace toll_calculator.enums;
 
-internal enum VehicleType
+public enum VehicleType
 {
     Motorbike = 0,
     Tractor = 1,

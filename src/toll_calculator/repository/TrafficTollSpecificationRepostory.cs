@@ -15,7 +15,7 @@ internal static class TrafficTollSpecificationRepository
     private static TrafficTollSpecification GetTollSpecificationFromAssemblyEmbeddedJsonFile()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = $"{nameof(toll_calculator)}.{nameof(repository)}.traffic_toll_2022.json";
+        var resourceName = $"{nameof(toll_calculator)}.{nameof(repository)}.traffic_toll_2013.json";
 
         Stream stream = null!;
         StreamReader reader = null!;
