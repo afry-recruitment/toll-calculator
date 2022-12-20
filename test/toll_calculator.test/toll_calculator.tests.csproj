@@ -26,4 +26,8 @@
         <ProjectReference Include="..\..\src\toll_calculator\toll_calculator.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="NewFolder\" />
+    </ItemGroup>
+
 </Project>
