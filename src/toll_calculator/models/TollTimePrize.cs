@@ -9,7 +9,7 @@ internal sealed class TollTimePrize
         FeeType = feeType;
     }
 
-    public TimeSpan Start { get; init; }
-    public TimeSpan End { get; init; }
-    public int FeeType { get; init; }
+    public TimeSpan Start { get; }
+    public TimeSpan End { get; }
+    public int FeeType { get; }
 }

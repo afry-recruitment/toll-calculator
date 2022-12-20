@@ -1,5 +1,4 @@
 using FluentAssertions;
-using System;
 using System.Text.Json;
 using toll_calculator.enums;
 using toll_calculator.models;
@@ -25,7 +24,7 @@ public class TrafficTollRepositoryTests
     public void Get_traffic_toll_from_repository_assert_no_exception()
     {
         var trafficTollSpec = TrafficTollSpecificationRepository.GetTrafficTollSpecification();
-        trafficTollSpec.ValidFrom.Year.Should().Be(2022);
+        trafficTollSpec.ValidFrom.Year.Should().Be(2013);
     }
 
         [Fact]
@@ -34,6 +33,7 @@ public class TrafficTollRepositoryTests
         var trafficToll2013 = new TrafficTollSpecification(
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
+            maximumDailyFee: 60,
             dailyTollTimePrizes: new[]
             {
                new TollTimePrize(
@@ -92,9 +92,8 @@ public class TrafficTollRepositoryTests
                 (int)VehicleType.Military
             });
 
-        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013);
-        File.WriteAllText("traffic_toll_2013.json", trafficToll2022Json);
-        _testOutputHelper.WriteLine(Path.GetFullPath("traffic_toll_2013.json"));
+        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions {WriteIndented = true });
+        _testOutputHelper.WriteLine(trafficToll2022Json);
     }
 
     private static DateTime[] GetTollFreeDates2013()

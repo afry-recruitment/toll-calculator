@@ -52,13 +52,13 @@
 //    //           vehicleType.Equals(TollFreeVehicles.Military.ToString());
 //    //}
 
-//    private int GetTollFee(DateTime date, VehicleType vehicleType)
+//    private static int GetTollFee(DateTime date, VehicleType vehicleType)
 //    {
 //        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 //        return TollTimeOfDayCalculator.GetTollFee(date);
 //    }
 
-//    private Boolean IsTollFreeDate(DateTime date)
+//    private static Boolean IsTollFreeDate(DateTime date)
 //    {
 //        int year = date.Year;
 //        int month = date.Month;
