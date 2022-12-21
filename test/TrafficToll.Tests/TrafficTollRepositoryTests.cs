@@ -4,7 +4,7 @@ using TrafficToll.Internals.Enums;
 using Xunit;
 using Xunit.Abstractions;
 using TrafficToll.Internals.DataAccess;
-using TrafficToll.Internals.Models;
+using TrafficToll.Internals.DataAccess.Models;
 
 namespace TrafficToll.tests;
 
@@ -21,13 +21,6 @@ public class TrafficTollRepositoryTests
     }
 
     [Fact]
-    public void Get_traffic_toll_from_repository_assert_no_exception()
-    {
-        var trafficTollSpec = TrafficTollSpecificationRepository.GetTrafficTollSpecification();
-        trafficTollSpec.ValidFrom.Year.Should().Be(2013);
-    }
-
-    [Fact]
     public void Create_traffic_toll_for_2013()
     {
         var trafficToll2013 = new TrafficTollSpecification(
@@ -37,9 +30,11 @@ public class TrafficTollRepositoryTests
             priceMapping: new Dictionary<int, int>()
             {
                 { 0, 0 },
-                { 1,  }
+                { 1, 8 },
+                { 2, 12 },
+                { 3, 18 }
             },
-            validTollTime: new TimeSpan(0,1,0),
+            validTollTime: new TimeSpan(0, 1, 0),
             dailyTollTimePrizes: new[]
             {
                new TollTimePeriod(
@@ -98,7 +93,7 @@ public class TrafficTollRepositoryTests
                 (int)VehicleType.Military
             });
 
-        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions {WriteIndented = true });
+        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions { WriteIndented = true });
         _testOutputHelper.WriteLine(trafficToll2022Json);
     }
 

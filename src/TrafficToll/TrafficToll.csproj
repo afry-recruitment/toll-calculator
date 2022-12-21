@@ -20,6 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Internals\DataAccess\FileDb\traffic_toll_2013.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Internals\DataAccess\FileDb\traffic_toll_2013.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="C:\Users\axels\MS-Code\toll-calculator\src\TrafficToll\.editorconfig" />
   </ItemGroup>
 

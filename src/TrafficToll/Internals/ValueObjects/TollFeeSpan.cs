@@ -2,15 +2,15 @@
 {
     internal sealed record TollFeeSpan
     {
-        public TollFeeSpan(TimeSpan start, TimeSpan end, int tollTrafficPrize)
+        public TollFeeSpan(TimeSpan start, TimeSpan end, int tollPrice)
         {
             Start = start;
             End = end;
-            TollTrafficPrize = tollTrafficPrize;
+            TollPrice = tollPrice;
         }
 
         public TimeSpan Start { get; }
         public TimeSpan End { get; }
-        public int TollTrafficPrize { get; }
+        public int TollPrice { get; }
     }
 }

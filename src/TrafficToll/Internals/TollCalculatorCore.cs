@@ -1,57 +1,45 @@
-﻿using TrafficToll.Internals.DataAccess;
-using TrafficToll.Internals.Enums;
-using TrafficToll.Internals.Models;
-using TrafficToll.Internals.ValueObjects;
+﻿using TrafficToll.Internals.ValueObjects;
 
 namespace TrafficToll.Internals;
-internal static class TollCalculatorCore
+internal class TollCalculatorCore
 {
+    private readonly int _maximumDailyFee;
+    private readonly TimeSpan _validTollTime;
+    private readonly IEnumerable<TollFeeSpan> _tollFeeSpans;
 
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
-    private static TrafficTollSpecification TrafficTollSpecification { get; }
-
-    static TollCalculatorCore()
+    public TollCalculatorCore(TollCalculationParameters tollCalculationParameters)
     {
-        TrafficTollSpecification = TrafficTollSpecificationRepository.GetTrafficTollSpecification();
+        _maximumDailyFee = tollCalculationParameters.MaximumDailyFee;
+        _validTollTime = tollCalculationParameters.ValidTollTime;
+        _tollFeeSpans = tollCalculationParameters.TollFeeSpans;
     }
 
-    public static int GetTollFee(TollCalculationInput tollCalculationInput, TollCalculationArguments tollCalculationArguments)
+    public int CalculateTollFee(IEnumerable<DateTime> passings)
     {
-        if (IsTollFreeVehicle(tollCalculationInput.VehicleType) || IsTollFreeDate(tollCalculationInput.Date))
-            return 0;
-
-        var groupedTimeSpans = GroupByMaxValidTollTime(tollCalculationInput.PassingTimes, TrafficTollSpecification.ValidTollTime);
-
-        throw new NotImplementedException();
+        var groupedPassings = GroupByValidTollTime(passings, _validTollTime);
+        int totalSum = CalculateSum(groupedPassings);
+        return totalSum < _maximumDailyFee ? totalSum : _maximumDailyFee;
     }
 
-    private static bool IsTollFreeVehicle(VehicleType vehicle)
+    private int CalculateSum(IEnumerable<IEnumerable<DateTime>> groupedPassings)
     {
-        return TrafficTollSpecification.TollFreeVehicleTypes.Select(x => (VehicleType)x).Contains(vehicle);
+        return groupedPassings.Select(GetHighestPriceInGroup).Sum();
     }
 
-    private static bool IsTollFreeDate(DateTime date)
+    private int GetHighestPriceInGroup(IEnumerable<DateTime> passings)
     {
-        return TrafficTollSpecification.TollFreeDates.Contains(date);
+        return passings.Select(x => ConvertDateTimeToPrice(x, _tollFeeSpans)).Max();
     }
 
-    private static int CalculateHighestFee(IEnumerable<TimeSpan> groupedTimeSpans)
+    internal static int ConvertDateTimeToPrice(DateTime passing, IEnumerable<TollFeeSpan> tollFeeSpans)
     {
-        var tollTimePrizes = TrafficTollSpecification.DailyTollTimePrizes;
-        var feeTypes = groupedTimeSpans.Select(x => tollTimePrizes.First(tollTime => tollTime.Start <= x && x < tollTime.End).TollTrafficType).OfType<TollTrafficType>();
-        throw new NotImplementedException();
+        var span = new TimeSpan(passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
+        return tollFeeSpans.Single(x => x.Start <= span && span < x.End).TollPrice;
     }
 
-    private static IEnumerable<IEnumerable<TimeSpan>> GroupByMaxValidTollTime(IEnumerable<TimeSpan> timeSpans, TimeSpan validTollTime)
+    internal static IEnumerable<IEnumerable<DateTime>> GroupByValidTollTime(IEnumerable<DateTime> timeSpans, TimeSpan validTollTime)
     {
-        var groupList = new List<IEnumerable<TimeSpan>>();
+        var groupList = new List<IEnumerable<DateTime>>();
 
         while (true)
         {

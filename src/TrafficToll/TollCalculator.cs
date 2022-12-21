@@ -1,21 +1,27 @@
 ﻿using TrafficToll.Internals;
 using TrafficToll.Internals.DataAccess;
+using TrafficToll.Internals.Enums;
 using TrafficToll.Internals.Validators;
 
 namespace TrafficToll
 {
     public class TollCalculator
     {
-        public static int GetTollFee(IEnumerable<DateTime> passings, int vehicleType)
+        private TollCalculatorCore? __tollCalculatorCore;
+        private TollCalculatorCore TollCalculatorCore => 
+            __tollCalculatorCore ??= new TollCalculatorCore(TrafficTollDataManager.GetTollCalculationParameters());
+        public int GetTollFee(IEnumerable<DateTime> passings, int vehicleType)
         {
             ValidatorCalculationArguments.EnsureArgumentsIsValid(passings, vehicleType);
+            if (VehicleIsNotTollable(vehicleType))
+                return 0;
 
-            var tollCalculationInput = TrafficTollFactory.CreateTollCalculationInput(passings, vehicleType);
-            var trafficTollSpecification = TrafficTollSpecificationRepository.GetDailyTrafficTollSpecification();
-            var tollCalculationArguments = TrafficTollFactory.CreateTollCalculationArguments(trafficTollSpecification);
+            return TollCalculatorCore.CalculateTollFee(passings);
+        }
 
-            throw new NotImplementedException();
-            //return TollCalculatorCore.GetTollFee(tollCalculationInput, tollCalculationArguments);
+        private bool VehicleIsNotTollable(int vehicleType)
+        {
+            return TrafficTollDataManager.GetTollFreeVehicles().Contains((VehicleType)vehicleType);
         }
     }
 }

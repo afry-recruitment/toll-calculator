@@ -1,3 +1,5 @@
+using TrafficToll.Internals.DataAccess;
+using TrafficToll.Internals;
 using Xunit;
 
 namespace TrafficToll.tests;
@@ -10,7 +12,7 @@ public class AcceptanceTests
     [Fact]
     public void Rush_hour_traffic_will_render_highest_fee()
     {
-        throw new NotImplementedException();
+        var coreCalculator = new TollCalculatorCore(TrafficTollDataManager.GetTollCalculationParameters());
     }
 
     [Fact]

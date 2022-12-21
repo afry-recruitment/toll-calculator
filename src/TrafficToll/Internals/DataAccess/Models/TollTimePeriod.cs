@@ -1,4 +1,4 @@
-﻿namespace TrafficToll.Internals.Models;
+﻿namespace TrafficToll.Internals.DataAccess.Models;
 
 internal sealed class TollTimePeriod
 {
