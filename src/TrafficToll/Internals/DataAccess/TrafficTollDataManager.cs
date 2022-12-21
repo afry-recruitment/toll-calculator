@@ -34,7 +34,7 @@ internal static class TrafficTollDataManager
     {
         var jsonDbName = "traffic_toll_2013.json";
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = $"{nameof(TrafficToll)}.{nameof(Internals)}.{nameof(DataAccess)}.{jsonDbName}";
+        var resourceName = $"{nameof(TrafficToll)}.{nameof(Internals)}.{nameof(DataAccess)}.FileDb.{jsonDbName}";
 
         Stream? stream = null;
         StreamReader? reader = null;

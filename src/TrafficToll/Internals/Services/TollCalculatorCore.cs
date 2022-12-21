@@ -1,7 +1,7 @@
 ﻿using TrafficToll.Internals.ValueObjects;
 
-namespace TrafficToll.Internals;
-internal class TollCalculatorCore
+namespace TrafficToll.Internals.Services;
+internal sealed class TollCalculatorCore
 {
     private readonly int _maximumDailyFee;
     private readonly TimeSpan _validTollTime;

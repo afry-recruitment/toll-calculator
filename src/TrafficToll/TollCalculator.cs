@@ -1,6 +1,6 @@
-﻿using TrafficToll.Internals;
-using TrafficToll.Internals.DataAccess;
+﻿using TrafficToll.Internals.DataAccess;
 using TrafficToll.Internals.Enums;
+using TrafficToll.Internals.Services;
 using TrafficToll.Internals.Validators;
 
 namespace TrafficToll
@@ -13,9 +13,7 @@ namespace TrafficToll
         public int GetTollFee(IEnumerable<DateTime> passings, int vehicleType)
         {
             ValidatorCalculationArguments.EnsureArgumentsIsValid(passings, vehicleType);
-            if (VehicleIsNotTollable(vehicleType))
-                return 0;
-
+            if (VehicleIsNotTollable(vehicleType)) return 0;
             return TollCalculatorCore.CalculateTollFee(passings);
         }
 

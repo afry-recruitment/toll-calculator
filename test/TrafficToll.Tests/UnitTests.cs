@@ -1,5 +1,5 @@
 using FluentAssertions;
-using TrafficToll.Internals;
+using TrafficToll.Internals.Services;
 using Xunit;
 
 namespace toll_calculator.tests;
