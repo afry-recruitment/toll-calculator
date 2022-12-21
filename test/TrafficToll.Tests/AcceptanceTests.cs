@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace toll_calculator.tests;
+namespace TrafficToll.tests;
 
 
 public class AcceptanceTests

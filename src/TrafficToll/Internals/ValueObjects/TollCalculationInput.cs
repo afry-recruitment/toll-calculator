@@ -20,7 +20,7 @@ namespace TrafficToll.Internals.ValueObjects
                 vehicleMessage != null ||
                 uniqueDatesMessage != null)
             {
-                throw new InvalidClientInputException(
+                throw new InvalidCalculationArgumentsException(
                     $"While instantiating {nameof(TollCalculationInput)}:" +
                    passingsIsEmptyMessage + dayMessage + vehicleMessage + uniqueDatesMessage);
             }

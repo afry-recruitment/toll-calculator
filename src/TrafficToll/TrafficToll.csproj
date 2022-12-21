@@ -15,4 +15,12 @@
     <None Remove="services\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\axels\MS-Code\toll-calculator\src\TrafficToll\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\axels\MS-Code\toll-calculator\src\TrafficToll\.editorconfig" />
+  </ItemGroup>
+
 </Project>

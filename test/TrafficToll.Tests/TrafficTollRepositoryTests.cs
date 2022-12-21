@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 using TrafficToll.Internals.DataAccess;
 using TrafficToll.Internals.Models;
 
-namespace toll_calculator.tests;
+namespace TrafficToll.tests;
 
 
 public class TrafficTollRepositoryTests

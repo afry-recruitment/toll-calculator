@@ -1,12 +1,15 @@
 ﻿using TrafficToll.Internals;
 using TrafficToll.Internals.DataAccess;
+using TrafficToll.Internals.Validators;
 
-namespace toll_calculator
+namespace TrafficToll
 {
     public class TollCalculator
     {
         public static int GetTollFee(IEnumerable<DateTime> passings, int vehicleType)
         {
+            ValidatorCalculationArguments.EnsureArgumentsIsValid(passings, vehicleType);
+
             var tollCalculationInput = TrafficTollFactory.CreateTollCalculationInput(passings, vehicleType);
             var trafficTollSpecification = TrafficTollSpecificationRepository.GetDailyTrafficTollSpecification();
             var tollCalculationArguments = TrafficTollFactory.CreateTollCalculationArguments(trafficTollSpecification);
