@@ -1,21 +1,28 @@
 using System.Text.Json;
-using toll_calculator.models;
 using System.Reflection;
-using toll_calculator.exceptions;
+using TrafficToll.Internals.Models;
+using TrafficToll.Internals.Exceptions;
 
-namespace toll_calculator.repository;
+namespace TrafficToll.Internals.DataAccess;
 
 internal static class TrafficTollSpecificationRepository
 {
-    public static TrafficTollSpecification GetTrafficTollSpecification()
+    private static TrafficTollSpecification? __trafficTollSpecification;
+    private static TrafficTollSpecification TrafficTollSpecification => __trafficTollSpecification ??= GetTollSpecificationFromAssemblyEmbeddedJsonFile();
+    public static TrafficTollSpecification GetDailyTrafficTollSpecification()
     {
-        return GetTollSpecificationFromAssemblyEmbeddedJsonFile();
+        return TrafficTollSpecification;
+    }
+
+    internal static TrafficTollSpecification? GetTrafficTollSpecification()
+    {
+        throw new NotImplementedException();
     }
 
     private static TrafficTollSpecification GetTollSpecificationFromAssemblyEmbeddedJsonFile()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = $"{nameof(toll_calculator)}.{nameof(repository)}.traffic_toll_2013.json";
+        var resourceName = $"{nameof(TrafficToll)}.{nameof(Internals)}.{nameof(DataAccess)}.traffic_toll_2013.json";
 
         Stream stream = null!;
         StreamReader reader = null!;
@@ -34,6 +41,6 @@ internal static class TrafficTollSpecificationRepository
         {
             reader?.Dispose();
             stream?.Dispose();
-        }       
+        }
     }
 }

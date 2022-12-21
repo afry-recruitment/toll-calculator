@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace toll_calculator.exceptions;
+namespace TrafficToll.Internals.Exceptions;
 
 [Serializable]
 [ExcludeFromCodeCoverage]

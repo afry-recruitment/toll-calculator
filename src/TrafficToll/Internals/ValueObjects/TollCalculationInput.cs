@@ -1,7 +1,7 @@
-﻿using toll_calculator.enums;
-using toll_calculator.exceptions;
+﻿using TrafficToll.Internals.Enums;
+using TrafficToll.Internals.Exceptions;
 
-namespace toll_calculator.value_objects
+namespace TrafficToll.Internals.ValueObjects
 {
     public record TollCalculationInput
     {
@@ -15,10 +15,10 @@ namespace toll_calculator.value_objects
             var uniqueDatesMessage = EnsureAllDatesIsUnique(passings);
             var vehicleMessage = EnsureVehicleExists(vehicleType);
 
-            if(passingsIsEmptyMessage != null ||
-                dayMessage != null || 
-                vehicleMessage != null || 
-                uniqueDatesMessage != null) 
+            if (passingsIsEmptyMessage != null ||
+                dayMessage != null ||
+                vehicleMessage != null ||
+                uniqueDatesMessage != null)
             {
                 throw new InvalidClientInputException(
                     $"While instantiating {nameof(TollCalculationInput)}:" +
@@ -58,7 +58,7 @@ namespace toll_calculator.value_objects
         private static string? EnsureVehicleExists(int vehicle)
         {
             var vehicles = Enum.GetValues(typeof(VehicleType)).OfType<int>();
-            if(vehicles.Contains(vehicle)) return null;
+            if (vehicles.Contains(vehicle)) return null;
 
             return "Vehicle type not found.\n";
         }

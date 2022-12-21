@@ -1,10 +1,10 @@
-﻿using toll_calculator.enums;
-using toll_calculator.models;
-using toll_calculator.repository;
-using toll_calculator.value_objects;
+﻿using TrafficToll.Internals.DataAccess;
+using TrafficToll.Internals.Enums;
+using TrafficToll.Internals.Models;
+using TrafficToll.Internals.ValueObjects;
 
-namespace toll_calculator;
-internal static class TollCalculator
+namespace TrafficToll.Internals;
+internal static class TollCalculatorCore
 {
 
     /**
@@ -17,12 +17,12 @@ internal static class TollCalculator
 
     private static TrafficTollSpecification TrafficTollSpecification { get; }
 
-    static TollCalculator()
+    static TollCalculatorCore()
     {
         TrafficTollSpecification = TrafficTollSpecificationRepository.GetTrafficTollSpecification();
     }
 
-    public static int GetTollFee(TollCalculationInput tollCalculationInput)
+    public static int GetTollFee(TollCalculationInput tollCalculationInput, TollCalculationArguments tollCalculationArguments)
     {
         if (IsTollFreeVehicle(tollCalculationInput.VehicleType) || IsTollFreeDate(tollCalculationInput.Date))
             return 0;
@@ -45,8 +45,8 @@ internal static class TollCalculator
     private static int CalculateHighestFee(IEnumerable<TimeSpan> groupedTimeSpans)
     {
         var tollTimePrizes = TrafficTollSpecification.DailyTollTimePrizes;
-        var feeTypes = groupedTimeSpans.Select(x => tollTimePrizes.First(tollTime => tollTime.Start <= x && x < tollTime.End).FeeType).OfType<TollTrafficType>();
-
+        var feeTypes = groupedTimeSpans.Select(x => tollTimePrizes.First(tollTime => tollTime.Start <= x && x < tollTime.End).TollTrafficType).OfType<TollTrafficType>();
+        throw new NotImplementedException();
     }
 
     private static IEnumerable<IEnumerable<TimeSpan>> GroupByMaxValidTollTime(IEnumerable<TimeSpan> timeSpans, TimeSpan validTollTime)

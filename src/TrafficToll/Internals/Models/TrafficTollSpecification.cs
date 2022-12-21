@@ -1,15 +1,15 @@
-﻿namespace toll_calculator.models;
+﻿namespace TrafficToll.Internals.Models;
 
 internal sealed class TrafficTollSpecification
 {
     public TrafficTollSpecification(
-        DateTime validFrom, 
-        DateTime validUntil, 
+        DateTime validFrom,
+        DateTime validUntil,
         int maximumDailyFee,
-        KeyValuePair<int, int>[] priceMapping,
-        TimeSpan validTollTime, 
-        TollTimePrize[] dailyTollTimePrizes, 
-        DateTime[] tollFreeDates, 
+        Dictionary<int, int> priceMapping,
+        TimeSpan validTollTime,
+        TollTimePeriod[] dailyTollTimePrizes,
+        DateTime[] tollFreeDates,
         int[] tollFreeVehicleTypes)
     {
         ValidFrom = validFrom;
@@ -26,8 +26,8 @@ internal sealed class TrafficTollSpecification
     public DateTime ValidUntil { get; }
     public int MaximumDailyFee { get; }
     public TimeSpan ValidTollTime { get; }
-    public KeyValuePair<int, int>[] PriceMapping { get; }
-    public TollTimePrize[] DailyTollTimePrizes { get; }
+    public Dictionary<int, int> PriceMapping { get; }
+    public TollTimePeriod[] DailyTollTimePrizes { get; }
     public DateTime[] TollFreeDates { get; }
     public int[] TollFreeVehicleTypes { get; }
 }

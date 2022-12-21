@@ -1,4 +1,4 @@
-﻿namespace toll_calculator.enums;
+﻿namespace TrafficToll.Internals.Enums;
 
 public enum VehicleType
 {

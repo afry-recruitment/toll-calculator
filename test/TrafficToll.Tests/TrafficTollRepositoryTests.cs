@@ -1,10 +1,10 @@
 using FluentAssertions;
 using System.Text.Json;
-using toll_calculator.enums;
-using toll_calculator.models;
-using toll_calculator.repository;
+using TrafficToll.Internals.Enums;
 using Xunit;
 using Xunit.Abstractions;
+using TrafficToll.Internals.DataAccess;
+using TrafficToll.Internals.Models;
 
 namespace toll_calculator.tests;
 
@@ -34,54 +34,55 @@ public class TrafficTollRepositoryTests
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
             maximumDailyFee: 60,
-            priceMapping: new KeyValuePair<int, int>
+            priceMapping: new Dictionary<int, int>()
             {
-                (0,0)
+                { 0, 0 },
+                { 1,  }
             },
             validTollTime: new TimeSpan(0,1,0),
             dailyTollTimePrizes: new[]
             {
-               new TollTimePrize(
+               new TollTimePeriod(
                    new TimeSpan(0, 0, 0),
                    new TimeSpan(6, 0, 0),
                    (int)TollTrafficType.Free),
-               new TollTimePrize(
+               new TollTimePeriod(
                    new TimeSpan(6, 0, 0),
                    new TimeSpan(6, 30,0),
                    (int)TollTrafficType.LowTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(6, 30, 0),
                   new TimeSpan(7, 0,0),
                    (int)TollTrafficType.MidTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(7, 0, 0),
                   new TimeSpan(8, 0,0),
                    (int)TollTrafficType.RushHourTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(8, 0, 0),
                   new TimeSpan(8, 30,0),
                    (int)TollTrafficType.MidTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(8, 30, 0),
                   new TimeSpan(15, 00,0),
                    (int)TollTrafficType.LowTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(15, 0, 0),
                   new TimeSpan(15, 30,0),
                    (int)TollTrafficType.MidTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(15, 30, 0),
                   new TimeSpan(17, 00,0),
                    (int)TollTrafficType.RushHourTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(17, 0, 0),
                   new TimeSpan(18, 0,0),
                    (int)TollTrafficType.MidTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(18, 0, 0),
                   new TimeSpan(18, 30,0),
                    (int)TollTrafficType.LowTraffic),
-               new TollTimePrize(
+               new TollTimePeriod(
                   new TimeSpan(18, 30, 0),
                   new TimeSpan(24, 0, 0),
                    (int)TollTrafficType.Free)
