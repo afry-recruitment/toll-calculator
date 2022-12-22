@@ -11,18 +11,10 @@ internal static class TrafficTollDataManager
 {
     private static TrafficTollSpecification? __trafficTollSpecification;
     private static TrafficTollSpecification TrafficTollSpecification => __trafficTollSpecification ??= GetTollSpecificationFromAssemblyEmbeddedJsonFile();
+    
     public static TollCalculationParameters GetTollCalculationParameters()
     {
-        return CreateTollCalculationArguments(
-            TrafficTollSpecification.MaximumDailyFee,
-            TrafficTollSpecification.ValidTollTime,
-            TrafficTollSpecification.DailyTollTimePrizes,
-            TrafficTollSpecification.PriceMapping);
-    }
-
-    public static IEnumerable<DateTime> GetTollFreeDates()
-    {
-        return TrafficTollSpecification.TollFreeDates;
+        return CreateTollCalculationParameters();
     }
 
     public static IEnumerable<VehicleType> GetTollFreeVehicles()
@@ -60,16 +52,13 @@ internal static class TrafficTollDataManager
         }
     }
 
-    private static TollCalculationParameters CreateTollCalculationArguments(
-        int maximumDailyFee, 
-        TimeSpan validTollTime, 
-        IEnumerable<TollTimePeriod> dailyTollTimePrizes, 
-        Dictionary<int, int> priceMapping)
+    private static TollCalculationParameters CreateTollCalculationParameters()
     {
-        EnsureTrafficTypesExist(priceMapping);
-        var tollFeeSpans = CreateTollFeeSpans(dailyTollTimePrizes, priceMapping);
+        EnsureTrafficTypesExist(TrafficTollSpecification.PriceMapping);
+        var tollFeeSpans = CreateTollFeeSpans(TrafficTollSpecification.DailyTollTimePrizes, TrafficTollSpecification.PriceMapping);
+        var tollFreeDateTuples = TrafficTollSpecification.TollFreeDates.Select(x => (x.Year, x.Month, x.Day));
 
-        return new TollCalculationParameters(maximumDailyFee, validTollTime, tollFeeSpans);
+        return new TollCalculationParameters(TrafficTollSpecification.MaximumDailyFee, TrafficTollSpecification.ValidTollTime, tollFeeSpans, tollFreeDateTuples);
     }
 
     private static IEnumerable<TollFeeSpan> CreateTollFeeSpans(IEnumerable<TollTimePeriod> dailyTollTimePrizes, Dictionary<int, int> trafficTypePrizeDictionary)

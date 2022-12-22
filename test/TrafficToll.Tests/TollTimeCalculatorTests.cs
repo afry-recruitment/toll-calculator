@@ -125,7 +125,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(1);
+        TollPassingsJoin.GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(1);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(3);
+        TollPassingsJoin.GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(3);
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(1);
+        TollPassingsJoin.GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(1);
     }
 
     [Fact]
@@ -177,7 +177,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(6);
+        TollPassingsJoin.GroupPassingsByValidTollTime(dateTimes, new TimeSpan(1, 0, 0)).Should().HaveCount(6);
     }
 
     [Fact]
@@ -191,7 +191,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(2);
+        TollPassingsJoin.GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(2);
     }
 
     [Fact]
@@ -205,7 +205,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(1);
+        TollPassingsJoin.GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(1);
     }
 
     [Fact]
@@ -219,7 +219,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act & Assert
-        TollTimeCalculator.__GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(2);
+        TollPassingsJoin.GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(2);
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class TollTimeCalculatorTests
         };
 
         // Act
-        var groupedPassings = TollTimeCalculator.GetDateGroupsWithGroupedTollPassings(dateTimes, new TimeSpan(1, 0, 0));
+        var groupedPassings = TollPassingsJoin.GetDateGroupsWithGroupedTollPassings(dateTimes, new TimeSpan(1, 0, 0));
 
         var output = JsonSerializer.Serialize(groupedPassings, new JsonSerializerOptions() { WriteIndented = true });
         _testOutputHelper.WriteLine(output);

@@ -1,6 +1,4 @@
 using FluentAssertions;
-using TrafficToll.Internals.DataAccess;
-using TrafficToll.Internals.Services;
 using Xunit;
 
 namespace TrafficToll.tests;
