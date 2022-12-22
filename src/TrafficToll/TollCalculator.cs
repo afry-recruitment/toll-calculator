@@ -19,7 +19,8 @@ namespace TrafficToll
 
         private bool VehicleIsNotTollable(int vehicleType)
         {
-            return TrafficTollDataManager.GetTollFreeVehicles().Contains((VehicleType)vehicleType);
+            var tollFreeVehicles = TrafficTollDataManager.GetTollFreeVehicles();
+            return tollFreeVehicles.Contains((VehicleType)vehicleType);
         }
     }
 }

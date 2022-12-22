@@ -8,5 +8,5 @@ public enum VehicleType
     Diplomat = 3,
     Foreign = 4,
     Military = 5,
-    Car = 6,
+    Other = 6,
 }

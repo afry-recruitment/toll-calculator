@@ -16,8 +16,8 @@ internal sealed class TollCalculatorCore
 
     public int CalculateTollFee(IEnumerable<DateTime> passings)
     {
-        var groupedPassings = GroupByValidTollTime(passings, _validTollTime);
-        int totalSum = CalculateSum(groupedPassings);
+        var groupedPassings = TollTimeCalculator.GroupTollPassings(passings, _validTollTime);
+        var totalSum = groupedPassings.Select(x => CalculateSum(x)).Sum();
         return totalSum < _maximumDailyFee ? totalSum : _maximumDailyFee;
     }
 
@@ -28,30 +28,13 @@ internal sealed class TollCalculatorCore
 
     private int GetHighestPriceInGroup(IEnumerable<DateTime> passings)
     {
-        return passings.Select(x => ConvertDateTimeToPrice(x, _tollFeeSpans)).Max();
+        var prices = passings.Select(x => ConvertDateTimeToPrice(x, _tollFeeSpans));
+        return prices.Max();
     }
 
     internal static int ConvertDateTimeToPrice(DateTime passing, IEnumerable<TollFeeSpan> tollFeeSpans)
     {
-        var span = new TimeSpan(passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
+        var span = new TimeSpan(0, passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
         return tollFeeSpans.Single(x => x.Start <= span && span < x.End).TollPrice;
-    }
-
-    internal static IEnumerable<IEnumerable<DateTime>> GroupByValidTollTime(IEnumerable<DateTime> timeSpans, TimeSpan validTollTime)
-    {
-        var groupList = new List<IEnumerable<DateTime>>();
-
-        while (true)
-        {
-            var startTime = timeSpans.First();
-            var group = timeSpans.Where(x => x >= startTime && x < startTime + validTollTime);
-            timeSpans = timeSpans.Where(x => !group.Contains(x));
-            groupList.Add(timeSpans);
-
-            if (!timeSpans.Any())
-                break;
-        }
-
-        return groupList;
     }
 }

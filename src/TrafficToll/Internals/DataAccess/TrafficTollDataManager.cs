@@ -27,7 +27,7 @@ internal static class TrafficTollDataManager
 
     public static IEnumerable<VehicleType> GetTollFreeVehicles()
     {
-        return TrafficTollSpecification.TollFreeVehicleTypes.OfType<VehicleType>();
+        return TrafficTollSpecification.TollFreeVehicleTypes.Select(x => (VehicleType)x);
     }
 
     private static TrafficTollSpecification GetTollSpecificationFromAssemblyEmbeddedJsonFile()
@@ -43,7 +43,7 @@ internal static class TrafficTollDataManager
             stream = assembly.GetManifestResourceStream(resourceName);
 
             if(stream == null)
-                throw new Exception("Failed creating stream from compiled resource: " + resourceName);
+                throw new Exception("Failed creating resource stream from compiled resource: " + resourceName);
 
             reader = new StreamReader(stream);
             var trafficTollJson = reader.ReadToEnd();

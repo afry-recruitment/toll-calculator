@@ -9,21 +9,30 @@ using TrafficToll.Internals.DataAccess.Models;
 namespace TrafficToll.tests;
 
 
-public class TrafficTollRepositoryTests
+public class TrafficTollDataAccessTests
 {
     private readonly ITestOutputHelper _testOutputHelper;
 
-    //Fees will differ between 8 SEK and 18 SEK, depending on the time of day
-
-    public TrafficTollRepositoryTests(ITestOutputHelper testOutputHelper)
+    public TrafficTollDataAccessTests(ITestOutputHelper testOutputHelper)
     {
         _testOutputHelper = testOutputHelper;
     }
 
     [Fact]
-    public void Create_traffic_toll_for_2013()
+    public void Serialize_traffic_toll_to_json()
     {
-        var trafficToll2013 = new TrafficTollSpecification(
+        //Arrange
+        var trafficToll2013 = CreateTrafficTollSpecification();
+
+        //Act & Assert
+        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions { WriteIndented = true });
+        
+        _testOutputHelper.WriteLine(trafficToll2022Json);
+    }
+
+    private static TrafficTollSpecification CreateTrafficTollSpecification()
+    {
+        return new TrafficTollSpecification(
             validFrom: new DateTime(2013, 1, 1),
             validUntil: new DateTime(2013, 12, 31),
             maximumDailyFee: 60,
@@ -92,9 +101,6 @@ public class TrafficTollRepositoryTests
                 (int)VehicleType.Foreign,
                 (int)VehicleType.Military
             });
-
-        var trafficToll2022Json = JsonSerializer.Serialize(trafficToll2013, new JsonSerializerOptions { WriteIndented = true });
-        _testOutputHelper.WriteLine(trafficToll2022Json);
     }
 
     private static DateTime[] GetTollFreeDates2013()

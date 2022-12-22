@@ -24,9 +24,9 @@ namespace TrafficToll.Internals.Validators
 
         private static string ValidateVehicleType(int vehicleType)
         {
-            var existingVehicles = Enum.GetValues<VehicleType>().OfType<int>();
+            var existingVehicles = Enum.GetValues<VehicleType>().Select(x => (int)x);
             if (!existingVehicles.Contains(vehicleType))
-                return $"Traffic type integer: {vehicleType} does not exist.\n";
+                return $"Vehicle type integer: {vehicleType} does not exist.\n";
 
             return string.Empty;
         }
