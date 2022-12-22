@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System;
 using System.Text.Json;
 using TrafficToll.Internals.Services;
 using Xunit;
@@ -248,5 +249,24 @@ public class TollTimeCalculatorTests
         groupedPassings.ToArray()[0].ToArray()[0].Should().HaveCount(2);
         groupedPassings.ToArray()[0].ToArray()[1].ToArray()[0].Should().Be(new DateTime(2022, 1, 1, 14, 0, 0));
         groupedPassings.ToArray()[0].ToArray()[0].Should().Contain(new DateTime(2022, 1, 1, 12, 0, 0));
+    }
+
+    [Fact]
+    public void Group_by_60_minutes()
+    {
+        // Arrange
+        var date0 = new DateTime(2022, 1, 1, 12, 0, 0);
+        var date1 = new DateTime(2022, 1, 1, 12, 59, 0);
+
+        var addedDate = date0 + new TimeSpan(0, 59, 0);
+        addedDate.Should().Be(date1);
+
+        var maxDate = date0 + new TimeSpan(1, 0, 0);
+        (date1 < maxDate).Should().BeTrue();
+        (date1 > date0).Should().BeTrue();
+
+        //var startTime = timeSpans.First();
+        //var group = timeSpans.Where(x => x >= startTime && x < startTime + validTollTime);
+        //groupList.Add(group);
     }
 }

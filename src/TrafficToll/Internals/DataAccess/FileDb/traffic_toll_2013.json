@@ -2,7 +2,7 @@
   "ValidFrom": "2013-01-01T00:00:00",
   "ValidUntil": "2013-12-31T00:00:00",
   "MaximumDailyFee": 60,
-  "ValidTollTime": "00:01:00",
+  "ValidTollTime": "01:00:00",
   "PriceMapping": {
     "0": 0,
     "1": 8,

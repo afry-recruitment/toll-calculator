@@ -43,7 +43,7 @@ public class TrafficTollDataAccessTests
                 { 2, 12 },
                 { 3, 18 }
             },
-            validTollTime: new TimeSpan(0, 1, 0),
+            validTollTime: new TimeSpan(1, 0, 0),
             dailyTollTimePrizes: new[]
             {
                new TollTimePeriod(

@@ -44,26 +44,63 @@ public class AcceptanceTests
     [Fact]
     public void Weekends_are_fee_free()
     {
+        // Arrange
+        var saturday = new DateTime(2013, 1, 5, 8, 0, 0);
+        var sunday = new DateTime(2013, 1, 6, 8, 0, 0);
 
+        var passings = new DateTime[]
+        {
+            saturday, sunday
+        };
+
+        var tollCalculator = new TollCalculator();
+
+        // Act & Assert
+        tollCalculator.GetTollFee(passings, 6).Should().Be(0);
     }
 
     [Fact]
     public void The_maximum_fee_for_one_day_is_60_SEK()
     {
-        throw new NotImplementedException();
+        // Arrange
+
+        var passings = new List<DateTime>();
+        for (int min = 0; min < 59; min++)
+        {
+            passings.Add(new DateTime(2013, 1, 4, 7, min, 0));
+        }
+
+        var tollCalculator = new TollCalculator();
+
+        // Act & Assert
+        tollCalculator.GetTollFee(passings, 6).Should().Be(60);
     }
 
     [Fact]
     public void Rush_hour_traffic_will_render_highest_fee()
     {
-        throw new NotImplementedException();
+        var passings = new DateTime[]{
+            new DateTime(2013, 1, 4, 7, 30, 0),
+            new DateTime(2013, 1, 4, 16, 30, 0),
+        };
+
+        var tollCalculator = new TollCalculator();
+
+        // Act & Assert
+        tollCalculator.GetTollFee(passings, 6).Should().Be(36);
     }
 
 
     [Fact]
     public void A_vehicle_should_only_be_charged_once_an_hour_but_the_highest_fee()
     {
-        throw new NotImplementedException();
+        var midTraffic = new DateTime(2013, 1, 4, 6, 30, 0);
+        var rushHourTraffic = new DateTime(2013, 1, 4, 7, 1, 59);
+
+        var tollCalculator = new TollCalculator();
+
+        // Act & Assert
+        tollCalculator.GetTollFee(new[] {midTraffic, rushHourTraffic}, 6).Should().Be(18);
     }
 
     private static IEnumerable<DateTime> Get23ValidPassings()

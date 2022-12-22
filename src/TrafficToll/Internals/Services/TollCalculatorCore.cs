@@ -19,32 +19,66 @@ internal sealed class TollCalculatorCore
     public int CalculateTollFee(IEnumerable<DateTime> passings)
     {
         var tollablePassings = GetTollablePassings(passings);
-        if (!tollablePassings.Any()) return 0;
-        var groupedPassings = TollPassingsJoin.GetDateGroupsWithGroupedTollPassings(passings, _validTollTime);
-        var totalSum = groupedPassings.Select(x => CalculateSum(x)).Sum();
-        return totalSum < _maximumDailyFee ? totalSum : _maximumDailyFee;
+        if (tollablePassings.Count() == 0) return 0;
+        var totalSum = CalculateTotalSum(tollablePassings);
+        return CorrectWithMaximumDailyFee(totalSum);
+    }
+
+    private int CalculateTotalSum(IEnumerable<DateTime> dateTimes)
+    {
+        int sum = 0;
+
+        while (true)
+        {
+            var startTime = dateTimes.First();
+            var includedPassings = TakePassingsInIncludedToll(dateTimes, startTime);
+            var highestSpanFee = GetHighestFeeFromPassings(includedPassings);
+            sum += highestSpanFee;
+            dateTimes = dateTimes.Where(x => !includedPassings.Contains(x)).ToArray();
+
+            if (!dateTimes.Any())
+                break;
+        }
+
+        return sum;
+    }
+
+    private int GetHighestFeeFromPassings(IEnumerable<DateTime> includedPassings)
+    {
+        var prices = new List<int>();
+        TimeSpan span;
+        foreach (var passing in includedPassings)
+        {
+            span = new TimeSpan(0, passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
+            var price = _tollFeeSpans.Single(x => x.Start <= span && span < x.End).TollPrice;
+            prices.Add(price);
+        }
+        return prices.Max();
+    }
+
+    private IEnumerable<DateTime> TakePassingsInIncludedToll(IEnumerable<DateTime> dateTimes, DateTime startTime)
+    {
+        return dateTimes.Where(x => x >= startTime && x < startTime + _validTollTime);
     }
 
     private IEnumerable<DateTime> GetTollablePassings(IEnumerable<DateTime> passings)
     {
-        var tollablePassings = passings.Where(x => !_tollFreeDates.Contains((x.Year, x.Month, x.Day)));
-        return tollablePassings;
+        var tollablePassings = PassingsWhereThereIsNoHoliday(passings);
+        return PassingsWhichAreWeekdays(tollablePassings);
     }
 
-    private int CalculateSum(IEnumerable<IEnumerable<DateTime>> groupedPassings)
+    private static IEnumerable<DateTime> PassingsWhichAreWeekdays(IEnumerable<DateTime> passings)
     {
-        return groupedPassings.Select(GetHighestPriceInGroup).Sum();
+        return passings.Where(x => !(x.DayOfWeek == DayOfWeek.Saturday || x.DayOfWeek == DayOfWeek.Sunday));
     }
 
-    private int GetHighestPriceInGroup(IEnumerable<DateTime> passings)
+    private IEnumerable<DateTime> PassingsWhereThereIsNoHoliday(IEnumerable<DateTime> passings)
     {
-        var prices = passings.Select(x => ConvertDateTimeToPrice(x, _tollFeeSpans));
-        return prices.Max();
+        return passings.Where(x => !_tollFreeDates.Contains((x.Year, x.Month, x.Day)));
     }
 
-    internal static int ConvertDateTimeToPrice(DateTime passing, IEnumerable<TollFeeSpan> tollFeeSpans)
+    private int CorrectWithMaximumDailyFee(int totalSum)
     {
-        var span = new TimeSpan(0, passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
-        return tollFeeSpans.Single(x => x.Start <= span && span < x.End).TollPrice;
+        return totalSum < _maximumDailyFee ? totalSum : _maximumDailyFee;
     }
 }
