@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using TrafficToll.Internals.Enums;
 using TrafficToll.Internals.Services;
 using TrafficToll.Internals.ValueObjects;
@@ -6,24 +6,11 @@ using Xunit;
 
 namespace TrafficToll.Tests.ClassTests;
 
-
-public class StaticTollTimeCalculatorTests
+public class TollPassingVerifyerTests
 {
     private VehicleType[] FreeVehicleTypes => Enumerable.Range(0, 5).Select(x => (VehicleType)x).ToArray();
     private IEnumerable<(int year, int month, int day)> Holidays => new[] { (2022, 5, 1), (2022, 12, 26) };
     private TollPassingVerifyer _tollPassingVerifyer => new TollPassingVerifyer(new TollableParameters(FreeVehicleTypes, Holidays));
-
-    [Fact]
-    public void CorrectWithMaximumDailyFee_expect_adjusted()
-    {
-        StaticTollCalculator.CorrectWithMaximumDailyFee(100, 60).Should().Be(60);
-    }
-
-    [Fact]
-    public void CorrectWithMaximumDailyFee_expect_not_adjusted()
-    {
-        StaticTollCalculator.CorrectWithMaximumDailyFee(100, 200).Should().Be(100);
-    }
 
     [Fact]
     public void PassingsWhereThereIsNoHoliday_expect_remove_one_holiday_passing()
@@ -75,8 +62,6 @@ public class StaticTollTimeCalculatorTests
         _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(1);
     }
 
-
-
     [Fact]
     public void GetTollablePassings_expect_adjusted_passings()
     {
@@ -90,55 +75,7 @@ public class StaticTollTimeCalculatorTests
             saturday, sunday, monday
         };
 
-        //var holidays = new[]
-        //{
-        //    (2022,12,26)
-        //};
-
         // Act & Assert
         _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(0);
-    }
-
-    [Fact]
-    public void TakePassingsWithin60MinutesTimeRange_expect_not_all()
-    {
-        // Arrange
-        var passings = new[]
-        {
-            new DateTime(2022, 12, 24, 12, 0, 0),
-            new DateTime(2022, 12, 24, 12, 59, 59, 999),
-            new DateTime(2022, 12, 24, 13, 0, 0),
-        };
-
-        // Act & Assert
-        StaticTollCalculator.TakePassingsWithin1HourTimeRange(passings, new TimeSpan(1,0,0)).Should().HaveCount(2);
-    }
-
-
-    [Fact]
-    public void CalculateTotalSum_expect_correct_sum()
-    {
-        // Arrange
-        var passings = new[]
-        {
-            new DateTime(2022, 12, 24, 12, 0, 0),
-            new DateTime(2022, 12, 24, 12, 59, 59, 999),
-            new DateTime(2022, 12, 24, 13, 0, 0),
-        };
-
-        var tollFeeSpans = new[]
-        {
-            new TollFeeSpan(
-                start: new TimeSpan(12,0,0),
-                end: new TimeSpan(13,0,0),
-                tollPrice: 12),
-            new TollFeeSpan(
-                start: new TimeSpan(13,0,0),
-                end: new TimeSpan(14,0,0),
-                tollPrice: 13),
-        };
-
-        // Act & Assert
-        StaticTollCalculator.CalculateTotalSum(passings, new TimeSpan(1, 0, 0), tollFeeSpans).Should().Be(25);
     }
 }
