@@ -3,18 +3,18 @@ using TrafficToll.Internals.ValueObjects;
 
 namespace TrafficToll.Internals.Services
 {
-    internal class PassingVerifyer
+    internal class TollPassingVerifyer
     {
         private readonly IEnumerable<(int year, int month, int day)> _tollFreeDates;
         private readonly IEnumerable<VehicleType> _tollFreeVehicles;
 
-        public PassingVerifyer(TollableParameters tollableParameters)
+        public TollPassingVerifyer(TollableParameters tollableParameters)
         {
             _tollFreeDates = tollableParameters.TollFreeDates;
             _tollFreeVehicles = tollableParameters.TollFreeVehicles;
         }
 
-        public IEnumerable<DateTime> GetTollablePassings(IEnumerable<DateTime> passings, VehicleType vehicleType)
+        public IEnumerable<DateTime> GetTollablePassings(IEnumerable<DateTime> passings, VehicleType vehicleType = VehicleType.Other)
         {
             if(_tollFreeVehicles.Contains(vehicleType)) return Array.Empty<DateTime>();
             var tollablePassings = PassingsWhereThereIsNoHoliday(passings, _tollFreeDates);

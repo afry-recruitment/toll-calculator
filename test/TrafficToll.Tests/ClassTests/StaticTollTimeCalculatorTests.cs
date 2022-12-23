@@ -1,4 +1,5 @@
 using FluentAssertions;
+using TrafficToll.Internals.Enums;
 using TrafficToll.Internals.Services;
 using TrafficToll.Internals.ValueObjects;
 using Xunit;
@@ -8,6 +9,10 @@ namespace TrafficToll.Tests.ClassTests;
 
 public class StaticTollTimeCalculatorTests
 {
+    private VehicleType[] FreeVehicleTypes => Enumerable.Range(0, 5).Select(x => (VehicleType)x).ToArray();
+    private IEnumerable<(int year, int month, int day)> Holidays => new[] { (2022, 5, 1), (2022, 12, 26) };
+    private TollPassingVerifyer _tollPassingVerifyer => new TollPassingVerifyer(new TollableParameters(FreeVehicleTypes, Holidays));
+
     [Fact]
     public void CorrectWithMaximumDailyFee_expect_adjusted()
     {
@@ -31,13 +36,8 @@ public class StaticTollTimeCalculatorTests
             new DateTime(2022,5,3,7,7,7),
         };
 
-        var holidays = new[]
-        {
-            (2022,5,1)
-        };
-
         // Act & Assert
-        StaticTollCalculator.PassingsWhereThereIsNoHoliday(passings, holidays).Should().HaveCount(2);
+        _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(2);
     }
 
     [Fact]
@@ -46,15 +46,15 @@ public class StaticTollTimeCalculatorTests
         // Arrange
         var passings = new[]
         {
-            new DateTime(2022,5,1,7,7,7),
             new DateTime(2022,5,2,7,7,7),
             new DateTime(2022,5,3,7,7,7),
+            new DateTime(2022,5,4,7,7,7),
         };
 
         var holidays = Array.Empty<(int year, int month, int day)>();
 
         // Act & Assert
-        StaticTollCalculator.PassingsWhereThereIsNoHoliday(passings, holidays).Should().HaveCount(3);
+        _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(3);
     }
 
     [Fact]
@@ -62,24 +62,25 @@ public class StaticTollTimeCalculatorTests
     {
         // Arrange
 
+        var friday = new DateTime(2022, 12, 23, 0, 0, 0);
         var saturday = new DateTime(2022, 12, 24, 0, 0, 0);
         var sunday = new DateTime(2022, 12, 25, 0, 0, 0);
-        var monday = new DateTime(2022, 12, 26, 0, 0, 0);
 
         var passings = new[]
         {
-            saturday, sunday, monday
+            friday, saturday, sunday
         };
 
         // Act & Assert
-        StaticTollCalculator.PassingsWhichAreNotDuringWeekend(passings).Should().HaveCount(1);
+        _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(1);
     }
+
+
 
     [Fact]
     public void GetTollablePassings_expect_adjusted_passings()
     {
         // Arrange
-
         var saturday = new DateTime(2022, 12, 24, 0, 0, 0);
         var sunday = new DateTime(2022, 12, 25, 0, 0, 0);
         var monday = new DateTime(2022, 12, 26, 0, 0, 0);
@@ -89,13 +90,13 @@ public class StaticTollTimeCalculatorTests
             saturday, sunday, monday
         };
 
-        var holidays = new[]
-        {
-            (2022,12,26)
-        };
+        //var holidays = new[]
+        //{
+        //    (2022,12,26)
+        //};
 
         // Act & Assert
-        StaticTollCalculator.GetTollablePassings(passings, holidays).Should().HaveCount(0);
+        _tollPassingVerifyer.GetTollablePassings(passings).Should().HaveCount(0);
     }
 
     [Fact]

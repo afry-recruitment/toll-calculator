@@ -44,22 +44,6 @@ namespace TrafficToll.Internals.Services
             return dateTimes.Where(x => x >= startTime && x < startTime + validTollTime);
         }
 
-        public static IEnumerable<DateTime> GetTollablePassings(IEnumerable<DateTime> passings, IEnumerable<(int year, int month, int date)> tollFreeDates)
-        {
-            var tollablePassings = PassingsWhereThereIsNoHoliday(passings, tollFreeDates);
-            return PassingsWhichAreNotDuringWeekend(tollablePassings);
-        }
-
-        public static IEnumerable<DateTime> PassingsWhichAreNotDuringWeekend(IEnumerable<DateTime> passings)
-        {
-            return passings.Where(x => !(x.DayOfWeek == DayOfWeek.Saturday || x.DayOfWeek == DayOfWeek.Sunday));
-        }
-
-        public static IEnumerable<DateTime> PassingsWhereThereIsNoHoliday(IEnumerable<DateTime> passings, IEnumerable<(int year, int month, int date)> tollFreeDates)
-        {
-            return passings.Where(x => !tollFreeDates.Contains((x.Year, x.Month, x.Day)));
-        }
-
         public static int CorrectWithMaximumDailyFee(int totalSum, int maximumDailyFee)
         {
             return totalSum < maximumDailyFee ? totalSum : maximumDailyFee;
