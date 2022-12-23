@@ -11,7 +11,7 @@ public class AcceptanceTests
     {
         // Arrange
         var tollCalculator = new TollCalculator();
-        var passings = Get23ValidPassings();
+        var passings = Get24TollablePassings();
 
         // Act & Assert
         tollCalculator.GetTollFee(passings, 0).Should().Be(0);
@@ -20,6 +20,7 @@ public class AcceptanceTests
         tollCalculator.GetTollFee(passings, 3).Should().Be(0);
         tollCalculator.GetTollFee(passings, 4).Should().Be(0);
         tollCalculator.GetTollFee(passings, 5).Should().Be(0);
+        tollCalculator.GetTollFee(passings, 6).Should().NotBe(0);
     }
 
     [Fact]
@@ -64,11 +65,7 @@ public class AcceptanceTests
     {
         // Arrange
 
-        var passings = new List<DateTime>();
-        for (int min = 0; min < 59; min++)
-        {
-            passings.Add(new DateTime(2013, 1, 4, 7, min, 0));
-        }
+        var passings = Get24TollablePassings();
 
         var tollCalculator = new TollCalculator();
 
@@ -103,7 +100,7 @@ public class AcceptanceTests
         tollCalculator.GetTollFee(new[] {midTraffic, rushHourTraffic}, 6).Should().Be(18);
     }
 
-    private static IEnumerable<DateTime> Get23ValidPassings()
+    private static IEnumerable<DateTime> Get24TollablePassings()
     {
         var passings = new List<DateTime>();
         for (int i = 0; i < 23; i++)

@@ -27,11 +27,10 @@ internal sealed class TollCalculatorCore
     private int CalculateTotalSum(IEnumerable<DateTime> dateTimes)
     {
         int sum = 0;
-
         while (true)
         {
             var startTime = dateTimes.First();
-            var includedPassings = TakePassingsInIncludedToll(dateTimes, startTime);
+            var includedPassings = TakePassingsWithin60MinutesTimeRange(dateTimes, startTime);
             var highestSpanFee = GetHighestFeeFromPassings(includedPassings);
             sum += highestSpanFee;
             dateTimes = dateTimes.Where(x => !includedPassings.Contains(x)).ToArray();
@@ -45,18 +44,18 @@ internal sealed class TollCalculatorCore
 
     private int GetHighestFeeFromPassings(IEnumerable<DateTime> includedPassings)
     {
-        var prices = new List<int>();
+        var maxPrice = 0;
         TimeSpan span;
         foreach (var passing in includedPassings)
         {
             span = new TimeSpan(0, passing.Hour, passing.Minute, passing.Second, passing.Millisecond);
             var price = _tollFeeSpans.Single(x => x.Start <= span && span < x.End).TollPrice;
-            prices.Add(price);
+            maxPrice = price > maxPrice ? price : maxPrice;
         }
-        return prices.Max();
+        return maxPrice;
     }
 
-    private IEnumerable<DateTime> TakePassingsInIncludedToll(IEnumerable<DateTime> dateTimes, DateTime startTime)
+    private IEnumerable<DateTime> TakePassingsWithin60MinutesTimeRange(IEnumerable<DateTime> dateTimes, DateTime startTime)
     {
         return dateTimes.Where(x => x >= startTime && x < startTime + _validTollTime);
     }

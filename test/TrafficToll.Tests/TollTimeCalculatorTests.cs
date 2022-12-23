@@ -1,24 +1,15 @@
 using FluentAssertions;
-using System;
-using System.Text.Json;
 using TrafficToll.Internals.Services;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace toll_calculator.tests;
 
 
 public class TollTimeCalculatorTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public TollTimeCalculatorTests(ITestOutputHelper testOutputHelper)
-    {
-        this._testOutputHelper = testOutputHelper;
-    }
 
     [Fact]
-    public void group_int()
+    public void Group_integers()
     {
         // Arrange
         IEnumerable<int> ints = new List<int>()
@@ -37,7 +28,7 @@ public class TollTimeCalculatorTests
     }
 
     [Fact]
-    public void group_date_time()
+    public void Group_date_time()
     {
         // Arrange
         IEnumerable<DateTime> dateTimes = new List<DateTime>()
@@ -58,7 +49,7 @@ public class TollTimeCalculatorTests
     }
 
     [Fact]
-    public void group_date_time_by_day_of_year()
+    public void Group_date_time_by_day_of_year()
     {
         // Arrange
         IEnumerable<DateTime> dateTimes = new List<DateTime>()
@@ -79,7 +70,7 @@ public class TollTimeCalculatorTests
     }
 
     [Fact]
-    public void group_date_time_by_day_and_by_year()
+    public void Group_date_time_by_day_and_by_year()
     {
         // Arrange
         IEnumerable<DateTime> dateTimes = new List<DateTime>()
@@ -100,7 +91,7 @@ public class TollTimeCalculatorTests
     }
 
     [Fact]
-    public void group_1_date_time_by_day_and_by_year()
+    public void Group_1_date_time_by_day_and_by_year()
     {
         // Arrange
         IEnumerable<DateTime> dateTimes = new List<DateTime>()
@@ -221,34 +212,6 @@ public class TollTimeCalculatorTests
 
         // Act & Assert
         TollPassingsJoin.GroupPassingsByDayOfTheYearAndYear(dateTimes).Should().HaveCount(2);
-    }
-
-    [Fact]
-    public void Group_by_date_and_toll_passings()
-    {
-        // Arrange
-        IEnumerable<DateTime> dateTimes = new List<DateTime>()
-        {
-            new DateTime(2022,1,1,12,0,0),
-            new DateTime(2022,1,1,12,2,0),
-            new DateTime(2022,1,1,14,0,0),
-            new DateTime(2022,1,2,12,0,0),
-            new DateTime(2022,1,2,12,2,0),
-            new DateTime(2022,1,2,14,0,0),
-        };
-
-        // Act
-        var groupedPassings = TollPassingsJoin.GetDateGroupsWithGroupedTollPassings(dateTimes, new TimeSpan(1, 0, 0));
-
-        var output = JsonSerializer.Serialize(groupedPassings, new JsonSerializerOptions() { WriteIndented = true });
-        _testOutputHelper.WriteLine(output);
-
-        // Assert
-        groupedPassings.Should().HaveCount(2);
-        groupedPassings.ToArray()[0].Should().HaveCount(2);
-        groupedPassings.ToArray()[0].ToArray()[0].Should().HaveCount(2);
-        groupedPassings.ToArray()[0].ToArray()[1].ToArray()[0].Should().Be(new DateTime(2022, 1, 1, 14, 0, 0));
-        groupedPassings.ToArray()[0].ToArray()[0].Should().Contain(new DateTime(2022, 1, 1, 12, 0, 0));
     }
 
     [Fact]
