@@ -9,18 +9,13 @@ namespace TrafficToll
     {
         private TollCalculatorCore? __tollCalculatorCore;
         private TollCalculatorCore TollCalculatorCore => 
-            __tollCalculatorCore ??= new TollCalculatorCore(TrafficTollDataManager.GetTollCalculationParameters());
+            __tollCalculatorCore ??= new TollCalculatorCore(
+                TrafficTollDataManager.GetTollCalculationParameters(),
+                TrafficTollDataManager.GetTollFreeParameters());
         public int GetTollFee(IEnumerable<DateTime> passings, int vehicleType)
         {
             ValidatorCalculationArguments.EnsureArgumentsIsValid(passings, vehicleType);
-            if (VehicleIsNotTollable(vehicleType)) return 0;
-            return TollCalculatorCore.CalculateTollFee(passings);
-        }
-
-        private bool VehicleIsNotTollable(int vehicleType)
-        {
-            var tollFreeVehicles = TrafficTollDataManager.GetTollFreeVehicles();
-            return tollFreeVehicles.Contains((VehicleType)vehicleType);
+            return TollCalculatorCore.CalculateTollFee(passings, vehicleType);
         }
     }
 }

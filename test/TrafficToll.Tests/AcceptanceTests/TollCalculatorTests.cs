@@ -1,10 +1,10 @@
 using FluentAssertions;
 using Xunit;
 
-namespace TrafficToll.tests;
+namespace TrafficToll.Tests.AcceptanceTests;
 
 
-public class AcceptanceTests
+public class TollCalculatorTests
 {
     [Fact]
     public void Some_vehicle_types_are_fee_free()
@@ -97,7 +97,7 @@ public class AcceptanceTests
         var tollCalculator = new TollCalculator();
 
         // Act & Assert
-        tollCalculator.GetTollFee(new[] {midTraffic, rushHourTraffic}, 6).Should().Be(18);
+        tollCalculator.GetTollFee(new[] { midTraffic, rushHourTraffic }, 6).Should().Be(18);
     }
 
     private static IEnumerable<DateTime> Get24TollablePassings()

@@ -17,9 +17,13 @@ internal static class TrafficTollDataManager
         return CreateTollCalculationParameters();
     }
 
-    public static IEnumerable<VehicleType> GetTollFreeVehicles()
+    public static TollableParameters GetTollFreeParameters()
     {
-        return TrafficTollSpecification.TollFreeVehicleTypes.Select(x => (VehicleType)x);
+        var tollFreeDateTuples = TrafficTollSpecification.TollFreeDates.Select(x => (x.Year, x.Month, x.Day));
+
+        return new TollableParameters(
+            TrafficTollSpecification.TollFreeVehicleTypes.Select(x => (VehicleType)x),
+            tollFreeDateTuples);
     }
 
     private static TrafficTollSpecification GetTollSpecificationFromAssemblyEmbeddedJsonFile()
@@ -58,7 +62,7 @@ internal static class TrafficTollDataManager
         var tollFeeSpans = CreateTollFeeSpans(TrafficTollSpecification.DailyTollTimePrizes, TrafficTollSpecification.PriceMapping);
         var tollFreeDateTuples = TrafficTollSpecification.TollFreeDates.Select(x => (x.Year, x.Month, x.Day));
 
-        return new TollCalculationParameters(TrafficTollSpecification.MaximumDailyFee, TrafficTollSpecification.ValidTollTime, tollFeeSpans, tollFreeDateTuples);
+        return new TollCalculationParameters(TrafficTollSpecification.MaximumDailyFee, TrafficTollSpecification.ValidTollTime, tollFeeSpans);
     }
 
     private static IEnumerable<TollFeeSpan> CreateTollFeeSpans(IEnumerable<TollTimePeriod> dailyTollTimePrizes, Dictionary<int, int> trafficTypePrizeDictionary)
