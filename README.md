@@ -1,7 +1,7 @@
-![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
-
 # Toll fee calculator 1.0
-A calculator for vehicle toll fees.
+***A calculator for vehicle toll fees provided by AFRY as a developer challenge for recruitment***
+
+***Demonstrates code design and skills in making good abstractions***
 
 * Make sure you read these instructions carefully
 * The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
