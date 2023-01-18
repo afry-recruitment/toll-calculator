@@ -79,6 +79,12 @@ public class TollCalculator
 
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
 
+        /* in this part of the code will check only holidays on year of 2013. 
+         * So it should change with common way of retunes holiday checking for the any given year.
+         
+         * Suggestions for modification: Could be use Holiday API (E.g.: Google calendar API) to get holidays.
+        */
+
         if (year == 2013)
         {
             if (month == 1 && day == 1 ||
