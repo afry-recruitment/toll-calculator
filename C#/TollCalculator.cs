@@ -12,6 +12,8 @@ public class TollCalculator
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
+    
+    Logger logger = new Logger();
 
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
@@ -37,6 +39,12 @@ public class TollCalculator
             }
         }
         if (totalFee > 60) totalFee = 60;
+        /*          
+         * Suggestions for modification: Could be used logging to identify errors / faults / current information related on current operation.    
+         * In hear developed logger class to do system logging functionality and in addition to that  
+         * it could be use logging framework / tool (E.g.: Log4Net) to do this task .   
+        */
+        logger.Log(vehicle.GetVehicleType()+" : Total fee is " + totalFee);
         return totalFee;
     }
 
@@ -59,6 +67,11 @@ public class TollCalculator
         int hour = date.Hour;
         int minute = date.Minute;
 
+        /*          
+         * Suggestions for modification: Could be used Database/Configuration file to handle rush-hours and fee instead of 
+         * hardcoding because this values (rush-hours and fee) may be changed time to time.  
+        */
+        
         if (hour == 6 && minute >= 0 && minute <= 29) return 8;
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
         else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
@@ -101,6 +114,12 @@ public class TollCalculator
         }
         return false;
     }
+    
+    
+     /*          
+      * Suggestions for modification: Could be used Database/Configuration file to handle toll free vehicles instead of 
+      * hardcoding.  
+      */
 
     private enum TollFreeVehicles
     {
