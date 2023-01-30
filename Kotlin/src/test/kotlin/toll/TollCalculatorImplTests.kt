@@ -7,13 +7,13 @@ import vehicle.Diplomat
 import vehicle.Vehicle
 import java.util.*
 
-class LogicCalculatorTests {
+class TollCalculatorImplTests {
 
-    private lateinit var calculator: TollCalculator
+    private lateinit var calculator: TollCalculatorImpl
 
     @Before
-    fun setup(){
-        calculator = TollCalculator()
+    fun setup() {
+        calculator = TollCalculatorImpl()
     }
 
     @Test
@@ -101,7 +101,7 @@ class LogicCalculatorTests {
 
     private fun Vehicle.getTollPrice(hour: Int, minute: Int, expectedPrice: TollPrice) {
         val calendar = createCalendarWithTimeAndDate()
-        calculator.getTollFee(
+        calculator.calculateTollFee(
             vehicle = this,
             date = calendar.apply {
                 set(Calendar.HOUR_OF_DAY, hour)
@@ -120,7 +120,7 @@ class LogicCalculatorTests {
         val calendar = GregorianCalendar.getInstance()
         for (hour in 0..23) {
             for (minute in 0..59) {
-                calculator.getTollFee(
+                calculator.calculateTollFee(
                     vehicle = vehicle,
                     date = calendar.apply {
                         set(Calendar.HOUR_OF_DAY, hour)
@@ -149,7 +149,7 @@ class LogicCalculatorTests {
         }
 
 
-        val result = calculator.getTollFee(
+        val result = calculator.calculateTollFee(
             vehicle = vehicle,
             dates = dates
         )
@@ -174,7 +174,7 @@ class LogicCalculatorTests {
             dates.add(calendar.time)
         }
 
-        val result = calculator.getTollFee(
+        val result = calculator.calculateTollFee(
             vehicle = vehicle,
             dates = dates
         )
@@ -198,24 +198,23 @@ class LogicCalculatorTests {
     }
 
     @Test
-    fun givenTollFreeDay_whenCalculatingTollFee_thenReturnFreePrice(){
+    fun givenTollFreeDay_whenCalculatingTollFee_thenReturnFreePrice() {
         val calendar = createCalendarWithTimeAndDate(hour = 9)
         val fakeLogic = FakeTollLogic(feeFreeDays = listOf(calendar.time))
-        val fakeCalculator = TollCalculator(tollLogic = fakeLogic)
+        val fakeCalculator = TollCalculatorImpl(tollLogic = fakeLogic)
         val vehicle = FakeVehicles.taxedCar
-        val cost = fakeCalculator.getTollFee(vehicle = vehicle, date = calendar.time)
+        val cost = fakeCalculator.calculateTollFee(vehicle = vehicle, date = calendar.time)
         Assert.assertEquals(TollPrice.Free.price, cost)
     }
 
     @Test
-    fun givenTollFeesOverMaxAmount_whenCalculatingFees_thenReturnMaxAmount(){
+    fun givenTollFeesOverMaxAmount_whenCalculatingFees_thenReturnMaxAmount() {
         val calendar = createCalendarWithTimeAndDate()
-        val fakeCalculator = TollCalculator() // no free days
         val vehicle = FakeVehicles.taxedCar
         val dates = mutableListOf<Date>()
         // get vehicle fees for every minute of every day, should only amount to 60
-        for(hour in 0..23){
-            for(minute in 0..59){
+        for (hour in 0..23) {
+            for (minute in 0..59) {
                 calendar.apply {
                     set(Calendar.HOUR_OF_DAY, hour)
                     set(Calendar.MINUTE, minute)
@@ -223,7 +222,19 @@ class LogicCalculatorTests {
                 dates.add(calendar.time)
             }
         }
-        val result = fakeCalculator.getTollFee(vehicle, dates)
-        Assert.assertEquals(TollCalculator.MAXIMUM_DAILY_FEE_PRICE, result)
+        val result = calculator.calculateTollFee(vehicle, dates)
+        Assert.assertEquals(TollCalculatorImpl.MAXIMUM_DAILY_FEE_PRICE, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun givenDatesStretchingOverSeveralDays_whenCalculatingFees_thenExpectError(){
+        val calendar = createCalendarWithTimeAndDate()
+        val vehicle = FakeVehicles.taxedCar
+        val dates = mutableListOf<Date>()
+        for(day in 0..3){
+            calendar.set(Calendar.DAY_OF_YEAR, day)
+            dates.add(calendar.time)
+        }
+        calculator.calculateTollFee(vehicle = vehicle, dates = dates)
     }
 }

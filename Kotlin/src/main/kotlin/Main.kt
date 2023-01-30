@@ -1,4 +1,4 @@
-import toll.TollCalculator
+import di.AppDependencyProvider
 import vehicle.*
 import java.util.*
 
@@ -13,9 +13,9 @@ fun main(args: Array<String>) {
         Tractor(),
     )
     val calendar = GregorianCalendar.getInstance()
-    val calculator = TollCalculator()
+    val calculator = AppDependencyProvider.provideTollCalculator()
     vehicles.forEach { vehicle ->
-        calculator.getTollFee(
+        calculator.calculateTollFee(
             vehicle = vehicle,
             date = calendar.time
         )

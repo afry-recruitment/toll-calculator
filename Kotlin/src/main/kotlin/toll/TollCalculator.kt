@@ -6,9 +6,15 @@ import time.FeePriceRange
 import vehicle.Vehicle
 import java.util.*
 
-class TollCalculator(
+interface TolLCalculator {
+    fun calculateTollFee(vehicle: Vehicle, date: Date): Int
+    fun calculateTollFee(vehicle: Vehicle, dates: List<Date>): Int
+}
+
+class TollCalculatorImpl(
     private val tollLogic: TollLogic = AppDependencyProvider.provideTollLogic()
-) {
+) : TolLCalculator {
+
     /**
      * Calculate the total toll fee for one day
      *
@@ -16,10 +22,11 @@ class TollCalculator(
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-    fun getTollFee(
+    override fun calculateTollFee(
         vehicle: Vehicle,
         dates: List<Date>
     ): Int = dates
+        .ensureSingleDay()                          // calculator is limited to only handle a single day
         .emptyIfVehicleTollFeeExempt(vehicle = vehicle)    // disregard operation if vehicle is exempt from fees
         .filter { date -> !tollLogic.isTollFreeDay(date) } // remove fee free days
         .groupedByHour()                            // group items
@@ -30,13 +37,27 @@ class TollCalculator(
     /**
      * Helper function to translate single date object to list.
      */
-    fun getTollFee(
-        vehicle: Vehicle,
-        date: Date
-    ): Int = getTollFee(
+    override fun calculateTollFee(vehicle: Vehicle, date: Date): Int = calculateTollFee(
         vehicle = vehicle,
         dates = listOf(date)
     )
+
+    /**
+     * The calculator is bound to
+     */
+    private fun List<Date>.ensureSingleDay(): List<Date> {
+        val calendar = GregorianCalendar.getInstance()
+        val groups = groupBy {
+            calendar.time = it
+            calendar.get(Calendar.DAY_OF_YEAR)
+        }
+
+        if(groups.size > 1) {
+            error("Calculator can only handle a single day")
+        }
+
+        return this
+    }
 
     /**
      * Helper extension removing all dates if vehicle is exempt from toll fees.
