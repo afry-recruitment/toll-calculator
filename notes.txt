@@ -1,0 +1,17 @@
+http://www.kajakrapporten.se/trangselskatt-goteborg/
+
+Key Takeaways:
+	* Modular application for easier developing and more sustainable code -> helps further developing
+	* Possibility to automatically fetch holidays for any country - independently on year
+	* Applied design patterns for smoother and better development
+	* Unit-tests for the vital components of the application has been added
+
+
+Future improvements: 
+	* Better if DateHandler is possible to parse own-defined holiday dates, e.g. json with dates etc.
+	* Good if TollCalculator uses API for updating toll fees, e.g. an REST-API or Firebase for realtime updates on fees.
+
+
+https://jollyday.sourceforge.net/
+If wanted to run the dynamical DateHandler, run application with Java 8 
+
