@@ -1,4 +1,4 @@
-﻿namespace TollCalculatorJon
+﻿namespace TollCalculator
 {
     public class TollCalculator
     {
