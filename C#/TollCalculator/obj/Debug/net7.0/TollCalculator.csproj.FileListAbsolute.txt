@@ -1,0 +1,12 @@
+C:\New folder\toll-calculator\C#\TollCalculator\bin\Debug\net7.0\TollCalculator.deps.json
+C:\New folder\toll-calculator\C#\TollCalculator\bin\Debug\net7.0\TollCalculator.dll
+C:\New folder\toll-calculator\C#\TollCalculator\bin\Debug\net7.0\TollCalculator.pdb
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.csproj.AssemblyReference.cache
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.GeneratedMSBuildEditorConfig.editorconfig
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.AssemblyInfoInputs.cache
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.AssemblyInfo.cs
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.csproj.CoreCompileInputs.cache
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.dll
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\refint\TollCalculator.dll
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\TollCalculator.pdb
+C:\New folder\toll-calculator\C#\TollCalculator\obj\Debug\net7.0\ref\TollCalculator.dll

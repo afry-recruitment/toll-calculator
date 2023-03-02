@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "YJjzd6G1rGmnwpLv0Zh0Tod//z94N2l6sBS0h2veln2MqNZHgqp/X56unv8ilvwcxX5E3E/Z/Vi0LhYjhEEu0g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\perlud\\OneDrive - Avensia AB\\Desktop\\New folder (2)\\TollCalculator\\TollCalculator.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1803",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://nuget.episerver.com/feed/packages.svc/'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
+    }
+  ]
+}
