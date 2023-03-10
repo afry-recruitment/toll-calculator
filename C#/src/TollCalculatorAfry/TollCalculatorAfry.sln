@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculatorAfry", "TollCalculatorAfry.csproj", "{4C3CE82B-BE44-4809-AE0C-D6F71696BF69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculatorAfryTest", "..\TollCalculatorAfryTest\TollCalculatorAfryTest.csproj", "{06D85E3A-3442-41A7-A096-B096D742D7AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C3CE82B-BE44-4809-AE0C-D6F71696BF69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C3CE82B-BE44-4809-AE0C-D6F71696BF69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C3CE82B-BE44-4809-AE0C-D6F71696BF69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C3CE82B-BE44-4809-AE0C-D6F71696BF69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06D85E3A-3442-41A7-A096-B096D742D7AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06D85E3A-3442-41A7-A096-B096D742D7AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06D85E3A-3442-41A7-A096-B096D742D7AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06D85E3A-3442-41A7-A096-B096D742D7AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35CEB444-8725-4F27-8D76-B7861E9D45CA}
+	EndGlobalSection
+EndGlobal
