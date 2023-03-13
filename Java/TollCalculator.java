@@ -11,8 +11,10 @@ public class TollCalculator {
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
+  public int getTollFee(Vehicle vehicle, List<Date> dates) {
+    // Created an index to keep track of the timestamps
+    int index = 0;
+    Date intervalStart = dates.get(index);
     int totalFee = 0;
     for (Date date : dates) {
       int nextFee = getTollFee(date, vehicle);
@@ -23,69 +25,92 @@ public class TollCalculator {
       long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
       if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
+        if (totalFee > 0)
+          totalFee -= tempFee;
+        if (nextFee >= tempFee)
+          tempFee = nextFee;
         totalFee += tempFee;
       } else {
         totalFee += nextFee;
+        // If an hour has passed since last timestamp we have to set a new reference
+        intervalStart = dates.get(index);
       }
+      // Increment the index
+      index++;
+
     }
-    if (totalFee > 60) totalFee = 60;
+    if (totalFee > 60)
+      totalFee = 60;
     return totalFee;
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
+    if (vehicle == null)
+      return false;
     String vehicleType = vehicle.getType();
     return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
+        vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
+        vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
+        vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
+        vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
+        vehicleType.equals(TollFreeVehicles.MILITARY.getType());
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
+    if (isTollFreeDate(date) || isTollFreeVehicle(vehicle))
+      return 0;
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
     int hour = calendar.get(Calendar.HOUR_OF_DAY);
     int minute = calendar.get(Calendar.MINUTE);
 
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
+    // The minutes cant be < 0 or > 60, therefore I removed this for simplicity
+    if (hour == 6 && minute <= 29)
+      return 8;
+    else if (hour == 6 && minute >= 30)
+      return 13;
+    else if (hour == 7)
+      return 18;
+    else if (hour == 8 && minute <= 29)
+      return 13;
+    // This was a bug because for example 09.20 would have be free with the old code
+    else if (hour == 8 && minute >= 30 || hour >= 9 && hour <= 14)
+      return 8;
+    else if (hour == 15 && minute <= 29)
+      return 13;
+    else if (hour == 15 && minute >= 30 || hour == 16)
+      return 18;
+    else if (hour == 17)
+      return 13;
+    else if (hour == 18 && minute <= 29)
+      return 8;
+    else
+      return 0;
   }
 
   private Boolean isTollFreeDate(Date date) {
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
+    // removed variable year
     int month = calendar.get(Calendar.MONTH);
     int day = calendar.get(Calendar.DAY_OF_MONTH);
 
     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
+    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY)
+      return true;
 
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
-      }
+    // Removed if (year == 2013), otherwise no red days would have been free
+    if (month == Calendar.JANUARY && day == 1 ||
+        month == Calendar.MARCH && (day == 28 || day == 29) ||
+        month == Calendar.APRIL && (day == 1 || day == 30) ||
+        month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
+        month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
+        month == Calendar.JULY ||
+        month == Calendar.NOVEMBER && day == 1 ||
+        month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
+      return true;
     }
+
     return false;
   }
 
@@ -96,6 +121,7 @@ public class TollCalculator {
     DIPLOMAT("Diplomat"),
     FOREIGN("Foreign"),
     MILITARY("Military");
+
     private final String type;
 
     TollFreeVehicles(String type) {
@@ -107,4 +133,3 @@ public class TollCalculator {
     }
   }
 }
-
