@@ -1,4 +1,8 @@
 
+<<<<<<< HEAD
+=======
+import vehicle.Vehicle;
+>>>>>>> 36e9c27 (Fixing Code)
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
