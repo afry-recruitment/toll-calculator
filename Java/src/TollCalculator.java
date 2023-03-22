@@ -1,5 +1,5 @@
-package vehicle;
 
+import vehicle.Vehicle;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;

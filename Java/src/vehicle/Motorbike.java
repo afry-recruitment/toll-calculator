@@ -1,3 +1,5 @@
+package vehicle;
+
 public class Motorbike implements Vehicle {
   @Override
   public String getType() {
