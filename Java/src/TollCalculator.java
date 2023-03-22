@@ -1,3 +1,4 @@
+package vehicle;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
