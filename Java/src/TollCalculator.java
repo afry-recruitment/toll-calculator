@@ -1,112 +1,141 @@
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class TollCalculator {
-  Set<String> tollFreeVehicle = Set<String>.of("")
+
+  private static final Set<String> tollFreeVehicleTypes = Set.of("Motorbike", "Tractor", "Emergency", "Diplomat", "Foreign", "Military");
 
   /**
    * Calculate the total toll fee for one day
    *
    * @param vehicle - the vehicle
-   * @param dates   - date and time of all passes on one day
+   * @param passes   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
+  public int getTollFee(Vehicle vehicle, LocalDateTime... passes) {
+    if (passes == null || passes.length == 0|| passes[0] == null) {
+      throw new RuntimeException("No passes were given");
+    }
+    checkIfAllPassesIsTheSameDay(passes);
+    LocalDateTime lastHighestIntervall = null;
+    int lastHighestFee = 0;
     int totalFee = 0;
-    for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
+    for (LocalDateTime date : passes) {
+      if (totalFee >= 60) {
+        break;
+      }
 
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+      int nextFee = getFeeOnePass(date, vehicle);
 
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
-      } else {
+      if (lastHighestIntervall == null || Duration.between(lastHighestIntervall, date).toMinutes() > 60) {
+        lastHighestFee = nextFee;
+        lastHighestIntervall = date;
         totalFee += nextFee;
+
+      } else {
+        if (nextFee > lastHighestFee) {
+          lastHighestFee = nextFee;
+          lastHighestIntervall = date;
+          totalFee += lastHighestFee;
+        }
       }
     }
     if (totalFee > 60) totalFee = 60;
     return totalFee;
   }
 
-  private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
-    String vehicleType = vehicle.getType();
-    EnumSet<TollFreeVehicles> tollFreeVehiclesEnumSet = EnumSet.allOf(TollFreeVehicles.class);
-    return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
-  }
+  private void checkIfAllPassesIsTheSameDay(LocalDateTime... passes) {
+    LocalDateTime firstPass = passes[0];
+    LocalDate firstPassDate = firstPass.toLocalDate();
 
-  public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
+    for (int i = 1; i < passes.length; i++) {
+      LocalDateTime currentPass = passes[i];
+      LocalDate currentPassDate = currentPass.toLocalDate();
 
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
-  }
-
-  private Boolean isTollFreeDate(Date date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
-
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
+      if (!currentPassDate.equals(firstPassDate)) {
+        throw new RuntimeException("Passes are on different days");
       }
     }
-    return false;
   }
 
-  private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
-    TRACTOR("Tractor"),
-    EMERGENCY("Emergency"),
-    DIPLOMAT("Diplomat"),
-    FOREIGN("Foreign"),
-    MILITARY("Military");
-    private final String type;
+  private boolean isTollFreeVehicle(Vehicle vehicle) {
+    if (vehicle == null) return false;
 
-    TollFreeVehicles(String type) {
-      this.type = type;
-    }
+    return tollFreeVehicleTypes.contains(vehicle.getType());
+  }
 
-    public String getType() {
-      return type;
-    }
+  public int getFeeOnePass(final LocalDateTime date, Vehicle vehicle) {
+    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
+    int hour = date.getHour();
+    int minute = date.getMinute();
+
+
+    if (hour == 6 && minute >= 30 ) return 13;
+    else if (hour == 7 ) return 18;
+    else if (hour == 8 && minute <= 29) return 13;
+    else if (hour == 15 && minute <= 29) return 13;
+    else if (hour == 15 && minute >= 30 || hour == 16) return 18;
+    else if (hour == 17) return 13;
+    else return 8;
+  }
+
+  private Boolean isTollFreeDate(LocalDateTime date) {
+    int year = date.getYear();
+
+    DayOfWeek dayOfWeek = date.getDayOfWeek();
+    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) return true;
+    LocalDate EasterSunday = calculateEaster(year);
+
+    Set<LocalDate> specialDates = new HashSet<>(Arrays.asList(
+            LocalDate.of(year, Month.JANUARY, 1),
+            LocalDate.of(year, Month.APRIL, 30),
+            LocalDate.of(year, Month.MAY, 1),
+            LocalDate.of(year, Month.JUNE, 5),
+            LocalDate.of(year, Month.JUNE, 6),
+            LocalDate.of(year, Month.DECEMBER, 24),
+            LocalDate.of(year, Month.DECEMBER, 25),
+            LocalDate.of(year, Month.DECEMBER, 26),
+            LocalDate.of(year, Month.DECEMBER, 31),
+            EasterSunday.minusDays(3), //Maundy Thursday
+            EasterSunday.minusDays(2), //Good friday
+            EasterSunday.plusDays(1), //Easter Monday
+            EasterSunday.plusDays(39), //Ascension day
+            calculateDateOfFridays(year, 24), //Midsummer
+            calculateDateOfFridays(year, 43) //All Saints Day
+
+    ));
+
+    return specialDates.contains(date.toLocalDate());
+  }
+
+  private LocalDate calculateEaster(int year) {
+    int a = year % 19;
+    int b = year / 100;
+    int c = year % 100;
+    int d = b / 4;
+    int e = b % 4;
+    int f = (b + 8) / 25;
+    int g = (b - f + 1) / 3;
+    int h = (19 * a + b - d - g + 15) % 30;
+    int i = c / 4;
+    int k = c % 4;
+    int l = (32 + 2 * e + 2 * i - h - k) % 7;
+    int m = (a + 11 * h + 22 * l) / 451;
+    int month = (h + l - 7 * m + 114) / 31;
+    int day = ((h + l - 7 * m + 114) % 31) + 1;
+    return LocalDate.of(year, month, day);
+  }
+
+  private LocalDate calculateDateOfFridays(int year, int week) {
+    LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
+    LocalDate firstFriday = firstDayOfYear.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY));
+    return firstFriday.plusWeeks(week);
   }
 }
 
