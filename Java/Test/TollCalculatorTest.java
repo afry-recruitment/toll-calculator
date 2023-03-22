@@ -1,22 +1,16 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
-=======
-
 import vehicle.Car;
 import vehicle.Diplomat;
 import vehicle.Emergency;
 import vehicle.Foreign;
 import vehicle.Military;
-import vehicle.Motorbike;
 import vehicle.Tractor;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
 import vehicle.Vehicle;
->>>>>>> 36e9c27 (Fixing Code)
+
 
 public class TollCalculatorTest {
     @Test
