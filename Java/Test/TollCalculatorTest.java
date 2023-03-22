@@ -8,6 +8,7 @@ import vehicle.Diplomat;
 import vehicle.Emergency;
 import vehicle.Foreign;
 import vehicle.Military;
+import vehicle.Motorbike;
 import vehicle.Tractor;
 import vehicle.Vehicle;
 
