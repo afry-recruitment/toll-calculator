@@ -3,6 +3,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class TollCalculator {
+  Set<String> tollFreeVehicle = Set<String>.of("")
 
   /**
    * Calculate the total toll fee for one day
@@ -37,6 +38,7 @@ public class TollCalculator {
   private boolean isTollFreeVehicle(Vehicle vehicle) {
     if(vehicle == null) return false;
     String vehicleType = vehicle.getType();
+    EnumSet<TollFreeVehicles> tollFreeVehiclesEnumSet = EnumSet.allOf(TollFreeVehicles.class);
     return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
            vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
            vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
