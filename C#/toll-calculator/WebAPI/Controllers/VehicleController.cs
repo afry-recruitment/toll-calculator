@@ -1,6 +1,7 @@
 ﻿using interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
+using WebAPI.DataStrings;
 using WebAPI.Enum;
 
 namespace WebAPI.Controllers
@@ -15,9 +16,8 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IResult GetVehicleType([FromRoute] string id)
         {
-            Regex regex = new Regex(@"^[0-9 ]+$");
-
-            if (!regex.IsMatch(id))            //fix issue, if id doesnt excist in
+            Regex regex = new Regex(RegexStrings.RegexDoesStringContainNumbers);
+            if (!regex.IsMatch(id))           //fix issue, if id doesnt excist in
                 return Results.BadRequest(); //vehicles it will be set to car. Causes problems
 
             var currentVehicle = System.Enum.GetName(typeof(Vehicles), int.Parse(id));

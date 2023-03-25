@@ -1,5 +1,4 @@
-﻿using WebAPI.Enum;
-
+﻿
 namespace interfaces
 {
     public interface IVehicle

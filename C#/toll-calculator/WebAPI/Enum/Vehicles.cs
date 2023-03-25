@@ -1,6 +1,5 @@
 ﻿namespace WebAPI.Enum
 {
-    //Easier to add new vehicles if we need in the future
     public enum Vehicles
     {
         Car = 0,
