@@ -13,6 +13,7 @@ namespace ConsoleClient
          * @param dates   - date and time of all passes on one day
          * @return - the total toll fee for that day
          */
+
         public int GetTollFee(IVehicle vehicle, DateTime[] dates)
         {
             DateTime intervalStart = dates[0];
@@ -78,45 +79,56 @@ namespace ConsoleClient
             int day = date.Day;
 
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-            if (HolidaysBasedOnEaster(day, month, year)) return true;
-            if (Midsummer(year, day)) return true;
+            if (HolidaysBasedOnEaster(date)) return true;
+            if (MidsummerDay(year, day)) return true;
 
             if (month == 1 && day == 1 ||
                     month == 5 && day == 1 ||
                     month == 6 && day == 6 ||
-                    month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
+                    month == 12 && (day == 24 || day == 25 || 
+                    day == 26 || day == 31))
             {
                 return true;
             }
             return false;
         }
-        private bool Midsummer(int year, int day)
+        private bool MidsummerDay(int year, int day)
         {
-            DateTime startDate = new DateTime(year, 6, 20);
-            int daysToSaturday = (6 - (int)startDate.DayOfWeek) % 7;
-            startDate.AddDays(daysToSaturday);
 
-            if (day == startDate.Day) return true;
+            var midSummer = GetMidSummerDayDate(year);
+            if (day == midSummer.Day) return true;
 
             return false;
         }
 
-
-        public bool HolidaysBasedOnEaster(int day, int month, int year)
+        public DateTime GetMidSummerDayDate(int year)
         {
-            var easter = CalculateEasterDay(year);
-            var longFriday = easter.Day - 2;
-            var maundyThursday = easter.Day - 3;
-            var easterMonday = easter.AddDays(1).Day;
-            var ascensionDate = easter.AddDays(39).Day;
-            var pentecostDate = easter.AddDays(49).Day;
-            var whitemonday = easter.AddDays(50).Day;
+            DateTime startDate = new DateTime(year, 6, 20);
+            int daysToSaturday = (6 - (int)startDate.DayOfWeek) % 7;
+            return startDate.AddDays(daysToSaturday);
+        }
 
 
-            if (month == easter.Month &&
-                (day == easter.Day || day == easter.Day - 1 || day == longFriday ||
-                day == maundyThursday || day == easterMonday || day == ascensionDate ||
-                day == pentecostDate || day == whitemonday)) return true;
+        public bool HolidaysBasedOnEaster(DateTime date)
+        {
+            var easterSunday = CalculateEasterDay(date.Year);
+            var easter = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 1);
+            var longFriday = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 2);
+            var maundyThursday = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 3);
+            var easterMonday = easterSunday.AddDays(1);
+            var ascensionDate = easterSunday.AddDays(39);
+            var pentecostDate = easterSunday.AddDays(49);
+            var whitemonday = easterSunday.AddDays(50);
+
+            if (date.ToString("yyyy-MM-dd") == easter.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == easterSunday.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == maundyThursday.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == maundyThursday.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == easterMonday.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == ascensionDate.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == pentecostDate.ToString("yyyy-MM-dd") ||
+                date.ToString("yyyy-MM-dd") == whitemonday.ToString("yyyy-MM-dd")) return true;
 
             return false;
         }

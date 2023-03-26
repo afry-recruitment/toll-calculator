@@ -1,7 +1,5 @@
 ﻿
 using ConsoleClient;
-using TollFeeCalculator;
-using TollFeeCalculatoric;
 
 TollCalculator tollCalculator = new TollCalculator();
 
@@ -45,11 +43,14 @@ DateTime[] TestMaxCost = { DateTime.UtcNow,
                            new DateTime(2023, 3, 27, 9, 0, 0),
                            new DateTime(2023, 3, 27, 10, 0, 0),
                            new DateTime(2023, 3, 27, 11, 0, 0),
+                           new DateTime(2023, 3, 27, 12, 0, 0),
+                           new DateTime(2023, 3, 27, 13, 0, 0),
+                           new DateTime(2023, 3, 27, 14, 0, 0),
 
 };
 
 #region car
-Console.WriteLine(tollCalculator.CalculateEasterDay(2023));
+Console.WriteLine(tollCalculator.HolidaysBasedOnEaster(new DateTime(2013, 5, 26, 10,2, 0)));
 /*Console.WriteLine("------------------Car-------------------------");
 Console.WriteLine($"On {nameof(SaturDay)} - Total fee: "+tollCalculator.GetTollFee(new Car(), SaturDay));
 Console.WriteLine($"On {nameof(Christmass)} - Total fee: " + tollCalculator.GetTollFee(new Car(), Christmass));
