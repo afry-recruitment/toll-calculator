@@ -1,5 +1,4 @@
-﻿
-namespace Service
+﻿namespace Service
 {
     public class TollCalculator
     {

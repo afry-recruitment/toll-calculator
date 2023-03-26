@@ -1,8 +1,9 @@
-﻿
+﻿using DataLib.Enum;
+
 namespace interfaces
 {
     public interface IVehicle
     {
-        IResult GetVehicleType(string id);
+        IResult GetVehicleType(Vehicles? vehicle);
     }
 }
