@@ -1,31 +1,30 @@
 ﻿using interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
-using WebAPI.DataStrings;
-using WebAPI.Enum;
+using DataLib.Enum;
+using System.Net.Mime;
+using DataLib.Model;
 
 namespace WebAPI.Controllers
 {
-    public class VehicleController : IVehicle
+    public class VehicleController// : IVehicle
     {
         public VehicleController()
         {
         }
 
-        [Route("/GetVehicleType/{id}")]
-        [HttpGet]
-        public IResult GetVehicleType([FromRoute] string id)
+        [HttpGet("{vehicle}")]
+        public VehicleModel? GetVehicleType(Vehicles? vehicle)
         {
-            Regex regex = new Regex(RegexStrings.RegexDoesStringContainNumbers);
-            if (!regex.IsMatch(id))           //fix issue, if id doesnt excist in
-                return Results.BadRequest(); //vehicles it will be set to car. Causes problems
+            if (vehicle == null) return null;
 
-            var currentVehicle = System.Enum.GetName(typeof(Vehicles), int.Parse(id));
-
-            if (currentVehicle is null)
-                return Results.NotFound();
-
-            return Results.Ok(currentVehicle);
+            var model = new VehicleModel
+            {
+                Id = Convert.ToInt32(vehicle),
+                Type = Enum.GetName(typeof(Vehicles), vehicle)
+            };
+            return model;
+            //return Results.Ok(model);
         }
+
     }
 }

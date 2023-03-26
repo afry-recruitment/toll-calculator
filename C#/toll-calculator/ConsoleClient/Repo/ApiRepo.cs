@@ -1,19 +1,25 @@
 ﻿
+using DataLib.Enum;
+using DataLib.Model;
+using Newtonsoft.Json;
+
 namespace ConsoleClient.Repo
 {
-    public class ClassOne
+    public class ApiRepo
     {
-        private static readonly string apiUri = "https://THEURLUWANTTOCALL/api/v1/SomeValue";
+        private static readonly string apiUri = "https://localhost:7246/";
         HttpClient HttpClient { get; }
-        /*public async Task<List<Model>> GetData(string request) =>
+        public async Task<VehicleModel> GetData(Vehicles request) =>
             await DeserializeData(await HttpClient.GetAsync(apiUri + request));
-        private async Task<List<Model>> DeserializeData(HttpResponseMessage responseMessage) =>
+      
+        private async Task<VehicleModel> DeserializeData(HttpResponseMessage responseMessage) =>
             responseMessage.IsSuccessStatusCode ?
-            JsonConvert.DeserializeObject<List<Model>>(
+            JsonConvert.DeserializeObject<VehicleModel>(
                 await responseMessage.Content.ReadAsStringAsync()) : null;
+
         public ApiRepo()
         {
             HttpClient = new HttpClient();
-        }*/
+        }
     }
 }

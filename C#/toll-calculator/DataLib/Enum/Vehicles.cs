@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Enum
+﻿namespace DataLib.Enum
 {
     public enum Vehicles
     {
