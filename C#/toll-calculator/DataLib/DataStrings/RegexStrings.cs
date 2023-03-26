@@ -1,5 +1,4 @@
-﻿
-namespace DataLib.DataStrings
+﻿namespace DataLib.DataStrings
 {
     public class RegexStrings
     {

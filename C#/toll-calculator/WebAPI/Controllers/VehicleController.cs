@@ -1,7 +1,5 @@
-﻿using interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using DataLib.Enum;
-using System.Net.Mime;
 using DataLib.Model;
 
 namespace WebAPI.Controllers
@@ -22,8 +20,7 @@ namespace WebAPI.Controllers
                 Id = Convert.ToInt32(vehicle),
                 Type = Enum.GetName(typeof(Vehicles), vehicle)
             };
-            return model;
-            //return Results.Ok(model);
+            return model;;
         }
 
     }

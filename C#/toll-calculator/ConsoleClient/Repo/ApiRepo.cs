@@ -1,5 +1,4 @@
-﻿
-using DataLib.Enum;
+﻿using DataLib.Enum;
 using DataLib.Model;
 using Newtonsoft.Json;
 

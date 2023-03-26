@@ -1,5 +1,4 @@
-﻿
-namespace DataLib.Model
+﻿namespace DataLib.Model
 {
     public class VehicleModel
     {
