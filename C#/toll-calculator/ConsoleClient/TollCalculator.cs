@@ -112,9 +112,9 @@ namespace ConsoleClient
         public bool HolidaysBasedOnEaster(DateTime date)
         {
             var easterSunday = CalculateEasterDay(date.Year);
-            var easter = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 1);
-            var longFriday = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 2);
-            var maundyThursday = new DateTime(easterSunday.Year, easterSunday.Month, easterSunday.Day - 3);
+            var easter = easterSunday.AddDays(-1);
+            var longFriday = easterSunday.AddDays(-2);
+            var maundyThursday = easterSunday.AddDays(-3);
             var easterMonday = easterSunday.AddDays(1);
             var ascensionDate = easterSunday.AddDays(39);
             var pentecostDate = easterSunday.AddDays(49);
