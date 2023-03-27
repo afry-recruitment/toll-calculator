@@ -83,7 +83,7 @@ namespace ConsoleClient
 
         private bool OtherTollFreeDays(DateTime date)
         {
-            if (date.Month == 1 && date.Day == 1 ||//new year
+            if (date.Month == 1 && (date.Day == 1 || date.Day == 6) || 
            date.Month == 5 && date.Day == 1 ||//first of may
            date.Month == 6 && date.Day == 6 ||//national day
            date.Month == 12 && date.Day == 25 ||//christmass days and new year
@@ -96,15 +96,13 @@ namespace ConsoleClient
         {
             var currentDate = new DateTime(date.Year, date.Month, date.Day);
             var easterSunday = GetDateOfEaster(currentDate.Year);
-            var longFriday = easterSunday.AddDays(-2);
-            var easterMonday = easterSunday.AddDays(1);
-            var ascensionDate = easterSunday.AddDays(39);
-            var pentecostDay = easterSunday.AddDays(49);
+            var longFriday = easterSunday.AddDays(-2);//lång fredag
+            var easterMonday = easterSunday.AddDays(1);//Pingst afton
+            var ascensionDay = easterSunday.AddDays(39);//Kristi himmelsfärds
 
             if (currentDate.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
                 currentDate.ToString("yyyy-MM-dd") == easterMonday.ToString("yyyy-MM-dd") ||
-                currentDate.ToString("yyyy-MM-dd") == ascensionDate.ToString("yyyy-MM-dd") ||
-                currentDate.ToString("yyyy-MM-dd") == pentecostDay.ToString("yyyy-MM-dd")) return true;
+                currentDate.ToString("yyyy-MM-dd") == ascensionDay.ToString("yyyy-MM-dd")) return true;
 
             return false;
         }

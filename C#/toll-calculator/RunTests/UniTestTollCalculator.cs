@@ -102,9 +102,11 @@ namespace RunTests
                            new DateTime(2023, 12, 24, 9, 30, 0),
                            new DateTime(2023, 12, 24, 12, 30, 0),
                            new DateTime(2023, 12, 24, 14, 00, 0),
+
                            new DateTime(2013, 12, 24, 9, 30, 0),
                            new DateTime(2013, 12, 24, 12, 30, 0),
                            new DateTime(2013, 12, 24, 14, 0, 0),
+
                            new DateTime(1989, 12, 24, 9, 30, 0),
                            new DateTime(1989, 12, 24, 12, 30, 0),
                            new DateTime(1989, 12, 24, 14, 0, 0)
@@ -121,9 +123,11 @@ namespace RunTests
                            new DateTime(2023, 5, 1, 9, 30, 0),
                            new DateTime(2023, 5, 1, 11, 30, 0),
                            new DateTime(2023, 5, 1, 14, 30, 0),
+
                            new DateTime(2013, 5, 1, 9, 30, 0),
                            new DateTime(2013, 5, 1, 11, 30, 0),
                            new DateTime(2013, 5, 1, 14, 30, 0),
+
                            new DateTime(1989, 5, 1, 9, 30, 0),
                            new DateTime(1989, 5, 1, 11, 30, 0),
                            new DateTime(1989, 5, 1, 14, 30, 0)
@@ -136,10 +140,18 @@ namespace RunTests
         [Test]
         public void LongFriday_ExpectNoCost()
         {
-            DateTime[] dateTime = { 
+            DateTime[] dateTime = {
+                           new DateTime(2023, 4, 7, 15, 0, 0),
                            new DateTime(2023, 4, 7, 16, 0, 0),
+                           new DateTime(2023, 4, 7, 17, 0, 0),
+
+                           new DateTime(2013, 3, 29, 15, 30, 0),
                            new DateTime(2013, 3, 29, 16, 30, 0),
+                           new DateTime(2013, 3, 29, 17, 30, 0),
+
+                           new DateTime(1989, 3, 24, 15, 30, 0),
                            new DateTime(1989, 3, 24, 16, 30, 0),
+                           new DateTime(1989, 3, 24, 17, 30, 0),
             };
             int expectedCost = 0;
             var actualCost = tollCalculator.GetTollFee(new Car(), dateTime);
@@ -153,9 +165,11 @@ namespace RunTests
                            new DateTime(2023, 4, 10, 15, 0, 0),
                            new DateTime(2023, 4, 10, 16, 0, 0),
                            new DateTime(2023, 4, 10, 17, 0, 0),
+
                            new DateTime(2013, 4, 1, 15, 0, 0),
                            new DateTime(2013, 4, 1, 16, 0, 0),
                            new DateTime(2013, 4, 1, 17, 8, 0),
+
                            new DateTime(1989, 3, 27, 15, 0, 0),
                            new DateTime(1989, 3, 27, 16, 0, 0),
                            new DateTime(1989, 3, 27, 17, 0, 0),
@@ -168,7 +182,6 @@ namespace RunTests
         [Test]
         public void NatonalDay_ExpectNoCost()
         {
-            //TODO finish up
             DateTime[] dateTime = {
                            new DateTime(2023, 6, 6, 15, 0, 0),
                            new DateTime(2023, 6, 6, 16, 0, 0),
@@ -182,52 +195,48 @@ namespace RunTests
         [Test]
         public void NewYear_ExpectNoCost()
         {
-            //TODO finish up
             DateTime[] dateTime = {
-                           new DateTime(2023, 4, 10, 15, 0, 0),
-                           new DateTime(2013, 4, 1, 15, 30, 0),
-                           new DateTime(1989, 3, 27, 11, 30, 0),
+                           new DateTime(2023, 12, 31, 15, 0, 0),
+                           new DateTime(2023, 12, 31, 16, 0, 0),
+                           new DateTime(2023, 12, 31, 17, 0, 0),
+                           new DateTime(2023, 1, 1, 15, 0, 0),
+                           new DateTime(2023, 1, 1, 16, 0, 0),
+                           new DateTime(2023, 1, 1, 17, 0, 0),
+
+                           new DateTime(2013, 12, 31, 15, 30, 0),
+                           new DateTime(2013, 12, 31, 15, 30, 0),
+                           new DateTime(2013, 12, 31, 15, 30, 0),
+                           new DateTime(2013, 1, 1, 15, 0, 0),
+                           new DateTime(2013, 1, 1, 16, 0, 0),
+                           new DateTime(2013, 1, 1, 17, 0, 0),
+
+                           new DateTime(1989, 12, 31, 15, 30, 0),
+                           new DateTime(1989, 12, 31, 16, 30, 0),
+                           new DateTime(1989, 12, 31, 17, 30, 0),
+                           new DateTime(1989, 1, 1, 15, 30, 0),
+                           new DateTime(1989, 1, 1, 16, 30, 0),
+                           new DateTime(1989, 1, 1, 17, 30, 0),
             };
             int expectedCost = 0;
             var actualCost = tollCalculator.GetTollFee(new Car(), dateTime);
             Assert.That(actualCost, Is.EqualTo(expectedCost), $"Actual cost: {actualCost} expected: {expectedCost}");
         }
-        //TODO Code Below needs to be lockt over so its tested correctly
 
         [Test]
-        public void AscensionDate_ExpectNoCost()//Kristi himmelsfärds
+        public void AscensionDay_ExpectNoCost()//Kristi himmelsfärds
         {
-            //TODO finish up
             DateTime[] dateTime = {
                            new DateTime(2023, 5, 18, 15, 0, 0),
                            new DateTime(2023, 5, 18, 16, 0, 0),
                            new DateTime(2023, 5, 18, 17, 0, 0),
+
                            new DateTime(2013, 5, 9, 15, 0, 0),
                            new DateTime(2013, 5, 9, 16, 0, 0),
                            new DateTime(2013, 5, 9, 17, 0, 0),
+
                            new DateTime(1989, 5, 4, 15, 0, 0),
                            new DateTime(1989, 5, 4, 16, 0, 0),
                            new DateTime(1989, 5, 4, 17, 0, 0),
-            };
-            int expectedCost = 0;
-            var actualCost = tollCalculator.GetTollFee(new Car(), dateTime);
-            Assert.That(actualCost, Is.EqualTo(expectedCost), $"Actual cost: {actualCost} expected: {expectedCost}");
-        }
-
-        [Test]
-        public void PentecostDay_ExpectNoCost()//Pingstdagen
-        {
-            //TODO finish up
-            DateTime[] dateTime = {
-                           new DateTime(2023, 5, 28, 15, 0, 0),
-                           new DateTime(2023, 5, 28, 16, 0, 0),
-                           new DateTime(2023, 5, 28, 17, 0, 0),
-                           new DateTime(2013, 5, 19, 15, 0, 0),
-                           new DateTime(2013, 5, 19, 16, 0, 0),
-                           new DateTime(2013, 5, 19, 17, 0, 0),
-                           new DateTime(1989, 5, 14, 15, 0, 0),
-                           new DateTime(1989, 5, 14, 16, 0, 0),
-                           new DateTime(1989, 5, 14, 17, 0, 0)
             };
             int expectedCost = 0;
             var actualCost = tollCalculator.GetTollFee(new Car(), dateTime);
