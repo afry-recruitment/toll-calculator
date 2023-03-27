@@ -27,6 +27,7 @@ namespace RunTests
                            new DateTime(2023, 3, 22, 15, 0, 0),
                            new DateTime(2023, 3, 22, 15, 15, 0),
                            new DateTime(2023, 3, 22, 15, 30, 0),
+
                            new DateTime(2023, 3, 22, 16, 0, 0),
                            new DateTime(2023, 3, 22, 16, 15, 0),
                            new DateTime(2023, 3, 22, 16, 30, 0),
@@ -43,9 +44,11 @@ namespace RunTests
                            new DateTime(2023, 3, 25, 9, 30, 0),//Saturday
                            new DateTime(2023, 3, 25, 14, 0, 0),
                            new DateTime(2023, 3, 25, 16, 0, 0),
+
                            new DateTime(2023, 3, 26, 9, 30, 0),//SunDay
                            new DateTime(2023, 3, 26, 12, 30, 0),
                            new DateTime(2023, 3, 26, 14, 10, 0),
+
                            new DateTime(2023, 3, 26, 16, 45, 0),
                            new DateTime(2023, 3, 26, 17, 30, 0)
             };
@@ -61,15 +64,19 @@ namespace RunTests
                            new DateTime(2023, 3, 22, 6, 0, 0),
                            //new DateTime(2023, 3, 22, 6, 30, 0),
                            new DateTime(2023, 3, 22, 7, 0, 0),
+
                            new DateTime(2023, 3, 22, 8, 0, 0),
                            new DateTime(2023, 3, 22, 9, 0, 0),
                            new DateTime(2023, 3, 22, 10, 0, 0),
+
                            new DateTime(2023, 3, 22, 11, 0, 0),
                            new DateTime(2023, 3, 22, 12, 0, 0),
                            new DateTime(2023, 3, 22, 13, 0, 0),
+
                            new DateTime(2023, 3, 22, 14, 0, 0),
                            new DateTime(2023, 3, 22, 16, 0, 0),
                            new DateTime(2023, 3, 22, 17, 0, 0),
+
                            new DateTime(2023, 3, 22, 18, 0, 0),
                            new DateTime(2023, 3, 22, 19, 0, 0),
                            new DateTime(2023, 3, 22, 20, 0, 0),
@@ -86,6 +93,7 @@ namespace RunTests
                            new DateTime(2023, 12, 25, 9, 30, 0),
                            new DateTime(2023, 12, 26, 14, 0, 0),
                            new DateTime(2013, 12, 25, 9, 0, 0),
+
                            new DateTime(2013, 12, 26, 14, 0, 0),
                            new DateTime(1989, 12, 25, 9, 0, 0),
                            new DateTime(1989, 12, 26, 14, 0, 0),
