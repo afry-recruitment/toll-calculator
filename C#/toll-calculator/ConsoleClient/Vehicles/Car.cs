@@ -3,7 +3,7 @@ using DataLib.Interfaces;
 
 namespace TollFeeCalculatoric
 {
-    class Car : IVehicle
+    public class Car : IVehicle
     {
         public string GetVehicleType()
         {

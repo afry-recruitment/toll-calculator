@@ -74,91 +74,41 @@ namespace ConsoleClient
 
         private bool IsTollFreeDate(DateTime date)
         {
-            int year = date.Year;
-            int month = date.Month;
-            int day = date.Day;
-
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
             if (HolidaysBasedOnEaster(date)) return true;
-            if (MidsummerDay(year, day)) return true;
-
-            if (month == 1 && day == 1 ||
-                    month == 5 && day == 1 ||
-                    month == 6 && day == 6 ||
-                    month == 12 && (day == 24 || day == 25 || 
-                    day == 26 || day == 31))
-            {
-                return true;
-            }
-            return false;
-        }
-        private bool MidsummerDay(int year, int day)
-        {
-
-            var midSummer = GetMidSummerDayDate(year);
-            if (day == midSummer.Day) return true;
+            if (OtherTollFreeDays(date)) return true;
 
             return false;
         }
 
-        public DateTime GetMidSummerDayDate(int year)
+        private bool OtherTollFreeDays(DateTime date)
         {
-            DateTime startDate = new DateTime(year, 6, 20);
-            int daysToSaturday = (6 - (int)startDate.DayOfWeek) % 7;
-            return startDate.AddDays(daysToSaturday);
+            if (date.Month == 1 && date.Day == 1 ||//new year
+           date.Month == 5 && date.Day == 1 ||//first of may
+           date.Month == 6 && date.Day == 6 ||//national day
+           date.Month == 12 && date.Day == 25 ||//christmass days and new year
+           date.Day == 26 || date.Day == 31) return true;
+
+            return false;
         }
 
-
-        public bool HolidaysBasedOnEaster(DateTime date)
+        private bool HolidaysBasedOnEaster(DateTime date)
         {
-            var easterSunday = GetDateOfEaster(date.Year);
+            var currentDate = new DateTime(date.Year, date.Month, date.Day);
+            var easterSunday = GetDateOfEaster(currentDate.Year);
             var longFriday = easterSunday.AddDays(-2);
             var easterMonday = easterSunday.AddDays(1);
             var ascensionDate = easterSunday.AddDays(39);
-            var pentecostDate = easterSunday.AddDays(49);
-            var whitemonday = easterSunday.AddDays(50);
+            var pentecostDay = easterSunday.AddDays(49);
 
-            if (date.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == easterMonday.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == ascensionDate.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == pentecostDate.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == whitemonday.ToString("yyyy-MM-dd")) return true;
+            if (currentDate.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
+                currentDate.ToString("yyyy-MM-dd") == easterMonday.ToString("yyyy-MM-dd") ||
+                currentDate.ToString("yyyy-MM-dd") == ascensionDate.ToString("yyyy-MM-dd") ||
+                currentDate.ToString("yyyy-MM-dd") == pentecostDay.ToString("yyyy-MM-dd")) return true;
 
             return false;
         }
-        /// <summary>
-        /// ChatGDP version, works flawlessly but also wanted to try my own version.
-        /// Its pretty hardcore math below, 
-        /// I also did my own version below.
-        /// </summary>
-        /// <returns></returns>
-        public DateTime ChatGDPCalcEasters(int year)
-        {
-            int goldenNumber = year % 19 + 1;
-            int century = year / 100 + 1;
-            int skippedLeapYears = (3 * century / 4) - 12;
-            int correction = ((8 * century + 5) / 25) - 5;
-            int epact = (11 * goldenNumber + 20 + correction - skippedLeapYears) % 30;
-            if (epact == 25 && goldenNumber > 11 || epact == 24)
-            {
-                epact++;
-            }
-            int fullMoon = 44 - epact;
-            if (fullMoon < 21)
-            {
-                fullMoon += 30;
-            }
-            int sunday = (fullMoon + 7) - ((year + year / 4 + fullMoon + 1) % 7);
-            if (sunday > 31)
-            {
-                sunday -= 31;
-                return new DateTime(year, 4, sunday);
-            }
-            else
-            {
-                return new DateTime(year, 3, sunday);
-            }
-        }
+
         /// <summary>
         /// Calculate when easter appears every year. 
         /// Used the math from link: https://www.rmg.co.uk/stories/topics/when-easter
@@ -174,7 +124,7 @@ namespace ConsoleClient
 
             int goldenNumber = (year % cycleOfDate) * goldenFactor;
             int closestFullMoon = daysBetween - goldenNumber; // calculate the number of days between March 21
-                                                       // and the full moon closest to that date.
+                                                              // and the full moon closest to that date.
 
             if (closestFullMoon > 50)
                 while (closestFullMoon > 51) closestFullMoon = closestFullMoon - 30;
@@ -184,7 +134,7 @@ namespace ConsoleClient
             int weekDayOfEaster = (year + (year / 4) + closestFullMoon + 1) % daysInWeek;
             int easterSunday = closestFullMoon + daysInWeek - weekDayOfEaster;
 
-            return easterSunday > 31 ? new DateTime(year, 04, easterSunday - 31) : new DateTime(year,03,easterSunday);
+            return easterSunday > 31 ? new DateTime(year, 04, easterSunday - 31) : new DateTime(year, 03, easterSunday);
         }
     }
 }
