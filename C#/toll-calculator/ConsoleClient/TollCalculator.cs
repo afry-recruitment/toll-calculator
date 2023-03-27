@@ -111,20 +111,14 @@ namespace ConsoleClient
 
         public bool HolidaysBasedOnEaster(DateTime date)
         {
-            var easterSunday = CalculateEasterDay(date.Year);
-            var easter = easterSunday.AddDays(-1);
+            var easterSunday = GetDateOfEaster(date.Year);
             var longFriday = easterSunday.AddDays(-2);
-            var maundyThursday = easterSunday.AddDays(-3);
             var easterMonday = easterSunday.AddDays(1);
             var ascensionDate = easterSunday.AddDays(39);
             var pentecostDate = easterSunday.AddDays(49);
             var whitemonday = easterSunday.AddDays(50);
 
-            if (date.ToString("yyyy-MM-dd") == easter.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == easterSunday.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == maundyThursday.ToString("yyyy-MM-dd") ||
-                date.ToString("yyyy-MM-dd") == maundyThursday.ToString("yyyy-MM-dd") ||
+            if (date.ToString("yyyy-MM-dd") == longFriday.ToString("yyyy-MM-dd") ||
                 date.ToString("yyyy-MM-dd") == easterMonday.ToString("yyyy-MM-dd") ||
                 date.ToString("yyyy-MM-dd") == ascensionDate.ToString("yyyy-MM-dd") ||
                 date.ToString("yyyy-MM-dd") == pentecostDate.ToString("yyyy-MM-dd") ||
@@ -132,8 +126,13 @@ namespace ConsoleClient
 
             return false;
         }
-
-        public DateTime CalculateEasterDay(int year)
+        /// <summary>
+        /// ChatGDP version, works flawlessly but also wanted to try my own version.
+        /// Its pretty hardcore math below, 
+        /// I also did my own version below.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime ChatGDPCalcEasters(int year)
         {
             int goldenNumber = year % 19 + 1;
             int century = year / 100 + 1;
@@ -159,6 +158,33 @@ namespace ConsoleClient
             {
                 return new DateTime(year, 3, sunday);
             }
+        }
+        /// <summary>
+        /// Calculate when easter appears every year. 
+        /// Used the math from link: https://www.rmg.co.uk/stories/topics/when-easter
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public DateTime GetDateOfEaster(int year)
+        {
+            const int goldenFactor = 11;//Spread the values out over a range of 0 to 18
+            const int daysInWeek = 7;
+            const int cycleOfDate = 19;//19 years during which the date of Easter repeats itself
+            const int daysBetween = 225;//days between March 21 (the approximate date)
+
+            int goldenNumber = (year % cycleOfDate) * goldenFactor;
+            int closestFullMoon = daysBetween - goldenNumber; // calculate the number of days between March 21
+                                                       // and the full moon closest to that date.
+
+            if (closestFullMoon > 50)
+                while (closestFullMoon > 51) closestFullMoon = closestFullMoon - 30;
+            else if (closestFullMoon > 48)
+                closestFullMoon = closestFullMoon - 1;
+
+            int weekDayOfEaster = (year + (year / 4) + closestFullMoon + 1) % daysInWeek;
+            int easterSunday = closestFullMoon + daysInWeek - weekDayOfEaster;
+
+            return easterSunday > 31 ? new DateTime(year, 04, easterSunday - 31) : new DateTime(year,03,easterSunday);
         }
     }
 }

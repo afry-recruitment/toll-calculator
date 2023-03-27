@@ -50,7 +50,9 @@ DateTime[] TestMaxCost = { DateTime.UtcNow,
 };
 
 #region car
-Console.WriteLine(tollCalculator.HolidaysBasedOnEaster(new DateTime(2013, 4, 2, 10,2, 0)));
+Console.WriteLine(tollCalculator.HolidaysBasedOnEaster(new DateTime(1989, 3, 27, 14, 0, 0)));
+//Console.WriteLine(tollCalculator.GetDateOfEaster(2023));
+
 /*Console.WriteLine("------------------Car-------------------------");
 Console.WriteLine($"On {nameof(SaturDay)} - Total fee: "+tollCalculator.GetTollFee(new Car(), SaturDay));
 Console.WriteLine($"On {nameof(Christmass)} - Total fee: " + tollCalculator.GetTollFee(new Car(), Christmass));
