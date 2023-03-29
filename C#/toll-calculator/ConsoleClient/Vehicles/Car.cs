@@ -1,7 +1,7 @@
 ﻿using ConsoleClient.Enum;
 using ConsoleClient.Interfaces;
 
-namespace TollFeeCalculatoric
+namespace TollFeeCalculator
 {
     public class Car : IVehicle
     {

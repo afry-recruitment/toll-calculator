@@ -130,7 +130,7 @@ namespace ConsoleClient
         /// </summary>
         /// <param name="year"></param>
         /// <returns></returns>
-        public DateTime GetDateOfEaster(int year)
+        private DateTime GetDateOfEaster(int year)
         {
             const byte goldenFactor = 11;//Spread the values out over a range of 0 to 18
             const byte daysInWeek = 7;

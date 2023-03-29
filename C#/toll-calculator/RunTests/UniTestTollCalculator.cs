@@ -1,7 +1,7 @@
 using ConsoleClient;
 using ConsoleClient.Interfaces;
 using TollFeeCalculator;
-using TollFeeCalculatoric;
+using TollFeeCalculator;
 
 namespace RunTests
 {
@@ -32,11 +32,11 @@ namespace RunTests
         public void ChargedOncePerHour_HourEightAndMore()
         {
             DateTime[] dateTimes = {
-                           new DateTime(2023, 3, 22, 8, 0, 0),//13
+                           new DateTime(2023, 3, 22, 8, 0, 0),
                            new DateTime(2023, 3, 22, 8, 45, 0),
-                           new DateTime(2023, 3, 22, 10, 15, 0),//8
-                           new DateTime(2023, 3, 22, 13, 54, 0),//8
-                           new DateTime(2023, 3, 22, 14, 54, 0)//8
+                           new DateTime(2023, 3, 22, 10, 15, 0),
+                           new DateTime(2023, 3, 22, 13, 54, 0),
+                           new DateTime(2023, 3, 22, 14, 54, 0)
             };
             int expectedCost = 37;
             var actualCost = tollCalculator.GetTollFee(new Car("abc123"), dateTimes);
