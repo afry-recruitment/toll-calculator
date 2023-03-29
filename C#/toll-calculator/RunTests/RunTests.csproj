@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConsoleClient\ConsoleClient.csproj" />
-    <ProjectReference Include="..\DataLib\DataLib.csproj" />
   </ItemGroup>
 
 </Project>

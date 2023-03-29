@@ -1,4 +1,4 @@
-﻿namespace DataLib.Enum
+﻿namespace ConsoleClient.Enum
 {
     public enum TollFreeVehicles
     {
