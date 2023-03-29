@@ -1,4 +1,6 @@
 using ConsoleClient;
+using ConsoleClient.Interfaces;
+using TollFeeCalculator;
 using TollFeeCalculatoric;
 
 namespace RunTests
@@ -289,5 +291,43 @@ namespace RunTests
             var actualCost = tollCalculator.GetTollFee(new Car("abc123"), dateTime);
             Assert.That(actualCost, Is.EqualTo(expectedCost), $"Actual cost: {actualCost} expected: {expectedCost}");
         }
+
+        [Test]
+        public void TollFreeVehiclesTest()
+        {
+            DateTime[] dateTime = {
+                           new DateTime(2023, 5, 18, 15, 0, 0),
+                           new DateTime(2023, 5, 18, 16, 0, 0),
+                           new DateTime(2023, 5, 18, 17, 0, 0),
+
+                           new DateTime(2013, 5, 9, 15, 0, 0),
+                           new DateTime(2013, 5, 9, 16, 0, 0),
+                           new DateTime(2013, 5, 9, 17, 0, 0),
+
+                           new DateTime(1989, 5, 4, 15, 0, 0),
+                           new DateTime(1989, 5, 4, 16, 0, 0),
+                           new DateTime(1989, 5, 4, 17, 0, 0),
+            };
+
+            List<IVehicle> vehicles = new List<IVehicle> 
+            { 
+                new Diplomat("AFE342"), 
+                new Emergency("CCE345"), 
+                new Foreign("VC34523"), 
+                new Military("TTY554"), 
+                new Motorbike("FFR564"), 
+                new Tractor("GTE543")
+            };
+
+            int actualCost = 0;
+            int expectedCost = 0;
+
+            foreach (var vehicle in vehicles)
+              actualCost = actualCost + tollCalculator.GetTollFee(vehicle, dateTime);
+            
+            Assert.That(actualCost, Is.EqualTo(expectedCost), $"Actual cost: {actualCost} expected: {expectedCost}");
+        }
+
+
     }
 }
