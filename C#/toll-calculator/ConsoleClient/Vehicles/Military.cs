@@ -5,11 +5,8 @@ namespace TollFeeCalculator
 {
     public class Military : IVehicle
     {
-        public string? RegNumber { get; }
-
-        public string GetVehicleType()
-        {
-            return Vehicles.Military.ToString();
-        }
+        public string RegNumber { get; }
+        public string GetVehicleType() { return Vehicles.Military.ToString(); }
+        public Military(string regNumber) { RegNumber = regNumber; }
     }
 }

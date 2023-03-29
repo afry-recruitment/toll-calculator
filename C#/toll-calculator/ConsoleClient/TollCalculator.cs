@@ -13,6 +13,7 @@ namespace ConsoleClient
          * @param dates   - date and time of all passes on one day
          * @return - the total toll fee for that day
          */
+
         private List<TollData> tollData = new List<TollData>();
         public int GetTollFee(IVehicle vehicle, DateTime[] dates)
         {

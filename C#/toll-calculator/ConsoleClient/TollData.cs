@@ -1,5 +1,4 @@
-﻿
-using ConsoleClient.Interfaces;
+﻿using ConsoleClient.Interfaces;
 
 namespace ConsoleClient
 {
@@ -19,12 +18,11 @@ namespace ConsoleClient
             DroveThruCount = droveThruCount;
         }
 
-        public TollData UpdateTollData(DateTime droveThruDate, int droveThruCount) =>
+        public TollData UpdateTollData(
+            DateTime droveThruDate, int droveThruCount) =>
             new TollData(
                 Vehicle,
                 droveThruDate,
                 droveThruCount);
-        
-
     }
 }
