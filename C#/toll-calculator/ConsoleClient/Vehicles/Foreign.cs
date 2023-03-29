@@ -6,12 +6,7 @@ namespace TollFeeCalculator
     public class Foreign : IVehicle
     {
         public string RegNumber { get; }
-
-        public string GetVehicleType()
-        {
-            return Vehicles.Foreign.ToString();
-        }
+        public string GetVehicleType(){ return Vehicles.Foreign.ToString(); }
         public Foreign(string regNumber) { RegNumber = regNumber; }
-
     }
 }

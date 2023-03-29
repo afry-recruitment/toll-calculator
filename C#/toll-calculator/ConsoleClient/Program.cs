@@ -1,3 +1,2 @@
-﻿
-using ConsoleClient;
+﻿using ConsoleClient;
 Console.WriteLine("hey");

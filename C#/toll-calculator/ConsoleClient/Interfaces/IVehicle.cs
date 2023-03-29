@@ -1,5 +1,4 @@
-﻿
-namespace ConsoleClient.Interfaces
+﻿namespace ConsoleClient.Interfaces
 {
     public interface IVehicle
     {
