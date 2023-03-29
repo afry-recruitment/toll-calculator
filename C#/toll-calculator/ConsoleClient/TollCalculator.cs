@@ -1,5 +1,5 @@
-﻿using DataLib.Enum;
-using DataLib.Interfaces;
+﻿using ConsoleClient.Enum;
+using ConsoleClient.Interfaces;
 
 namespace ConsoleClient
 {
@@ -13,29 +13,40 @@ namespace ConsoleClient
          * @param dates   - date and time of all passes on one day
          * @return - the total toll fee for that day
          */
-
+        private List<TollData> tollData = new List<TollData>();
         public int GetTollFee(IVehicle vehicle, DateTime[] dates)
         {
-            DateTime intervalStart = dates[0];
+            var tollDataOnVehicle = tollData.FirstOrDefault(v => v.Vehicle.RegNumber == vehicle.RegNumber);
             int totalFee = 0;
+            int currentFee = 0;
+
             foreach (DateTime date in dates)
             {
-                int nextFee = GetTollFee(date, vehicle);
-                int tempFee = GetTollFee(intervalStart, vehicle);
-
-                long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-                long minutes = diffInMillies / 1000 / 60;
-
-                if (minutes <= 60)
+                if (tollDataOnVehicle == null)
                 {
-                    if (totalFee > 0) totalFee -= tempFee;
-                    if (nextFee >= tempFee) tempFee = nextFee;
-                    totalFee += tempFee;
+                    tollDataOnVehicle = new TollData(vehicle, date, 1);
+                    currentFee = GetTollFee(date, tollDataOnVehicle);
                 }
-                else
+                else if (tollDataOnVehicle.DroveThruDate.Hour == date.Hour)
                 {
-                    totalFee += nextFee;
+                    var droveThruCount = tollDataOnVehicle.DroveThruCount + 1;
+                    tollDataOnVehicle = tollDataOnVehicle.UpdateTollData(date, droveThruCount);
+                    currentFee = GetTollFee(date, tollDataOnVehicle);
                 }
+                else if (tollDataOnVehicle.DroveThruDate.Hour < date.Hour)
+                {
+                    if (totalFee == 0)
+                    {
+                        totalFee = totalFee + currentFee;
+                    }
+
+                    tollDataOnVehicle = tollDataOnVehicle.UpdateTollData(date, 1);
+                    totalFee = totalFee + GetTollFee(date, tollDataOnVehicle);
+                }
+            }
+            if (totalFee == 0)
+            {
+                totalFee = currentFee;
             }
             if (totalFee > 60) totalFee = 60;
             return totalFee;
@@ -53,23 +64,28 @@ namespace ConsoleClient
                    vehicleType.Equals(TollFreeVehicles.Military.ToString());
         }
 
-        public int GetTollFee(DateTime date, IVehicle vehicle)
+        public int GetTollFee(DateTime date, TollData tollData)
         {
-            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+            if (IsTollFreeDate(date) || IsTollFreeVehicle(tollData.Vehicle)) return 0;
 
             int hour = date.Hour;
             int minute = date.Minute;
+            int fee = 0;
 
-            if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-            else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-            else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-            else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-            else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-            else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-            else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-            else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-            else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-            else return 0;
+            if (hour < 6 || hour == 18 && minute >= 30) fee = 0;
+            else if (hour == 6 && minute >= 0 && minute <= 29) fee = tollData.DroveThruCount > 1 ? 13 : 8;
+            else if (hour == 6 && minute >= 30 && minute <= 59) fee = 13;
+            else if (hour == 7 && minute >= 0 && minute <= 59) fee = 18;
+            else if (hour == 8 && minute >= 0 && minute <= 29) fee = 13;
+            else if (hour == 8 && minute >= 30 && minute <= 59) fee = tollData.DroveThruCount > 1 ? 13 : 8;
+            else if (hour >= 9 && hour <= 14 && minute >= 0 && minute <= 59) fee = 8;
+            else if (hour == 15 && minute >= 0 && minute <= 29) fee = tollData.DroveThruCount > 1 ? 18 : 13;
+            else if (hour == 15 && minute >= 30 && minute <= 59) fee = 18;
+            else if (hour == 16 && minute >= 0 && minute <= 59) fee = 18;
+            else if (hour == 17 && minute >= 0 && minute <= 59) fee = 13;
+            else if (hour == 18 && minute >= 0 && minute <= 29) fee = 8;
+
+            return fee;
         }
 
         private bool IsTollFreeDate(DateTime date)
@@ -83,7 +99,7 @@ namespace ConsoleClient
 
         private bool OtherTollFreeDays(DateTime date)
         {
-            if (date.Month == 1 && (date.Day == 1 || date.Day == 6) || 
+            if (date.Month == 1 && (date.Day == 1 || date.Day == 6) ||
            date.Month == 5 && date.Day == 1 ||//first of may
            date.Month == 6 && date.Day == 6 ||//national day
            date.Month == 12 && date.Day == 25 ||//christmass days and new year
@@ -115,10 +131,10 @@ namespace ConsoleClient
         /// <returns></returns>
         public DateTime GetDateOfEaster(int year)
         {
-            const int goldenFactor = 11;//Spread the values out over a range of 0 to 18
-            const int daysInWeek = 7;
-            const int cycleOfDate = 19;//19 years during which the date of Easter repeats itself
-            const int daysBetween = 225;//days between March 21 (the approximate date)
+            const byte goldenFactor = 11;//Spread the values out over a range of 0 to 18
+            const byte daysInWeek = 7;
+            const byte cycleOfDate = 19;//19 years during which the date of Easter repeats itself
+            const byte daysBetween = 225;//days between March 21 (the approximate date)
 
             int goldenNumber = (year % cycleOfDate) * goldenFactor;
             int closestFullMoon = daysBetween - goldenNumber; // calculate the number of days between March 21
