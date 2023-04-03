@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "type": "Motorbike"
+  },
+  {
+    "id": "2",
+    "type": "Tractor"
+  },
+  {
+    "id": "3",
+    "type": "Emergency"
+  },
+  {
+    "id": "4",
+    "type": "Diplomat"
+  },
+  {
+    "id": "5",
+    "type": "Foreign"
+  },
+  {
+    "id": "6",
+    "type": "Military"
+  }
+]
