@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1",
+    "name": "MaxFee",
+    "value": 60
+  },
+  {
+    "id": "2",
+    "name": "MaxPeriod",
+    "value":  60
+  }
+]
