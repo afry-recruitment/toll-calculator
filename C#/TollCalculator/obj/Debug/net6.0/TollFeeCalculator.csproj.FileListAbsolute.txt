@@ -1,0 +1,15 @@
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollFeeCalculator.exe
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollFeeCalculator.deps.json
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollFeeCalculator.runtimeconfig.json
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollFeeCalculator.dll
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\bin\Debug\net6.0\TollFeeCalculator.pdb
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.csproj.AssemblyReference.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.AssemblyInfoInputs.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.AssemblyInfo.cs
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.csproj.CoreCompileInputs.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.dll
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\refint\TollFeeCalculator.dll
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.pdb
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\TollFeeCalculator.genruntimeconfig.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollCalculator\obj\Debug\net6.0\ref\TollFeeCalculator.dll

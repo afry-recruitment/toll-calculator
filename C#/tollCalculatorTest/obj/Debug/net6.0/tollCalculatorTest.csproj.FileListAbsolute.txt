@@ -1,0 +1,6 @@
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\bin\Debug\net6.0\CoverletSourceRootsMapping
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\obj\Debug\net6.0\tollCalculatorTest.csproj.AssemblyReference.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\obj\Debug\net6.0\tollCalculatorTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\obj\Debug\net6.0\tollCalculatorTest.AssemblyInfoInputs.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\obj\Debug\net6.0\tollCalculatorTest.AssemblyInfo.cs
+C:\Users\samfa\source\repos\toll-calculator\C#\tollCalculatorTest\obj\Debug\net6.0\tollCalculatorTest.csproj.CoreCompileInputs.cache

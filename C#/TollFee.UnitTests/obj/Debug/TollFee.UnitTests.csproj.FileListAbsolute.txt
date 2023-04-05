@@ -1,0 +1,3 @@
+C:\Users\samfa\source\repos\toll-calculator\C#\TollFee.UnitTests\obj\Debug\TollFee.UnitTests.csproj.AssemblyReference.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollFee.UnitTests\obj\Debug\TollFee.UnitTests.csproj.CoreCompileInputs.cache
+C:\Users\samfa\source\repos\toll-calculator\C#\TollFee.UnitTests\obj\Debug\TollFee.UnitTests.csproj.SuggestedBindingRedirects.cache
