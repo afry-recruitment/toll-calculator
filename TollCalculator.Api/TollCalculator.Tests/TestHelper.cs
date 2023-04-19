@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces.GetTollFee;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using TollCalculator.Domain.Entities;
 using TollCalculator.Infrastructure.Context;
 using TollCalculator.Infrastructure.Repositories;

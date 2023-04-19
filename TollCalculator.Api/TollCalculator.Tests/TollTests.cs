@@ -2,7 +2,6 @@ using Application.Interfaces.GetTollFee;
 using Library.UnitTests;
 using TollCalculator.Domain.DTOs;
 using TollCalculator.Infrastructure.Context;
-using TollCalculator.Infrastructure.Repositories;
 
 namespace TollCalculator.Tests;
 
