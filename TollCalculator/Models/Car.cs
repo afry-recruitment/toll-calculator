@@ -2,8 +2,9 @@
 {
     public class Car : Vehicle
     {
-        public Car()
+        public Car(string licensePlate)
         {
+            LicensePlate = licensePlate;
             IsTollFree = false;
         }
     }

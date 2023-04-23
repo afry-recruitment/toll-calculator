@@ -2,8 +2,9 @@
 {
     public class Motorbike : Vehicle
     {
-        public Motorbike()
+        public Motorbike(string licensePlate)
         {
+            LicensePlate = licensePlate;
             IsTollFree = true;
         }
     }
