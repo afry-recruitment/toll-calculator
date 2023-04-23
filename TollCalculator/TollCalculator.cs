@@ -2,105 +2,120 @@
 
 public class TollCalculator
 {
+    public const int MAXIMUM_DAILY_TOLL_FEE_AMOUNT = 60;
 
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
-    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+    public int CalculateTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
+        if (vehicle == null || dates == null)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
-
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
+            throw new ArgumentNullException();
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
-    }
 
-    private bool IsTollFreeVehicle(IVehicle vehicle)
-    {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
-    }
-
-    public int GetTollFee(DateTime date, IVehicle vehicle)
-    {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
-    }
-
-    private Boolean IsTollFreeDate(DateTime date)
-    {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
-
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
+        // since I hardcoded holiday dates and they change every year
+        if (dates.Any(x => x.Year != 2023))
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
+            throw new Exception();
         }
-        return false;
+
+        if (vehicle.IsTollFree || IsTollFreeDate(dates[0]))
+        {
+            return 0;
+        }
+
+        Array.Sort(dates);
+
+        // start by evaluating first index of array and set totalFee to that value incase length = 1
+        var prevDate = dates[0];
+        int prevFee = GetTollFee(prevDate);
+        int totalFee = prevFee;
+
+        for (int i = 1; i < dates.Length; i++)
+        {
+            var currDate = dates[i];
+            int currFee = GetTollFee(currDate);
+
+            TimeSpan timeDiff = currDate.TimeOfDay - prevDate.TimeOfDay;
+
+            if (timeDiff.TotalMinutes >= 60)
+            {
+                totalFee += currFee;
+            }
+
+            else if (currFee > prevFee)
+            {
+                totalFee += currFee - prevFee;
+            }
+
+            prevFee = currFee;
+            prevDate = currDate;
+        }
+
+        return Math.Min(totalFee, MAXIMUM_DAILY_TOLL_FEE_AMOUNT);
     }
 
-    private enum TollFreeVehicles
+    public int GetTollFee(DateTime date)
     {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
+        switch (date.Hour)
+        {
+            case 6:
+                return date.Minute >= 0 && date.Minute <= 29
+                    ? 8
+                    : 13;
+
+            case 7:
+                return 18;
+
+            case 8:
+                return date.Minute >= 0 && date.Minute <= 29
+                    ? 8
+                    : 13;
+
+            case 15:
+                return date.Minute >= 0 && date.Minute <= 29
+                    ? 13
+                    : 18;
+
+            case 17:
+                return 13;
+
+            case 18:
+                return 8;
+        }
+
+        return 0;
+    }
+
+    // Swedish holidays taken from https://www.kalender.se/helgdagar for 2023
+    // Decided on using hard-coded holidays to avoid complexity, see README on point 6.
+    public bool IsTollFreeDate(DateTime date)
+    {
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+        {
+            return true;
+        }
+
+        switch (date.Month)
+        {
+            case 1:
+                return date.Day == 1 || date.Day == 6;
+
+            case 4:
+                return date.Day == 7 || date.Day == 9 || date.Day == 10;
+
+            case 5:
+                return date.Day == 1 || date.Day == 18 || date.Day == 28;
+
+            case 6:
+                return date.Day == 6 || date.Day == 24;
+
+            case 11:
+                return date.Day == 4;
+
+            case 12:
+                return date.Day == 25 || date.Day == 26;
+
+            default:
+                return false;
+        }
     }
 }
