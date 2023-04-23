@@ -1,10 +1,12 @@
 ﻿namespace TollFeeCalculator
 {
-    public class Car : IVehicle
+    public class Car : Vehicle
     {
-        public String GetVehicleType()
+        public Car()
         {
-            return "Car";
+            VehicleType = "Car";
+            IsTollFree = false;
+            TollFees = new List<TollFee>();
         }
     }
 }
