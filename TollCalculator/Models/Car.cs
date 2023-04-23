@@ -4,7 +4,6 @@
     {
         public Car()
         {
-            VehicleType = "Car";
             IsTollFree = false;
             TollFees = new List<TollFee>();
         }

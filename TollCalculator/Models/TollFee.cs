@@ -4,6 +4,6 @@
     {
         public int TollCost { get; set; }
         public DateTime TollDate { get; set; }
-        public int VehicleId { get; set; }
+        public Vehicle Vehicle { get; set; }
     }
 }
