@@ -1,1 +1,1 @@
-﻿// Run tests to check code functionality
+﻿Console.WriteLine("Hi");
