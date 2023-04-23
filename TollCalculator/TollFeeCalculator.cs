@@ -6,7 +6,7 @@ public class TollFeeCalculator
 
     public int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees)
     {
-        if (DateTime.UtcNow.Hour < 18)
+        if (DateTime.UtcNow.Hour < 19)
         {
             throw new Exception("Cannot start calculating daily total fees before tolls have closed.");
         }
@@ -16,56 +16,47 @@ public class TollFeeCalculator
             throw new ArgumentNullException();
         }
 
-        if (tollFees.Any(x => x.tollDate.Day != DateTime.Today.Day))
+        if (tollFees.Any(x => x.TollDate.Day != DateTime.Today.Day))
         {
             throw new Exception("Can only calculate toll fees from earlier today.");
         }
 
-        // check if all tollFees belong to right vehicle
-        if (!tollFees.All(x => x.vehicleLicensePlate == vehicle.LicensePlate))
+        if (!tollFees.All(x => x.VehicleLicensePlate == vehicle.LicensePlate))
         {
             throw new Exception("Vehicle license plate mismatch.");
         }
 
-        tollFees.OrderBy(t => t.tollDate);
+        tollFees.OrderBy(t => t.TollDate);
 
-        var totalFee = tollFees[0].tollFee;
+        var totalDailyTollFeeAmount = tollFees[0].TollFeeAmount;
+        var prevTollFeeAmount = tollFees[0].TollFeeAmount;
+        var prevTollDate = tollFees[0].TollDate;
 
-        // stop calculating once we hit maximum daily amount
-        while (totalFee < MAXIMUM_DAILY_TOLL_FEE_AMOUNT)
+        for (int i = 1; i < tollFees.Length; i++)
         {
-            var prevTollFee = tollFees[0].tollFee;
-            var prevTollDate = tollFees[0].tollDate;
+            var currTollDate = tollFees[i].TollDate;
+            var currTollFeeAmount = tollFees[i].TollFeeAmount;
 
-            for (int i = 1; i < tollFees.Length; i++)
+            TimeSpan timeDiff = currTollDate.TimeOfDay - prevTollDate.TimeOfDay;
+
+            if (timeDiff.TotalMinutes >= 60)
             {
-                var currTollDate = tollFees[i].tollDate;
-                int currTollFee = tollFees[i].tollFee;
-
-                TimeSpan timeDiff = currTollDate.TimeOfDay - prevTollDate.TimeOfDay;
-
-                if (timeDiff.TotalMinutes >= 60)
-                {
-                    totalFee += currTollFee;
-                }
-
-                else if (currTollFee > prevTollFee)
-                {
-                    totalFee += currTollFee - prevTollFee;
-                }
-
-                prevTollFee = currTollFee;
-                prevTollDate = currTollDate;
+                totalDailyTollFeeAmount += currTollFeeAmount;
             }
+
+            else if (currTollFeeAmount > prevTollFeeAmount)
+            {
+                totalDailyTollFeeAmount += currTollFeeAmount - prevTollFeeAmount;
+            }
+
+            prevTollFeeAmount = currTollFeeAmount;
+            prevTollDate = currTollDate;
         }
 
-        return Math.Min(totalFee, MAXIMUM_DAILY_TOLL_FEE_AMOUNT);
+        return Math.Min(totalDailyTollFeeAmount, MAXIMUM_DAILY_TOLL_FEE_AMOUNT);
     }
 
-    // imagined scenario: every time a vehicle passes the toll booth
-    // the time, toll cost for that hour and the vehicles license plate are saved to a db
-    // when the tolls close at 18, all passings for the vehicle are retrived and the totalcost is calculated above
-    public TollFee CalculateTollFee(Vehicle vehicle, DateTime date)
+    public TollFee NewTollFee(Vehicle vehicle, DateTime date)
     {
         if (vehicle == null)
         {
@@ -82,11 +73,11 @@ public class TollFeeCalculator
             return new TollFee(0, date, vehicle.LicensePlate);
         }
 
-        var tollFee = GetTollFeeForHour(date);
-        return new TollFee(tollFee, date, vehicle.LicensePlate);
+        var tollFeeAmount = GetTollFeeAmount(date);
+        return new TollFee(tollFeeAmount, date, vehicle.LicensePlate);
     }
 
-    public int GetTollFeeForHour(DateTime date)
+    public int GetTollFeeAmount(DateTime date)
     {
         switch (date.Hour)
         {
