@@ -5,6 +5,11 @@ Instead I will focus on the actual functions of calculating the toll-fees, keepi
 
 Being able to run tests should showcase that the code is functional
 
+## Imagined scenario
+Every time a vehicle passes a toll, a record of that moment is saved containing the toll fee amount, the time and the vehicles license plate.
+
+This record would be saved somewhere appropriate, and once the tolls close for the day at 19 the system starts to calculate the total daily toll fee amounts for all vehicles.
+
 ## Requirements and line of thinking
 
 ### 1. Fees will differ between 8 SEK and 18 SEK, depending on the time of day 
@@ -31,7 +36,7 @@ Being able to run tests should showcase that the code is functional
 
 ### 5. Some vehicle types are fee-free
 
-- Attach a bool property for each vehicle type
+- Attach a bool value for different vehicle types
 
 
 ### 6. Weekends and holidays are fee-free
