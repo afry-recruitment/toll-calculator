@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using TollFeeCalculator;
+﻿using TollFeeCalculator;
 
 public class TollCalculator
 {
@@ -13,7 +11,7 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
         DateTime intervalStart = dates[0];
         int totalFee = 0;
@@ -40,7 +38,7 @@ public class TollCalculator
         return totalFee;
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    private bool IsTollFreeVehicle(IVehicle vehicle)
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
@@ -52,7 +50,7 @@ public class TollCalculator
                vehicleType.Equals(TollFreeVehicles.Military.ToString());
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public int GetTollFee(DateTime date, IVehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
