@@ -1,5 +1,5 @@
 ## Assumptions
-This code is never going to see the light of day, so I will just keep it simple for all our sake, ie. not creating an actual useable program such as a WebApi or adding databases with service and repositores etc.
+This code is never going to see the light of day, so I will just keep it simple for all our sakes, ie. not creating an actual useable program such as a WebApi or adding databases with service and repositores etc.
 
 Instead I will focus on the actual functions of calculating the toll-fees, keeping them as accurate to a real-life scenario where databases would be involved and prove the use-cases and stability through testing
 
