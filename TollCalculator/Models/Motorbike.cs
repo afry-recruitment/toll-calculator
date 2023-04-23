@@ -1,4 +1,4 @@
-﻿namespace TollFeeCalculator
+﻿namespace TollCalculator.Models
 {
     public class Motorbike : Vehicle
     {

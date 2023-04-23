@@ -1,6 +1,6 @@
-﻿using TollFeeCalculator;
+﻿using TollCalculator.Models;
 
-public class TollCalculator
+public class TollFeeCalculator
 {
     public const int MAXIMUM_DAILY_TOLL_FEE_AMOUNT = 60;
 
