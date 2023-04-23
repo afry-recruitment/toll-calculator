@@ -77,7 +77,7 @@ public class TollFeeCalculator
         return new TollFee(tollFeeAmount, date, vehicle.LicensePlate);
     }
 
-    public int GetTollFeeAmount(DateTime date)
+    private int GetTollFeeAmount(DateTime date)
     {
         switch (date.Hour)
         {
@@ -111,7 +111,7 @@ public class TollFeeCalculator
 
     // Swedish holidays taken from https://www.kalender.se/helgdagar for 2023
     // Decided on using hard-coded holidays to for simplicity, see README on point 6.
-    public bool IsTollFreeDate(DateTime date)
+    private bool IsTollFreeDate(DateTime date)
     {
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
         {
