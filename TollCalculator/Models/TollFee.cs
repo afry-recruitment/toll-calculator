@@ -2,15 +2,15 @@
 {
     public class TollFee
     {
-        public int tollFee { get; }
-        public DateTime tollDate { get; }
-        public string vehicleLicensePlate { get; }
+        public int TollFeeAmount { get; }
+        public DateTime TollDate { get; }
+        public string VehicleLicensePlate { get; }
 
-        public TollFee(int _tollCost, DateTime _tollDate, string _vehicleLicensePlate)
+        public TollFee(int tollFeeAmount, DateTime tollDate, string vehicleLicensePlate)
         {
-            tollFee = _tollCost;
-            tollDate = _tollDate;
-            vehicleLicensePlate = _vehicleLicensePlate;
+            TollFeeAmount = tollFeeAmount;
+            TollDate = tollDate;
+            VehicleLicensePlate = vehicleLicensePlate;
         }
     }
 }
