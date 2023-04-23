@@ -31,7 +31,7 @@ Code should function on its own without use of external libraries or APIs
 
 ### 5. Some vehicle types are fee-free
 
-- Attach a bool function for each vehicle type
+- Attach a bool property for each vehicle type
 
 
 ### 6. Weekends and holidays are fee-free
