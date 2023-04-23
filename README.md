@@ -1,9 +1,9 @@
 ## Assumptions
-This code is never going to see the light of day, so I will just keep it simple for all our sake, ie. not creating an actual useable program such as a WebApi 
+This code is never going to see the light of day, so I will just keep it simple for all our sake, ie. not creating an actual useable program such as a WebApi or adding databases with service and repositores etc.
+
+Instead I will focus on the actual functions of calculating the toll-fees, keeping them as accurate to a real-life scenario where databases would be involved and prove the use-cases and stability through testing
 
 Being able to run tests should showcase that the code is functional
-
-Code should function on its own without use of external libraries or APIs
 
 ## Requirements and line of thinking
 
@@ -38,13 +38,13 @@ Code should function on its own without use of external libraries or APIs
 
 - This one can be a bit tricky since different countries have different holidays, in this case we use SEK so it should be set to Swedish holidays. 
 
-Obviously hard-coding it is a bad solution, but since I want to limit the scope of this assignment and not rely on external libraries or APIs it might be worth the trade off.
+- Obviously hard-coding it is a bad solution, but since I want to limit the scope of this assignment and not rely on external libraries or APIs it might be worth the trade off.
 
-Could create a function that reads from a json file depending on the culture set for the program, but that would also increase the scope and possibly decrease readability.
+- Could create a function that reads from a json file depending on the culture set for the program, but that would also increase the scope and possibly decrease readability.
 
-According to my line of thinking in 1. I will simply hard-code them, since there is a requirement to use SEK and no requirement to adapt the program to different cultures.
+- According to my line of thinking in 1. I will simply hard-code them, since there is a requirement to use SEK and no requirement to adapt the program to different cultures.
 
-Since holidays unfortunately dont occur the same date every year, I will set the holidays to the dates for 2023 and add a check to see if the year used in the dates for the toll calculation are the correct year.
+- Since holidays unfortunately dont occur the same date every year, I will set the holidays to the dates for 2023 and add a check to see if the year used in the dates for the toll calculation are the correct year.
 
 ## BONUS POINTS:
 
