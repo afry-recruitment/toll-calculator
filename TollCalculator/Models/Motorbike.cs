@@ -5,7 +5,6 @@
         public Motorbike()
         {
             IsTollFree = true;
-            TollFees = new List<TollFee>();
         }
     }
 }
