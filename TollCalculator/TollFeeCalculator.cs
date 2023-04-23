@@ -12,7 +12,7 @@ public class TollFeeCalculator
         }
 
         // check if any of the tollFees are from different days
-        if (tollFees.Select(x => x.tollDate.Day).Distinct().Count() > 1)
+        if (tollFees.Select(x => x.tollDate.Day).Distinct().Count() < 1)
         {
             throw new Exception();
         }
