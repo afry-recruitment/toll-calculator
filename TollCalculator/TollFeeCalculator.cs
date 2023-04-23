@@ -4,56 +4,78 @@ public class TollFeeCalculator
 {
     public const int MAXIMUM_DAILY_TOLL_FEE_AMOUNT = 60;
 
-    public int CalculateTollFee(Vehicle vehicle, DateTime[] dates)
+    public int CalculateTotalTollFee(Vehicle vehicle, TollFee[] tollFees)
     {
-        if (vehicle == null || dates == null)
+        if (vehicle == null || tollFees == null)
         {
             throw new ArgumentNullException();
         }
 
-        // since I hardcoded holiday dates and they change every year
-        if (dates.Any(x => x.Year != 2023))
+        // check if any of the tollFees are from different days
+        if (tollFees.Select(x => x.tollDate.Day).Distinct().Count() > 1)
         {
             throw new Exception();
         }
 
-        if (vehicle.IsTollFree || IsTollFreeDate(dates[0]))
+        // check if all tollFees belong to right vehicle
+        if (tollFees.Any(x => x.vehicleLicensePlate != vehicle.LicensePlate))
         {
-            return 0;
+            throw new Exception();
         }
 
-        Array.Sort(dates);
+        tollFees.OrderBy(t => t.tollDate);
 
-        // start by evaluating first index of array and set totalFee to that value incase length = 1
-        var prevDate = dates[0];
-        int prevFee = GetTollFee(prevDate);
-        int totalFee = prevFee;
+        var prevTollFee = tollFees[0].tollFee;
+        var prevTollDate = tollFees[0].tollDate;
+        int totalFee = prevTollFee;
 
-        for (int i = 1; i < dates.Length; i++)
+        for (int i = 1; i < tollFees.Length; i++)
         {
-            var currDate = dates[i];
-            int currFee = GetTollFee(currDate);
+            var currTollDate = tollFees[i].tollDate;
+            int currTollFee = tollFees[i].tollFee;
 
-            TimeSpan timeDiff = currDate.TimeOfDay - prevDate.TimeOfDay;
+            TimeSpan timeDiff = currTollDate.TimeOfDay - prevTollDate.TimeOfDay;
 
             if (timeDiff.TotalMinutes >= 60)
             {
-                totalFee += currFee;
+                totalFee += currTollFee;
             }
 
-            else if (currFee > prevFee)
+            else if (currTollFee > prevTollFee)
             {
-                totalFee += currFee - prevFee;
+                totalFee += currTollFee - prevTollFee;
             }
 
-            prevFee = currFee;
-            prevDate = currDate;
+            prevTollFee = currTollFee;
+            prevTollDate = currTollDate;
         }
 
         return Math.Min(totalFee, MAXIMUM_DAILY_TOLL_FEE_AMOUNT);
     }
 
-    public int GetTollFee(DateTime date)
+    public TollFee CalculateTollFee(Vehicle vehicle, DateTime date)
+    {
+        if (vehicle == null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        // since I hardcoded holiday dates and they change every year
+        if (date.Year != 2023)
+        {
+            throw new Exception();
+        }
+
+        if (vehicle.IsTollFree || IsTollFreeDate(date))
+        {
+            return new TollFee(0, date, vehicle.LicensePlate);
+        }
+
+        var tollFee = GetTollFeeForHour(date);
+        return new TollFee(tollFee, date, vehicle.LicensePlate);
+    }
+
+    public int GetTollFeeForHour(DateTime date)
     {
         switch (date.Hour)
         {
@@ -96,6 +118,7 @@ public class TollFeeCalculator
 
         switch (date.Month)
         {
+            // Month 1, Day 1 or 6 etc
             case 1:
                 return date.Day == 1 || date.Day == 6;
 
