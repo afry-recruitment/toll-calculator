@@ -69,32 +69,34 @@ public static class TollFeeCalculator
         return new TollFee(GetTollFeeAmount(date), date, vehicle.LicensePlate);
     }
 
-    // Toll fees based on Göteborgs trängselskatt, updated for 2023
+    // I have based the times and prices on the original function
+    // but it didnt consider the first 30 minutes of every hour between 09-14
+    // I assume it was a bug and set those times to always cost 8 SEK
     private static int GetTollFeeAmount(DateTime date)
     {
         if (date.Hour == 6)
-            return date.Minute <= 29 ? 9 : 16;
+            return date.Minute <= 29 ? 8 : 13;
 
         if (date.Hour == 7)
-            return 22;
+            return 18;
 
         if (date.Hour == 8)
-            return date.Minute <= 29 ? 16 : 9;
+            return date.Minute <= 29 ? 13 : 8;
 
         if (date.Hour >= 9 || date.Hour <= 14)
-            return 9;
+            return 8;
 
         if (date.Hour == 15)
-            return date.Minute <= 29 ? 16 : 22;
+            return date.Minute <= 29 ? 13 : 18;
 
         if (date.Hour == 16)
-            return 22;
+            return 18;
 
         if (date.Hour == 17)
-            return 16;
+            return 13;
 
         if (date.Hour == 18)
-            return date.Minute <= 29 ? 9 : 0;
+            return date.Minute <= 29 ? 8 : 0;
 
         return 0;
     }
