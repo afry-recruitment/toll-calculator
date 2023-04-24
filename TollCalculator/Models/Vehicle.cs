@@ -3,7 +3,6 @@
     // Made an abstract class instead of an interface to increase flexibility and makes adding new vehicles easy
     public abstract class Vehicle
     {
-        // LicensePlate needs to be unique, but for simplicities sake I ensure that by sending it in as a parameter in the constructor
         public string LicensePlate { get; protected set; }
         public VehicleSector Sector { get; protected set; }
         public bool IsTollFree { get; private set; }
@@ -13,13 +12,10 @@
             LicensePlate = licensePlate;
             Sector = sector;
 
-            // true if the vehicles sector or the name of the derived class exists in TollFreeVehicle
             IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), Sector.ToString())
                       || Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
         }
 
-        // I replaced VehicleType with VehicleSector, since Vehicle is now an abstract class
-        // is the Vehicle Type, and most toll-exempt vehicles are based on the sectors they operate in
         public enum VehicleSector
         {
             Civilian = 0,
@@ -29,9 +25,6 @@
             Military = 4
         }
 
-        // Here you can decide what you want the toll-free vehicles to be
-        // It either needs to be included in the VehicleSector above or
-        // be the class name of a new derived Vehicle
         private enum TollFreeVehicle
         {
             Motorbike = 0,
