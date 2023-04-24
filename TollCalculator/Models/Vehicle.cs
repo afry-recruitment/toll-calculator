@@ -14,7 +14,7 @@
             Sector = sector;
 
             // true if the vehicles sector or the name of the derived class exists in TollFreeVehicle
-            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), Sector)
+            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), Sector.ToString())
                       || Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
         }
 
