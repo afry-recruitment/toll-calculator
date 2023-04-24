@@ -18,6 +18,8 @@
                       || Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
         }
 
+        // I replaced VehicleType with VehicleSector, since Vehicle is now an abstract class
+        // is the Vehicle Type, and most toll-exempt vehicles are based on the sectors they operate in
         public enum VehicleSector
         {
             Civilian = 0,
