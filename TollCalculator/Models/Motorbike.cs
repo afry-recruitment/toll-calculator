@@ -2,10 +2,11 @@
 {
     public class Motorbike : Vehicle
     {
-        public Motorbike(string licensePlate)
+        public new VehicleType VehicleType { get; private set; }
+        public Motorbike(string licensePlate) : base(licensePlate)
         {
             LicensePlate = licensePlate;
-            IsTollFree = true;
+            VehicleType = VehicleType.Motorbike;
         }
     }
 }
