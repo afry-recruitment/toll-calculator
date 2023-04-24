@@ -1,4 +1,5 @@
 ﻿using PublicHoliday;
+using TollCalculator.Exceptions;
 using TollCalculator.Models;
 
 public static class TollFeeCalculator
@@ -10,28 +11,22 @@ public static class TollFeeCalculator
         // Sweden is UTC+2, tolls close at 18:30, calculation should be done long before midnight
         if (DateTime.UtcNow.AddHours(2).TimeOfDay.TotalHours < 18.30)
         {
-            throw new Exception("Cannot start calculating daily total fees before tolls have closed.");
+            throw new TollsHaveNotClosedException();
         }
 
         if (tollFees.Any(x => x.TollDate.Day != DateTime.Today.Day))
         {
-            throw new Exception("Can only calculate toll fees from earlier today.");
+            throw new TollDateDayException();
         }
 
         if (!tollFees.All(x => x.VehicleLicensePlate == vehicle.LicensePlate))
         {
-            throw new Exception("Vehicle license plate mismatch.");
+            throw new VehicleLicensePlateException();
         }
 
         tollFees.OrderBy(t => t.TollDate);
 
-
-        // set the total amount to index[0] of the array incase there is only one tollfee
         var totalDailyTollFeeAmount = tollFees[0].TollFeeAmount;
-
-        // since we do not need to compare time diff for first tollfee of the day
-        // we can start iterating from index[1], these variables will be compared to the 
-        // next index in the array to determine how much the total toll fee will be
         var prevTollFeeAmount = tollFees[0].TollFeeAmount;
         var prevTollDate = tollFees[0].TollDate;
 
@@ -61,9 +56,9 @@ public static class TollFeeCalculator
 
     public static TollFee NewTollFee(Vehicle vehicle, DateTime date)
     {
-        if (date.Year != 2023)
+        if (date.Year != DateTime.Now.Year)
         {
-            throw new Exception();
+            throw new NotCurrentYearException("");
         }
 
         if (vehicle.IsTollFree || IsTollFreeDate(date))
