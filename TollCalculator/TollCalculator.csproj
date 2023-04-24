@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PublicHoliday" Version="2.27.0" />
+  </ItemGroup>
+
 </Project>

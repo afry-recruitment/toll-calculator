@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using PublicHoliday;
 using TollCalculator.Models;
 
 public static class TollFeeCalculator
@@ -7,7 +7,8 @@ public static class TollFeeCalculator
 
     public static int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees)
     {
-        if (DateTime.UtcNow.Hour < 19)
+        // Sweden is UTC+2, tolls close at 18:30, calculation should be done long before midnight
+        if (DateTime.UtcNow.AddHours(2).TimeOfDay.TotalHours < 18.30)
         {
             throw new Exception("Cannot start calculating daily total fees before tolls have closed.");
         }
@@ -24,7 +25,13 @@ public static class TollFeeCalculator
 
         tollFees.OrderBy(t => t.TollDate);
 
+
+        // set the total amount to index[0] of the array incase there is only one tollfee
         var totalDailyTollFeeAmount = tollFees[0].TollFeeAmount;
+
+        // since we do not need to compare time diff for first tollfee of the day
+        // we can start iterating from index[1], these variables will be compared to the 
+        // next index in the array to determine how much the total toll fee will be
         var prevTollFeeAmount = tollFees[0].TollFeeAmount;
         var prevTollDate = tollFees[0].TollDate;
 
@@ -64,80 +71,42 @@ public static class TollFeeCalculator
             return new TollFee(0, date, vehicle.LicensePlate);
         }
 
-        var tollFeeAmount = GetTollFeeAmount(date);
-        return new TollFee(tollFeeAmount, date, vehicle.LicensePlate);
+        return new TollFee(GetTollFeeAmount(date), date, vehicle.LicensePlate);
     }
 
-    // Toll fees as per original code
-    // 6:00 - 6:29 = 8 SEK
-    // 6:30 - 6:59 = 13 SEK
-    // 7:00 - 7:59 = 18 SEK
-    // 08:00 - 08:29 = 13 SEK
-    // 08:30 - 14:30 = 8 SEK <---- bug, doesnt count 9:00 - 9:29, 10:00 - 10:29 etc
-    // 15:00 - 15:29 = 13 SEK 
-    // 15:00 - 16:59 = 18 SEK <---- bug in original code, assuming it should be 15:30 - 16:59
-    // 17:00 - 17:59 = 13 SEK
-    // 18:00 - 18:29 = 8 SEK
+    // Toll fees based on Göteborgs trängselskatt, updated for 2023
     private static int GetTollFeeAmount(DateTime date)
     {
         if (date.Hour == 6)
-            return date.Minute <= 29 ? 8 : 13;
+            return date.Minute <= 29 ? 9 : 16;
 
         if (date.Hour == 7)
-            return 13;
+            return 22;
 
         if (date.Hour == 8)
-            return date.Minute <= 29 ? 13 : 8;
+            return date.Minute <= 29 ? 16 : 9;
 
         if (date.Hour >= 9 || date.Hour <= 14)
-            return 8;
+            return 9;
 
         if (date.Hour == 15)
-            return date.Minute <= 29 ? 13 : 18;
+            return date.Minute <= 29 ? 16 : 22;
 
         if (date.Hour == 16)
-            return 18;
+            return 22;
 
         if (date.Hour == 17)
-            return 13;
+            return 16;
 
         if (date.Hour == 18)
-            return date.Minute <= 29 ? 8 : 0;
+            return date.Minute <= 29 ? 9 : 0;
 
         return 0;
     }
 
-    // Swedish holidays taken from https://www.kalender.se/helgdagar for 2023
-    // Decided on using hard-coded holidays to for simplicity, see README on point 6.
     private static bool IsTollFreeDate(DateTime date)
     {
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-        {
-            return true;
-        }
-
-        switch (date.Month)
-        {
-            case 1:
-                return date.Day == 1 || date.Day == 6;
-
-            case 4:
-                return date.Day == 7 || date.Day == 9 || date.Day == 10;
-
-            case 5:
-                return date.Day == 1 || date.Day == 18 || date.Day == 28;
-
-            case 6:
-                return date.Day == 6 || date.Day == 24;
-
-            case 11:
-                return date.Day == 4;
-
-            case 12:
-                return date.Day == 25 || date.Day == 26;
-
-            default:
-                return false;
-        }
+        return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday
+            || new SwedenPublicHoliday().PublicHolidays(date.Year).Contains(date);
     }
 }
