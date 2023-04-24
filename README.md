@@ -8,7 +8,7 @@ Being able to run tests should showcase that the code is functional
 ## Imagined scenario
 Every time a vehicle passes a toll, a record of that moment is saved containing the toll fee amount, the time and the vehicles license plate.
 
-This record would be saved somewhere appropriate, and once the tolls close for the day at 19 the system starts to calculate the total daily toll fee amounts for all vehicles.
+This record would be saved somewhere appropriate, and once the tolls close for the day at 18:30 the system starts to calculate the total daily toll fee amounts for all vehicles.
 
 ## Requirements and line of thinking
 
@@ -23,8 +23,6 @@ This record would be saved somewhere appropriate, and once the tolls close for t
 ### 3. The maximum fee for one day is 60 SEK
 
 ### 4. A vehicle should only be charged once an hour
-
-- Will calculate the TimeSpan difference between previous and current TollFee to determine
 
 ### 4.1 In the case of multiple fees in the same hour period, the highest one applies.
 
