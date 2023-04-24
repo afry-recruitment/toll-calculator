@@ -1,45 +1,42 @@
 ﻿namespace TollCalculator.Models
 {
-    // Made this an abstract class instead of an interface to improve scaleability incase of future use
+    // Made an abstract class instead of an interface to increase flexibility and makes adding new vehicles easy
     public abstract class Vehicle
     {
         // LicensePlate needs to be unique, but for simplicities sake I ensure that by sending it in as a parameter in the constructor
         public string LicensePlate { get; protected set; }
-        public VehicleType Type { get; protected set; }
+        public VehicleSector Sector { get; protected set; }
         public bool IsTollFree { get; private set; }
 
-        public Vehicle(string licensePlate)
+        public Vehicle(string licensePlate, VehicleSector sector) 
         {
             LicensePlate = licensePlate;
-            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicles), Type);
+            Sector = sector;
+
+            // true if the vehicles sector or the name of the derived class exists in TollFreeVehicle
+            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), Sector)
+                      || Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
         }
 
-        public Vehicle(string licensePlate, VehicleType type) 
+        public enum VehicleSector
         {
-            LicensePlate = licensePlate;
-            Type = type;
-            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicles), Type);
+            Civilian = 0,
+            Emergency = 1,
+            Diplomat = 2,
+            Foreign = 3,
+            Military = 4
         }
 
-        public enum VehicleType
-        {
-            Motorbike = 0,
-            Tractor = 1,
-            Emergency = 2,
-            Diplomat = 3,
-            Foreign = 4,
-            Military = 5,
-            Car = 6
-        }
-
-        private enum TollFreeVehicles
+        // Here you can decide what you want the toll-free vehicles to be
+        // It either needs to be included in the VehicleSector above or
+        // be the class name of a new derived Vehicle
+        private enum TollFreeVehicle
         {
             Motorbike = 0,
-            Tractor = 1,
-            Emergency = 2,
-            Diplomat = 3,
-            Foreign = 4,
-            Military = 5
+            Emergency = 1,
+            Diplomat = 2,
+            Foreign = 3,
+            Military = 4
         }
     }
 }

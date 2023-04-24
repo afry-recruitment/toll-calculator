@@ -2,6 +2,6 @@
 {
     public class Car : Vehicle
     {
-        public Car(string licensePlate, VehicleType type) : base(licensePlate, type) { }
+        public Car(string licensePlate, VehicleSector sector) : base(licensePlate, sector) { }
     }
 }
