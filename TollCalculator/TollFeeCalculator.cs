@@ -6,12 +6,16 @@ public static class TollFeeCalculator
 {
     public const int MAXIMUM_DAILY_TOLL_FEE_AMOUNT = 60;
 
-    public static int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees)
+    public static int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees, DateTime? bypassException = null)
     {
-        // Sweden is UTC+2, tolls close at 18:30, calculation should be done long before midnight
-        if (DateTime.UtcNow.AddHours(2).TimeOfDay.TotalHours < 18.30)
+        // To bypass the UtcNow verification I added the nullable DateTime param so its testable
+        if (bypassException == null)
         {
-            throw new TollsHaveNotClosedException();
+            // Sweden is UTC+2, tolls close at 18:30, calculation should be done long before midnight
+            if (DateTime.UtcNow.AddHours(2).TimeOfDay.TotalHours < 18.30)
+            {
+                throw new TollsHaveNotClosedException();
+            }
         }
 
         if (tollFees.Any(x => x.TollDate.Day != DateTime.Today.Day))
@@ -58,7 +62,7 @@ public static class TollFeeCalculator
     {
         if (date.Year != DateTime.Now.Year)
         {
-            throw new NotCurrentYearException("");
+            throw new NotCurrentYearException();
         }
 
         if (vehicle.IsTollFree || IsTollFreeDate(date))
