@@ -4,25 +4,13 @@
     public abstract class Vehicle
     {
         public string LicensePlate { get; protected set; }
-        public VehicleSector Sector { get; protected set; }
         public bool IsTollFree { get; private set; }
 
-        public Vehicle(string licensePlate, VehicleSector sector) 
+        public Vehicle(string licensePlate) 
         {
             LicensePlate = licensePlate;
-            Sector = sector;
 
-            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), Sector.ToString())
-                      || Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
-        }
-
-        public enum VehicleSector
-        {
-            Civilian = 0,
-            Emergency = 1,
-            Diplomat = 2,
-            Foreign = 3,
-            Military = 4
+            IsTollFree = Enum.IsDefined(typeof(TollFreeVehicle), GetType().Name);
         }
 
         private enum TollFreeVehicle

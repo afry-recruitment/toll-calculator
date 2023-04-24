@@ -9,7 +9,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void CalculateTotalDailyTollFee_ValuesWithin60Min_ShouldReturnHighestFee()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var firstTollDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 45, 0);
             var secondTollDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 7, 15, 0);
             var firstTollFee = TollFeeCalculator.NewTollFee(car, firstTollDate);
@@ -26,7 +26,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void CalculateTotalDailyTollFee_ValuesNotWithin60Min_ShouldReturnSum()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var firstTollDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 45, 0);
             var secondTollDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 15, 0);
             var firstTollFee = TollFeeCalculator.NewTollFee(car, firstTollDate);
@@ -43,7 +43,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void CalculateTotalDailyTollFee_TotalDailyTollFeeExceeded_ShouldReturn60()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var firstTollDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 45, 0);
             var secondTollDate = firstTollDate.AddHours(1.05);
             var thirdTollDate = secondTollDate.AddHours(1.05);
@@ -70,7 +70,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void CalculateTotalDailyTollFee_WithTollFeeDates_NotFromToday_ShouldReturnException()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var firstTollDate = DateTime.Now;
             var secondTollDate = DateTime.Now.AddDays(2);
             var firstTollFee = TollFeeCalculator.NewTollFee(car, firstTollDate);
@@ -84,8 +84,8 @@ namespace TollCalculator.Tests
         [Fact]
         public void CalculateTotalDailyTollFee_WithTollFeeLicensePlates_FromDifferentVehicles_ShouldThrowException()
         {
-            var firstCar = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
-            var secondCar = new Car("AAA-123", Vehicle.VehicleSector.Civilian);
+            var firstCar = new Car("ABC-123");
+            var secondCar = new Car("AAA-123");
             var tollDate = DateTime.Now;
             var firstTollFee = TollFeeCalculator.NewTollFee(firstCar, tollDate);
             var secondTollFee = TollFeeCalculator.NewTollFee(secondCar, tollDate);
@@ -98,11 +98,11 @@ namespace TollCalculator.Tests
         [Fact]
         public void NewTollFee_WithTollFreeVehicle_ShouldReturnTollFeeAmountZero()
         {
-            var carTollFree = new Car("ABC-123", Vehicle.VehicleSector.Military);
+            var motorbike = new Motorbike("ABC-123");
             var tollDate = new DateTime(2023, 1, 2, 6, 15, 0);
             var expected = 0;
 
-            var actual = TollFeeCalculator.NewTollFee(carTollFree, tollDate).TollFeeAmount;
+            var actual = TollFeeCalculator.NewTollFee(motorbike, tollDate).TollFeeAmount;
 
             Assert.Equal(expected, actual);
         }
@@ -110,7 +110,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void NewTollFee_WithTollFreeDate_ShouldReturnTollFeeAmountZero()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var tollFreeDate = new DateTime(2023, 1, 1, 6, 15, 0);
             var expected = 0;
 
@@ -122,7 +122,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void NewTollFee_WithoutTollFreeVehicle_WithoutTollFreeDate_ShouldNotReturnTollFeeAmount()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var tollDate = new DateTime(2023, 1, 2, 6, 15, 0);
             var expected = 8;
 
@@ -134,7 +134,7 @@ namespace TollCalculator.Tests
         [Fact]
         public void NewTollFee_WithoutCurrentYear_ShouldThrowException()
         {
-            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var car = new Car("ABC-123");
             var tollDate = new DateTime(2021, 1, 2, 6, 15, 0);
 
             Assert.Throws<NotCurrentYearException>(() => TollFeeCalculator.NewTollFee(car, tollDate));
