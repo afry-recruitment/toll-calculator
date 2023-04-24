@@ -1,4 +1,5 @@
-﻿using TollCalculator.Models;
+﻿using System.Reflection.Metadata.Ecma335;
+using TollCalculator.Models;
 
 public static class TollFeeCalculator
 {
@@ -53,7 +54,6 @@ public static class TollFeeCalculator
 
     public static TollFee NewTollFee(Vehicle vehicle, DateTime date)
     {
-
         if (date.Year != 2023)
         {
             throw new Exception();
@@ -68,34 +68,41 @@ public static class TollFeeCalculator
         return new TollFee(tollFeeAmount, date, vehicle.LicensePlate);
     }
 
+    // Toll fees as per original code
+    // 6:00 - 6:29 = 8 SEK
+    // 6:30 - 6:59 = 13 SEK
+    // 7:00 - 7:59 = 18 SEK
+    // 08:00 - 08:29 = 13 SEK
+    // 08:30 - 14:30 = 8 SEK <---- bug, doesnt count 9:00 - 9:29, 10:00 - 10:29 etc
+    // 15:00 - 15:29 = 13 SEK 
+    // 15:00 - 16:59 = 18 SEK <---- bug in original code, assuming it should be 15:30 - 16:59
+    // 17:00 - 17:59 = 13 SEK
+    // 18:00 - 18:29 = 8 SEK
     private static int GetTollFeeAmount(DateTime date)
     {
-        switch (date.Hour)
-        {
-            case 6:
-                return date.Minute >= 0 && date.Minute <= 29
-                    ? 8
-                    : 13;
+        if (date.Hour == 6)
+            return date.Minute <= 29 ? 8 : 13;
 
-            case 7:
-                return 18;
+        if (date.Hour == 7)
+            return 13;
 
-            case 8:
-                return date.Minute >= 0 && date.Minute <= 29
-                    ? 8
-                    : 13;
+        if (date.Hour == 8)
+            return date.Minute <= 29 ? 13 : 8;
 
-            case 15:
-                return date.Minute >= 0 && date.Minute <= 29
-                    ? 13
-                    : 18;
+        if (date.Hour >= 9 || date.Hour <= 14)
+            return 8;
 
-            case 17:
-                return 13;
+        if (date.Hour == 15)
+            return date.Minute <= 29 ? 13 : 18;
 
-            case 18:
-                return 8;
-        }
+        if (date.Hour == 16)
+            return 18;
+
+        if (date.Hour == 17)
+            return 13;
+
+        if (date.Hour == 18)
+            return date.Minute <= 29 ? 8 : 0;
 
         return 0;
     }
