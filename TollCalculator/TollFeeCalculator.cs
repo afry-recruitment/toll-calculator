@@ -1,19 +1,14 @@
 ﻿using TollCalculator.Models;
 
-public class TollFeeCalculator
+public static class TollFeeCalculator
 {
     public const int MAXIMUM_DAILY_TOLL_FEE_AMOUNT = 60;
 
-    public int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees)
+    public static int CalculateTotalDailyTollFee(Vehicle vehicle, TollFee[] tollFees)
     {
         if (DateTime.UtcNow.Hour < 19)
         {
             throw new Exception("Cannot start calculating daily total fees before tolls have closed.");
-        }
-
-        if (vehicle == null || tollFees == null)
-        {
-            throw new ArgumentNullException();
         }
 
         if (tollFees.Any(x => x.TollDate.Day != DateTime.Today.Day))
@@ -56,12 +51,8 @@ public class TollFeeCalculator
         return Math.Min(totalDailyTollFeeAmount, MAXIMUM_DAILY_TOLL_FEE_AMOUNT);
     }
 
-    public TollFee NewTollFee(Vehicle vehicle, DateTime date)
+    public static TollFee NewTollFee(Vehicle vehicle, DateTime date)
     {
-        if (vehicle == null)
-        {
-            throw new ArgumentNullException();
-        }
 
         if (date.Year != 2023)
         {
@@ -77,7 +68,7 @@ public class TollFeeCalculator
         return new TollFee(tollFeeAmount, date, vehicle.LicensePlate);
     }
 
-    private int GetTollFeeAmount(DateTime date)
+    private static int GetTollFeeAmount(DateTime date)
     {
         switch (date.Hour)
         {
@@ -111,7 +102,7 @@ public class TollFeeCalculator
 
     // Swedish holidays taken from https://www.kalender.se/helgdagar for 2023
     // Decided on using hard-coded holidays to for simplicity, see README on point 6.
-    private bool IsTollFreeDate(DateTime date)
+    private static bool IsTollFreeDate(DateTime date)
     {
         if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
         {
