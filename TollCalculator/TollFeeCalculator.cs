@@ -72,7 +72,7 @@ public static class TollFeeCalculator
     // I have based the times and prices on the original function
     // but it didnt consider the first 30 minutes of every hour between 09-14
     // I assume it was a bug and set those times to always cost 8 SEK
-    private static int GetTollFeeAmount(DateTime date)
+    public static int GetTollFeeAmount(DateTime date)
     {
         if (date.Hour == 6)
             return date.Minute <= 29 ? 8 : 13;
@@ -83,7 +83,7 @@ public static class TollFeeCalculator
         if (date.Hour == 8)
             return date.Minute <= 29 ? 13 : 8;
 
-        if (date.Hour >= 9 || date.Hour <= 14)
+        if (date.Hour >= 9 && date.Hour <= 14)
             return 8;
 
         if (date.Hour == 15)
@@ -101,7 +101,7 @@ public static class TollFeeCalculator
         return 0;
     }
 
-    private static bool IsTollFreeDate(DateTime date)
+    public static bool IsTollFreeDate(DateTime date)
     {
         return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday
             || new SwedenPublicHoliday().PublicHolidays(date.Year).Contains(date);
