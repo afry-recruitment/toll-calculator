@@ -34,7 +34,7 @@ This record would be saved somewhere appropriate, and once the tolls close for t
 
 ### 6. Weekends and holidays are fee-free
 
-- I will be using the PublicHoliday NuGet package https://github.com/martinjw/Holiday which has been regularly maintained since 2013 and has no reported vulnerabilities
+- I will be using the PublicHoliday NuGet package https://github.com/martinjw/Holiday which has been regularly maintained since 2013 and has no reported vulnerabilities and uses the MIT license
 
 ## BONUS POINTS:
 
