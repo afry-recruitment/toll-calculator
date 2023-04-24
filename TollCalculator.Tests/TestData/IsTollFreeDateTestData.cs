@@ -2,9 +2,9 @@
 
 namespace TollCalculator.Tests.TestData
 {
-    public class PublicHolidayTestData : TheoryData<DateTime>
+    public class IsTollFreeDateTestData : TheoryData<DateTime>
     {
-        public PublicHolidayTestData()
+        public IsTollFreeDateTestData()
         {
             var holidays = new SwedenPublicHoliday().PublicHolidays(DateTime.Now.Year);
 

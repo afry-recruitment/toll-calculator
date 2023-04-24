@@ -7,6 +7,18 @@ namespace TollCalculator.Tests
     public class TollFeeCalculatorTests
     {
         [Fact]
+        public void CalculateTotalDailyTollFee()
+        {
+            var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
+            var firstTollFee = TollFeeCalculator.NewTollFee(car, firstTollDate);
+            var secondTollFee = TollFeeCalculator.NewTollFee(car, secondTollDate);
+            var tollFees = new TollFee[2] { firstTollFee, secondTollFee };
+            var bypassDateTime = DateTime.MinValue;
+
+            Assert.Throws<TollDateDayException>(() => TollFeeCalculator.CalculateTotalDailyTollFee(car, tollFees, bypassDateTime));
+        }
+
+        [Fact]
         public void CalculateTotalDailyTollFee_WithTollFeeDates_NotFromToday_ShouldReturnException()
         {
             var car = new Car("ABC-123", Vehicle.VehicleSector.Civilian);
@@ -78,17 +90,19 @@ namespace TollCalculator.Tests
             Assert.Throws<NotCurrentYearException>(() => TollFeeCalculator.NewTollFee(car, tollDate));
         }
 
+        // Tests that every hourly fee returns correct value
         [Theory]
-        [ClassData(typeof(HourlyTollFeeTestData))]
+        [ClassData(typeof(GetTollFeeAmountTestData))]
         public void GetTollFeeAmount(DateTime timeslot, int expected)
         {
             var actual = TollFeeCalculator.GetTollFeeAmount(timeslot);
             Assert.Equal(expected, actual);
         }
 
+        // Tests all public holidays and Saturday + Sunday
         [Theory]
-        [ClassData(typeof(PublicHolidayTestData))]
-        public void IsTollFreeDate_SwedishPublicHolidaysAndWeekends_ShouldReturnTrue(DateTime date)
+        [ClassData(typeof(IsTollFreeDateTestData))]
+        public void IsTollFreeDate(DateTime date)
         {
             var result = TollFeeCalculator.IsTollFreeDate(date);
             Assert.True(result);

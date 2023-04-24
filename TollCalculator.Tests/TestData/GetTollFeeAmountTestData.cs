@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TollCalculator.Tests.TestData
 {
-    public class HourlyTollFeeTestData : TheoryData<DateTime, int>
+    public class GetTollFeeAmountTestData : TheoryData<DateTime, int>
     {
-        public HourlyTollFeeTestData()
+        public GetTollFeeAmountTestData()
         {
             // 6:00, 8
             // 6:30, 13
