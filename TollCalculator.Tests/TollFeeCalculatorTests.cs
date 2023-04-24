@@ -1,4 +1,5 @@
 ﻿using TollCalculator.Models;
+using TollCalculator.Tests.TestData;
 
 namespace TollCalculator.Tests
 {
@@ -35,6 +36,22 @@ namespace TollCalculator.Tests
             var result = TollFeeCalculator.NewTollFee(car, tollDate);
 
             Assert.NotEqual(0, result.TollFeeAmount);
+        }
+
+        [Theory]
+        [ClassData(typeof(HourlyTollFeeTestData))]
+        public void GetTollFeeAmount(DateTime timeslot, int expected)
+        {
+            var actual = TollFeeCalculator.GetTollFeeAmount(timeslot);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [ClassData(typeof(PublicHolidayTestData))]
+        public void IsTollFreeDate_SwedishPublicHolidaysAndWeekends_ShouldReturnTrue(DateTime date)
+        {
+            var result = TollFeeCalculator.IsTollFreeDate(date);
+            Assert.True(result);
         }
     }
 }
