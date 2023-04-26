@@ -17,7 +17,7 @@ jobs:
         name: Build & push Docker image
         with:
           image: padmasankha/toll-fee-api-service
-          tags: latest
+          addLatest: true
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
