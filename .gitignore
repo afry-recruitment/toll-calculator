@@ -48,3 +48,5 @@ build/
 /dev/data/*
 /logs/
 /jmeter.log
+
+/venv

@@ -5,6 +5,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      MONGO_DATABASE: tolldb
+      MONGO_HOST: mongo_db
+      MONGO_PORT: 27017
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: P@ssw0rd
     ports:
       - "3000:8000" # HTTP
     restart: on-failure
+
+  mongo_db:
+    image: mongo:4.2.3
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: P@ssw0rd
+      MONGO_INITDB_DATABASE: tolldb
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongo-data:

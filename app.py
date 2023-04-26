@@ -1,10 +1,15 @@
-import os
 import logging
-from flask import Flask, Response
-from flask_restx import Api
+import os
 from logging.config import dictConfig
 
+from flask import Flask
+from flask_mongoengine import MongoEngine
+from flask_restx import Api
+
 from controller.echo import echo_ns
+from controller.toll_fee import tollfee_ns
+
+db = MongoEngine()
 
 dictConfig({
     'version': 1,
@@ -24,9 +29,25 @@ dictConfig({
 
 app = Flask(__name__)
 
-api = Api(title='Toll Fee API', description='Toll fee calculator 1.0',)
+api = Api(title='Toll Fee API', description='Toll fee calculator 1.0', )
 api.init_app(app)
 api.add_namespace(echo_ns, path='/api')
+api.add_namespace(tollfee_ns, path='/api/v1')
+
+
+def create_app(app):
+    app.config['MONGODB_SETTINGS'] = {
+        'db': os.getenv('MONGO_DATABASE'),
+        'host': os.getenv('MONGO_HOST'),
+        'port': int(os.getenv('MONGO_PORT')),
+        'username': os.getenv('MONGO_USERNAME'),
+        'password': os.getenv('MONGO_PASSWORD')
+    }
+    db.init_app(app)
+    return app
+
+
+app = create_app(app)
 
 if __name__ == '__main__':
     logging.info('Toll Fee service starting ...')
