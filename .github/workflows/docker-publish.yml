@@ -1,4 +1,4 @@
-name: ci
+name: Build & push Docker image
 
 on:
   push:
@@ -8,16 +8,17 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: Check out code
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
+      - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & push Docker image
         with:
           image: padmasankha/toll-fee-api-service
           tags: latest
-          registry: docker.io
-          dockerfile: Dockerfile
+          registry: registry-url.io
+          dockerfile: Dockerfile.ci
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
