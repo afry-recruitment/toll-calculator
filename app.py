@@ -6,8 +6,8 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_restx import Api
 
-from controller.echo import echo_ns
-from controller.toll_fee import tollfee_ns
+from src.controller.echo import echo_ns
+from src.controller.toll_fee import tollfee_ns
 
 db = MongoEngine()
 

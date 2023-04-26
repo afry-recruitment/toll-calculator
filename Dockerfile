@@ -9,9 +9,7 @@ RUN mkdir $HOME
 WORKDIR $HOME
 
 COPY requirements.txt $HOME
-COPY controller $HOME/controller
-COPY services $HOME/services
-COPY utils $HOME/utils
+COPY src $HOME/src
 COPY app.py $HOME
 
 RUN pip install -r requirements.txt
