@@ -1,3 +1,7 @@
 Flask==2.0.1
 flask-mongoengine==1.0.0
 flask-restx==1.1.0
+mongoengine~=0.27.0
+requests~=2.29.0
+
+

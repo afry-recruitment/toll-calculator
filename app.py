@@ -7,7 +7,7 @@ from flask_mongoengine import MongoEngine
 from flask_restx import Api
 
 from src.controller.echo import echo_ns
-from src.controller.toll_fee import tollfee_ns
+from src.controller.vehicle_controller import vehicle_ns
 
 db = MongoEngine()
 
@@ -32,7 +32,7 @@ app = Flask(__name__)
 api = Api(title='Toll Fee API', description='Toll fee calculator 1.0', )
 api.init_app(app)
 api.add_namespace(echo_ns, path='/api')
-api.add_namespace(tollfee_ns, path='/api/v1')
+api.add_namespace(vehicle_ns, path='/api/v1')
 
 
 def create_app(app):
