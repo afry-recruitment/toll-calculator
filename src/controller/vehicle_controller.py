@@ -5,7 +5,7 @@ from flask import Response, request
 from flask_restx import Namespace, Resource
 
 from src.services.holiday_service import is_today_a_holiday_or_weekend
-from src.services.tollfee_sevice import has_daily_price_quota_exceed, save, get_tollfee
+from src.services.tollfee_record_sevice import has_daily_price_quota_exceed, save, get_tollfee
 from src.services.vehicle_service import get_all_vehicle
 from src.utils.constant import Constant
 

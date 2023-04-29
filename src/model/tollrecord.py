@@ -12,7 +12,6 @@ class TollRecords(DynamicDocument):
     total_hours = FloatField()
     fee = FloatField()
     status = StringField(choices=['OPEN', 'PAID', 'CANCELLED'], default='OPEN')
-    description = StringField()
 
     meta = {
         'collection': 'tx_tollrecords',
