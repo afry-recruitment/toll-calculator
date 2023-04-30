@@ -1,41 +1,39 @@
-## Assumptions
-This code is never going to see the light of day, so I will just keep it simple for all our sakes, ie. not making it a big project such as a WebApi or adding databases with service and repositores etc.
+# Assumptions
 
-Instead I will focus on the actual functions of calculating the toll-fees, keeping them as accurate to a real-life scenario where databases would be involved and prove the use-cases and stability through testing
+Running and passing the tests verifies that the code is working and useable
 
-Being able to run tests should showcase that the code is functional
+Gif is from the movie Hackers 1995
 
-## Imagined scenario
-Every time a vehicle passes a toll, a record of that moment is saved containing the toll fee amount, the time and the vehicles license plate.
+![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
 
-This record would be saved somewhere appropriate, and once the tolls close for the day at 18:30 the system starts to calculate the total daily toll fee amounts for all vehicles.
+# Toll fee calculator 1.0
+A calculator for vehicle toll fees.
 
-## Requirements and line of thinking
+* Make sure you read these instructions carefully
+* The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
+* No requirement but bonus points if you know what movie is in the gif
 
-### 1. Fees will differ between 8 SEK and 18 SEK, depending on the time of day 
+## Background
+Our city has decided to implement toll fees in order to reduce traffic congestion during rush hours.
+This is the current draft of requirements:
+ 
+* Fees will differ between 8 SEK and 18 SEK, depending on the time of day 
+* Rush-hour traffic will render the highest fee
+* The maximum fee for one day is 60 SEK
+* A vehicle should only be charged once an hour
+  * In the case of multiple fees in the same hour period, the highest one applies.
+* Some vehicle types are fee-free
+* Weekends and holidays are fee-free
 
-- Since requirment explicitly states that SEK will be the currency used, I will not consider other currencies or cultureinfo
+## Your assignment
+The last city-developer quit recently, claiming that this solution is production-ready. 
+You are now the new developer for our city - congratulations! 
 
-### 2. Rush-hour traffic will render the highest fee
+Your job is to deliver the code and from now on, you are the responsible go-to-person for this solution. This is a solution you will have to put your name on. 
 
-- Will use the toll fees for hours that already exists in the GetTollFee function in TollCalculator.cs
+## Instructions
+You can make any modifications or suggestions for modifications that you see fit. Fork this repository and deliver your results via a pull-request. You could also create a gist, for privacy reasons, and send us the link.
 
-### 3. The maximum fee for one day is 60 SEK
+## Help I dont know C# or Java
+No worries! We accept submissions in other languages as well, why not try it in Go or nodejs.
 
-### 4. A vehicle should only be charged once an hour
-
-### 4.1 In the case of multiple fees in the same hour period, the highest one applies.
-
-- The solution here will be the core logic problem to solve in this assignment, spend extra time to make it readable and pretty
-
-### 5. Some vehicle types are fee-free
-
-- Attach a bool value for different vehicle types
-
-### 6. Weekends and holidays are fee-free
-
-- I will be using the PublicHoliday NuGet package https://github.com/martinjw/Holiday which has been regularly maintained since 2013 and has no reported vulnerabilities and uses the MIT license
-
-## BONUS POINTS:
-
-Its from the movie Hackers (1995)
