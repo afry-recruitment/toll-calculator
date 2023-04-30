@@ -16,7 +16,7 @@ To set up the project, follow these steps:
 
 To set up the database, follow these steps:
 
-1. Install a database server by running the docker-compose file as below.
+1. Install a database server by running the docker-compose.yml file as below.
     ```
    version: "3"
    services:
