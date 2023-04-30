@@ -100,7 +100,7 @@ All the APIs and the payloads are mention in the Swagger Doc [http://localhost:3
 | `vehicle_code` | `string` | **Required**. This Value Return from the 1st API |
 | `is_free`      | `string` | **Required**. This Value Return from the 1st API |
 
-#### 3. Vehicle checked exit
+#### 3. Vehicle checked out
 
 ```http
   POST /api/v1/vehicle-exit
