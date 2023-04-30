@@ -4,7 +4,7 @@ using TollCalculator.Exceptions;
 
 namespace TollCalculator.Tests
 {
-    public class TollCalculatorServiceTests
+    public class TollFeeCalculatorTests
     {
         [Fact]
         public void CalculateTotalDailyTollFee_ValuesWithin60Min_ShouldReturnHighestFee()
