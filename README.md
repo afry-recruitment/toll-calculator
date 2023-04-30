@@ -81,13 +81,13 @@ message to check the liveness of the API.
 
 All the APIs and the payloads are mention in the Swagger Doc [http://localhost:3000](http://localhost:3000)
 
-#### Get all Vehicle Types
+#### 1. Get all Vehicle Types
 
 ```http
   GET /api/v1/vehicle-type
 ```
 
-#### Vehicle checked in
+#### 2. Vehicle checked in
 
 ```http
   POST /api/v1/vehicle-in
@@ -100,7 +100,7 @@ All the APIs and the payloads are mention in the Swagger Doc [http://localhost:3
 | `vehicle_code` | `string` | **Required**. This Value Return from the 1st API |
 | `is_free`      | `string` | **Required**. This Value Return from the 1st API |
 
-#### Vehicle checked exit
+#### 3. Vehicle checked exit
 
 ```http
   POST /api/v1/vehicle-exit
