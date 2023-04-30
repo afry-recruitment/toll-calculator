@@ -10,3 +10,10 @@ class Constant:
 
     SUCCESS_CREATE = 201
     SUCCESS_ACCEPTED = 202
+
+    # Response message common
+    RES_BODY_SUCCESS_MSG = 'success'
+    RES_BODY_SUCCESS_STATUS = 0
+    RES_BODY_FAILURE_STATUS = -1
+
+    MAX_TOLL_FEE_PRE_DAY = 60

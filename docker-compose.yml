@@ -1,20 +1,5 @@
 version: "3"
 services:
-  api-service:
-    image: padmasankha/toll-fee-api-service:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      MONGO_DATABASE: tolldb
-      MONGO_HOST: mongo_db
-      MONGO_PORT: 27017
-      MONGO_USERNAME: admin
-      MONGO_PASSWORD: P@ssw0rd
-    ports:
-      - "3000:8000" # HTTP
-    restart: on-failure
-
   mongo_db:
     image: mongo:4.2.3
     restart: always
@@ -24,8 +9,23 @@ services:
       MONGO_INITDB_DATABASE: tolldb
     volumes:
       - mongo-data:/data/db
+      - ./init-scripts:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
+
+  api-service:
+    image: padmasankha/toll-fee-api-service:latest
+    environment:
+      MONGO_DATABASE: tolldb
+      MONGO_HOST: mongo_db
+      MONGO_PORT: 27017
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: P@ssw0rd
+    ports:
+      - "3000:8000" # HTTP
+    restart: on-failure
+    depends_on:
+      - mongo_db
 
 volumes:
   mongo-data:

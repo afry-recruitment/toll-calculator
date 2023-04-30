@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from src.model.tollrecord import TollRecords
 from src.services.tollfee_service import get_tollfee_by_vehicle_type
+from src.utils.constant import Constant
 
 
 def has_daily_price_quota_exceed(license_no) -> bool:
@@ -28,7 +29,7 @@ def has_daily_price_quota_exceed(license_no) -> bool:
     ]
     results = list(TollRecords.objects.aggregate(*pipeline))
 
-    if results.__len__() > 0 and results[0]['total_fee'] > 60:
+    if results.__len__() > 0 and results[0]['total_fee'] > Constant.MAX_TOLL_FEE_PRE_DAY:
         return True
     else:
         return False
@@ -66,14 +67,14 @@ def get_tollfee(license_no) -> float:
         return 0.00
     else:
         hourly_rates = get_tollfee_by_vehicle_type(result_dict.get('vehicle_type_code'))
-        fee = calculate_toll_fee(in_timestamp, out_timestamp, hourly_rates)
+        fee = _calculate_toll_fee(in_timestamp, out_timestamp, hourly_rates)
         TollRecords.objects(license_no=license_no, status='OPEN').update(status='PAID', out_timestamp=out_timestamp,
                                                                          total_hours=total_hours, fee=fee)
 
         return fee
 
 
-def calculate_toll_fee(start_time, end_time, hourly_rates) -> float:
+def _calculate_toll_fee(start_time, end_time, hourly_rates) -> float:
     datetime_pointer = start_time
 
     timediff = end_time - start_time
@@ -81,7 +82,7 @@ def calculate_toll_fee(start_time, end_time, hourly_rates) -> float:
 
     day_fee = 0
     if no_of_days > 0:
-        day_fee = 60.00 * no_of_days
+        day_fee = Constant.MAX_TOLL_FEE_PRE_DAY * no_of_days
         datetime_pointer = start_time + timedelta(days=no_of_days)
 
     hourly_fee = 0
@@ -100,8 +101,15 @@ def calculate_toll_fee(start_time, end_time, hourly_rates) -> float:
 
         datetime_pointer = datetime_pointer + timedelta(hours=1)
 
-    if hourly_fee > 60:
-        hourly_fee = 60
+    if hourly_fee > Constant.MAX_TOLL_FEE_PRE_DAY:
+        hourly_fee = Constant.MAX_TOLL_FEE_PRE_DAY
     total_fee = day_fee + hourly_fee
 
     return float(total_fee)
+
+
+def has_open_toll_records(license_no):
+    result = TollRecords.objects.filter(license_no=license_no, status='OPEN').count()
+    if result > 0:
+        raise ValueError(
+            "Please settle the outstanding balance at your earliest convenience to avoid any further inconvenience")

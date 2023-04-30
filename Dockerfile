@@ -14,4 +14,6 @@ COPY app.py $HOME
 
 RUN pip install -r requirements.txt
 
+RUN pip install gunicorn==20.1.0
+
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8000", "--workers","3"]

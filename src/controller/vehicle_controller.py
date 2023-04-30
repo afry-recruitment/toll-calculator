@@ -1,13 +1,15 @@
-import json
 import logging
 
-from flask import Response, request
+from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from src.services.holiday_service import is_today_a_holiday_or_weekend
 from src.services.tollfee_record_sevice import has_daily_price_quota_exceed, save, get_tollfee
+from src.services.tollfee_record_sevice import has_open_toll_records
 from src.services.vehicle_service import get_all_vehicle
 from src.utils.constant import Constant
+from src.utils.responses import get_error_response
+from src.utils.responses import get_success_response
 
 vehicle_ns = Namespace('Vehicle', description='End points related to Vehicle')
 
@@ -15,14 +17,9 @@ vehicle_ns = Namespace('Vehicle', description='End points related to Vehicle')
 @vehicle_ns.route('/vehicle-type')
 class VehicleType(Resource):
     def get(self):
-        logging.info('Fetching All the Vehicle Types')
+        logging.info('Fetching all the config vehicle types')
         vehicles = get_all_vehicle()
-        payload = {
-            "status": 0,
-            "data": vehicles
-        }
-        return Response(response=json.dumps(payload), status=Constant.SUCCESS,
-                        mimetype=Constant.MIME_TYPE)
+        return get_success_response(http_status=Constant.SUCCESS, response_data=[{"data": vehicles}])
 
 
 @vehicle_ns.route('/vehicle-in')
@@ -38,40 +35,34 @@ class VehicleIN(Resource):
     def post(self):
 
         try:
-            logging.info('Fetching All the Vehicle Types')
             payload = request.json
+            logging.info('Vehicle In with %s', payload)
             license_no = payload['license_no']
 
             is_holiday = is_today_a_holiday_or_weekend()
+            has_open_toll_records(license_no)
 
             if is_holiday or payload['is_free']:
                 save(payload)
-                response = {
-                    "status": 0,
-                    "message": "Vehicle is allows to park"
-                }
-                return Response(response=json.dumps(response), status=Constant.SUCCESS_ACCEPTED,
-                                mimetype=Constant.MIME_TYPE)
+                logging.info('Vehicle %s is allows to park fee of charge', license_no)
+                return get_success_response(http_status=Constant.SUCCESS_ACCEPTED,
+                                            message="Vehicle is allows to park fee of charge")
             else:
                 exceed = has_daily_price_quota_exceed(license_no)
                 if exceed:
-                    response = {
-                        "status": -1,
-                        "message": "Vehicle is not allows to park, Daily parking quota has exceed"
-                    }
-                    return Response(response=json.dumps(response), status=Constant.UNPROCESSABLE_ENTITY,
-                                    mimetype=Constant.MIME_TYPE)
+                    logging.error('Vehicle %s is not allows to park, Daily parking quota has exceed', license_no)
+                    raise ValueError("Vehicle is not allows to park, Daily parking quota has exceed")
                 else:
                     save(payload)
-                    response = {
-                        "status": 0,
-                        "message": "Vehicle is allows to park"
-                    }
-                    return Response(response=json.dumps(response), status=Constant.SUCCESS_ACCEPTED,
-                                    mimetype=Constant.MIME_TYPE)
+                    logging.info('Vehicle %s is allows to park', license_no)
+                    return get_success_response(http_status=Constant.SUCCESS_ACCEPTED,
+                                                message="Vehicle is allows to park")
+        except ValueError as e:
+            logging.error(e)
+            return get_error_response(error_message=e.args, http_status=Constant.UNPROCESSABLE_ENTITY)
         except Exception as e:
-            return Response(response=json.dumps(e), status=Constant.INTERNAL_SERVER_ERROR,
-                            mimetype=Constant.MIME_TYPE)
+            logging.error(e)
+            return get_error_response(error_message=e.args)
 
 
 @vehicle_ns.route('/vehicle-exit')
@@ -85,21 +76,15 @@ class VehicleExit(Resource):
 
         try:
             payload = request.json
+            logging.info('Vehicle Exit with %s', payload)
             license_no = payload['license_no']
 
             fee = get_tollfee(license_no)
-            payload = {
-                "status": 0,
-                "data": {
-                    "fee": fee
-                }
-            }
-            return Response(response=json.dumps(payload), status=Constant.SUCCESS,
-                            mimetype=Constant.MIME_TYPE)
+            logging.info('Vehicle %s Toll fee is :', license_no, fee)
+            return get_success_response(http_status=Constant.SUCCESS, response_data=[{"toll_fee": fee}])
+        except ValueError as e:
+            logging.error(e)
+            return get_error_response(error_message=e.args, http_status=Constant.UNPROCESSABLE_ENTITY)
         except Exception as e:
-            payload = {
-                "status": -1,
-                "message": e.args
-            }
-            return Response(response=json.dumps(payload), status=Constant.UNPROCESSABLE_ENTITY,
-                            mimetype=Constant.MIME_TYPE)
+            logging.error(e)
+            return get_error_response(error_message=e.args)
