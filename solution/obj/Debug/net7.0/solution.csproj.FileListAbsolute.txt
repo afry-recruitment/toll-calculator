@@ -1,0 +1,15 @@
+C:\Repos\afry\toll-calculator\solution\bin\Debug\net7.0\solution.exe
+C:\Repos\afry\toll-calculator\solution\bin\Debug\net7.0\solution.deps.json
+C:\Repos\afry\toll-calculator\solution\bin\Debug\net7.0\solution.runtimeconfig.json
+C:\Repos\afry\toll-calculator\solution\bin\Debug\net7.0\solution.dll
+C:\Repos\afry\toll-calculator\solution\bin\Debug\net7.0\solution.pdb
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.csproj.AssemblyReference.cache
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.AssemblyInfoInputs.cache
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.AssemblyInfo.cs
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.csproj.CoreCompileInputs.cache
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.dll
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\refint\solution.dll
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.pdb
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\solution.genruntimeconfig.cache
+C:\Repos\afry\toll-calculator\solution\obj\Debug\net7.0\ref\solution.dll
