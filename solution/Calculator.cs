@@ -1,3 +1,4 @@
+using System.Xml.Xsl.Runtime;
 using System.Data;
 using System.Globalization;
 using System.Reflection.Metadata;
@@ -24,13 +25,14 @@ namespace TollFeeCalculator
         return 0;
 
       // According to spec, all dates passed in occur on the same day, throw error if false
-      if (dates.Any(date => date.Day != dates[0].Day || date.Month != dates[0].Month || date.Year == dates[0].Year))
+      if (dates.Any(date => date.Day != dates[0].Day || date.Month != dates[0].Month || date.Year != dates[0].Year))
       {
         throw new ArgumentOutOfRangeException("Dates passed to calculation are not the same (all dates passed should be from same day)");
       }
 
       if (tollFreeDateService.IsTollFree(dates[0]))
       {
+
         return 0;
       }
 
@@ -39,13 +41,13 @@ namespace TollFeeCalculator
 
       int totalFee = 0;
       int currentFee = 0;
-      int currentMillie = dates[0].Millisecond;
+      DateTime currentDateTime = dates[0];
 
       foreach (DateTime date in datelist)
       {
         int nextFee = feeService.FeeForTime(TimeOnly.FromDateTime(date));
-        int minutes = (date.Millisecond - currentMillie) / 1000 / 60;
-        if (minutes <= 60)
+        TimeSpan dif = date - currentDateTime;
+        if (dif.TotalHours < 1)
         {
           if (currentFee < nextFee)
           {
@@ -57,7 +59,7 @@ namespace TollFeeCalculator
           totalFee += currentFee;
           currentFee = 0;
         }
-        currentMillie = date.Millisecond;
+        currentDateTime = date;
       }
       totalFee += currentFee;
 
