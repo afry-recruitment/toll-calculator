@@ -27,16 +27,4 @@ public class TollCalculatorController {
         TollCalculatorResponse result = tollCalculatorService.getTaxAmount(tollCalculatorRequest.getCity(), tollCalculatorRequest.getVehicle(), tollCalculatorRequest.getCheckInTime());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-    @ExceptionHandler(InvalidParameterException.class)
-    public final ResponseEntity<Object> handleInvalidParameterException(InvalidParameterException ex) {
-        HttpStatus httpStatus = ex.getHttpStatus();
-        if (ex.getHttpStatus() == null) {
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        List<String> details = new ArrayList<>();
-        details.add(ex.getMessage());
-        return new ResponseEntity<>(details, httpStatus);
-    }
-
 }

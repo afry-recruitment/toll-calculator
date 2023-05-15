@@ -28,13 +28,13 @@ public class TollCalculatorServiceImplTest {
     CityRepository cityRepository;
 
     @InjectMocks
-    TollCalculatorServiceImpl congestionTaxCalculatorService;
+    TollCalculatorServiceImpl tollCalculatorService;
 
     @Test
     public void validInputTaxEligible() throws ParseException {
         TollCalculatorRequest request = constructRequest("Car");
         Mockito.when(cityRepository.findByName("Gothenburg")).thenReturn(validVehicleDetails());
-        TollCalculatorResponse result = congestionTaxCalculatorService.getTaxAmount("Gothenburg", request.getVehicle(), request.getCheckInTime());
+        TollCalculatorResponse result = tollCalculatorService.getTaxAmount("Gothenburg", request.getVehicle(), request.getCheckInTime());
         assertThat(result).isNotNull();
         assertThat(result.getTaxAmount()).isEqualTo(new BigDecimal(8));
     }

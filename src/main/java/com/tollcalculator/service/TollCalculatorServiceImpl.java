@@ -41,14 +41,14 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
     @Override
     public void isValidCity(String city) throws InvalidParameterException {
         if (cityRepository.findByName(city).isEmpty()) {
-            throw new InvalidParameterException("Invalid City requested", HttpStatus.BAD_REQUEST);
+            throw new InvalidParameterException("Invalid City requested");
         }
     }
 
     @Override
     public void isValidVehicle(VehicleType vehicle) throws InvalidParameterException {
         if (vehicleRepository.findVehicleByName(vehicle.getType()).isEmpty()) {
-            throw new InvalidParameterException("Invalid Vehicle requested", HttpStatus.BAD_REQUEST);
+            throw new InvalidParameterException("Invalid Vehicle requested");
         }
     }
 

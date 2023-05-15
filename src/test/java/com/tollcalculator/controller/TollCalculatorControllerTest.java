@@ -52,7 +52,7 @@ public class TollCalculatorControllerTest {
     public void invalidInputVehicleTypeTest() throws InvalidParameterException {
         Throwable exception = assertThrows(InvalidParameterException.class, () -> {
             TollCalculatorRequest tollCalculatorRequest = buildTaxRequest(SHIP, GOTHENBURG);
-            Mockito.doThrow(new InvalidParameterException("Invalid Vehicle")).when(taxCalculatorController).isValidVehicle(tollCalculatorRequest.getVehicle());
+            Mockito.doThrow(new InvalidParameterException("Invalid Vehicle")).when(taxCalculatorController).validateRequest(tollCalculatorRequest);
             taxController.calculateToll(tollCalculatorRequest);
         });
         assertEquals("Invalid Vehicle", exception.getMessage());
@@ -62,7 +62,7 @@ public class TollCalculatorControllerTest {
     public void invalidInputCityTypeTest() throws InvalidParameterException {
         Throwable exception = assertThrows(InvalidParameterException.class, () -> {
             TollCalculatorRequest tollCalculatorRequest = buildTaxRequest(CAR, PUNE);
-            Mockito.doThrow(new InvalidParameterException("Invalid City")).when(taxCalculatorController).isValidVehicle(tollCalculatorRequest.getVehicle());
+            Mockito.doThrow(new InvalidParameterException("Invalid City")).when(taxCalculatorController).validateRequest(tollCalculatorRequest);
             taxController.calculateToll(tollCalculatorRequest);
         });
         assertEquals("Invalid City", exception.getMessage());
