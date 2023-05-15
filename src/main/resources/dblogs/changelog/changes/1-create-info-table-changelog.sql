@@ -27,7 +27,7 @@ INSERT INTO city_tax_exempt_vehicle VALUES (1,1),(1,3),(1,4),(1,5),(1,6),(1,8);
 
 CREATE TABLE city_holiday_calendar (
     id bigint NOT NULL AUTO_INCREMENT,
-    date datetime(6) NOT NULL,
+    date datetime NOT NULL,
     city_id bigint NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_city_holiday_calendar_city FOREIGN KEY (city_id) REFERENCES city (id)
