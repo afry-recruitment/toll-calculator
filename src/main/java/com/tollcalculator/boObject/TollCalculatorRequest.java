@@ -1,6 +1,7 @@
 package com.tollcalculator.boObject;
 
 import com.tollcalculator.util.DateTimeUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -9,10 +10,14 @@ import java.util.List;
 
 public class TollCalculatorRequest {
 
+    @Schema(example = "Gothenburg")
     private String city;
-
     private VehicleType vehicle;
 
+    @Schema(example = "[\n" +
+            "        \"2013-01-14 06:00:00\",\n" +
+            "        \"2013-01-14 06:15:00\"\n" +
+            "    ]")
     private List<Date> checkInTime;
 
     public String getCity() {
@@ -37,7 +42,7 @@ public class TollCalculatorRequest {
 
     public void setCheckInTime(List checkInTime) {
         List<Date> dates = new ArrayList<>();
-        if(checkInTime != null) {
+        if (checkInTime != null) {
             checkInTime.forEach(time -> {
                 try {
                     Date dateTime = DateTimeUtil.formatToDate(time);
@@ -48,4 +53,5 @@ public class TollCalculatorRequest {
             });
         }
         this.checkInTime = dates;
-    }}
+    }
+}

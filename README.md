@@ -25,6 +25,7 @@ For building and running the application you need:
 
 - [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17)
 - [Maven 3](https://maven.apache.org)
+- if you want to use mysql local database then installed mysql (https://dev.mysql.com/downloads/mysql/) but currently toll fee application configured to free cloud database.
 
 ## Running the application locally
 
