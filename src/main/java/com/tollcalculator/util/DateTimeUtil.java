@@ -51,7 +51,6 @@ public class DateTimeUtil {
 
         for(CityHolidayCalendar cityHolidayCalendar : cityPublicHoliday){
             if(DateUtils.isSameDay(cityHolidayCalendar.getDate(),date)){
-                System.out.println("public holiday");
                 return true;
             }
         }
@@ -59,7 +58,6 @@ public class DateTimeUtil {
             Integer numberOfTaxFreeDaysBeforeHoliday = city.getCityTaxChoice().getNumberOfTaxFreeDaysBeforeHoliday();
             Date min = DateUtils.addDays(cityHolidayCalendar.getDate(), numberOfTaxFreeDaysBeforeHoliday);
             if(isDateBeforeHoliday(min, cityHolidayCalendar.getDate(), date)) {
-                System.out.println("date before public holiday");
                 return true;
             }
         }

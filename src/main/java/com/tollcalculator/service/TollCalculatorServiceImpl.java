@@ -52,6 +52,12 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
         }
     }
 
+    /** Calculate Toll Fee
+     toll is fee-free for exempted vehicle
+     toll is fee-free if weekends and holidays
+     toll is charged in the case of multiple fees in the same hour period, the highest one applies.
+     toll is differ between 8 SEK and 18 SEK, depending on the time of day
+     **/
     @Override
     public TollCalculatorResponse getTaxAmount(String cityName, VehicleType vehicleType, List<Date> dates) {
         City cityObject = cityRepository.findByName(cityName).get();

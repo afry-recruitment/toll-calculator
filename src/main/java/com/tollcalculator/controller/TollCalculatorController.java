@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Toll Fee controller has request mapping
+ */
 @RestController
 @RequestMapping("/api/v1/tax-calculate")
 public class TollCalculatorController {
