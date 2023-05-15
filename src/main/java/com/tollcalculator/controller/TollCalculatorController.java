@@ -23,14 +23,9 @@ public class TollCalculatorController {
 
     @PostMapping
     public ResponseEntity<TollCalculatorResponse> calculateToll(@RequestBody TollCalculatorRequest tollCalculatorRequest) throws InvalidParameterException {
-        validateRequest(tollCalculatorRequest);
+        tollCalculatorService.validateRequest(tollCalculatorRequest);
         TollCalculatorResponse result = tollCalculatorService.getTaxAmount(tollCalculatorRequest.getCity(), tollCalculatorRequest.getVehicle(), tollCalculatorRequest.getCheckInTime());
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    private void validateRequest(TollCalculatorRequest tollCalculatorRequest) throws InvalidParameterException {
-        tollCalculatorService.isValidCity(tollCalculatorRequest.getCity());
-        tollCalculatorService.isValidVehicle(tollCalculatorRequest.getVehicle());
     }
 
     @ExceptionHandler(InvalidParameterException.class)

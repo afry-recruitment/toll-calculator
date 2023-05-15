@@ -1,5 +1,6 @@
 package com.tollcalculator.service;
 
+import com.tollcalculator.boObject.TollCalculatorRequest;
 import com.tollcalculator.boObject.TollCalculatorResponse;
 import com.tollcalculator.boObject.VehicleType;
 import com.tollcalculator.exceptions.InvalidParameterException;
@@ -30,6 +31,12 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
         this.cityRepository = cityRepository;
         this.vehicleRepository = vehicleRepository;
     }
+
+    @Override
+    public void validateRequest(TollCalculatorRequest tollCalculatorRequest) throws InvalidParameterException {
+            isValidCity(tollCalculatorRequest.getCity());
+            isValidVehicle(tollCalculatorRequest.getVehicle());
+        }
 
     @Override
     public void isValidCity(String city) throws InvalidParameterException {
