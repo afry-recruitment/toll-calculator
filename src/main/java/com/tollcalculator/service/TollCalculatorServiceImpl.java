@@ -12,7 +12,6 @@ import com.tollcalculator.model.City;
 import com.tollcalculator.util.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class TollCalculatorServiceImpl implements TollCalculatorService {
-    Logger LOG = LoggerFactory.getLogger(TollCalculatorServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TollCalculatorServiceImpl.class);
     private final CityRepository cityRepository;
     private final vehicleRepository vehicleRepository;
 
@@ -64,6 +63,7 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
 
         // calculate tax for exempt vehicle
         if (IsTollFreeVehicle(cityObject.getTaxExemptVehicles(), vehicleType)) {
+            LOG.debug("Requested vehicle {} has free toll", vehicleType.getType());
             return TollCalculatorResponse.builder().taxAmount(new BigDecimal(0)).build();
         }
 
@@ -77,8 +77,8 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
         Date intervalStart = dates.get(0);
         int totalFee = 0;
         for (Date date : dates) {
-            int nextFee = getTollFee(date, vehicleType, cityObject);
-            int tempFee = getTollFee(intervalStart, vehicleType, cityObject);
+            int nextFee = getTollFee(date, cityObject);
+            int tempFee = getTollFee(intervalStart, cityObject);
 
             TimeUnit timeUnit = TimeUnit.MINUTES;
             long diffInMillies = date.getTime() - intervalStart.getTime();
@@ -98,12 +98,13 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
         }
         Integer maxTaxPerDay = cityObject.getCityTaxChoice().getMaxTaxPerDay();
         if (totalFee > maxTaxPerDay) {
+            LOG.debug("Eligible for Capping Requested vehicle {} tax fees to max fees per day", vehicleType.getType());
             totalFee = maxTaxPerDay;
         }
         return TollCalculatorResponse.builder().taxAmount(new BigDecimal(totalFee)).build();
     }
 
-    public int getTollFee(final Date date, VehicleType vehicleType, City city) {
+    public int getTollFee(final Date date, City city) {
         if (IsTollFreeDate(date, city)) {
             return 0;
         }
@@ -142,14 +143,17 @@ public class TollCalculatorServiceImpl implements TollCalculatorService {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         if (DateTimeUtil.getWeekendFromCalendar(city.getCityWorkingCalender(), dayOfWeek)) {
+            LOG.debug("Requested city {} has toll free weekend", city.getName());
             return true;
         }
 
         if (DateTimeUtil.getCityHolidayMonthFromCalendar(city.getCityHolidayMonthCalender(), month)) {
+            LOG.debug("Requested city {} has toll free holiday month", city.getName());
             return true;
         }
 
         if (DateTimeUtil.getDateBeforeHolidayORPublicHoliday(date, city)) {
+            LOG.debug("Requested city {} has toll free date before holiday", city.getName());
             return true;
         }
         return false;
