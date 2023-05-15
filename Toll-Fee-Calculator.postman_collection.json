@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "33917062-f045-4ea8-9df3-8e5560599626",
+		"name": "Toll-Fee-Calculator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1995010",
+		"_collection_link": "https://lively-shadow-325697.postman.co/workspace/Sujata~3fd289df-83ff-4a6b-bbb5-3ad7dc4a94de/collection/1995010-33917062-f045-4ea8-9df3-8e5560599626?action=share&creator=1995010&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Toll-Fee-Calculator",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "city",
+						"value": "Gothenburg",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"city\": \"Gothenburg\",\n    \"vehicle\": {\n        \"type\": \"Car\"\n    },\n    \"checkInTime\": [\n        \"2013-01-14 06:00:00\",\n        \"2013-01-14 06:15:00\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tax-calculate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tax-calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Toll-Fee-Calculator-Invalid-City",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "city",
+						"value": "Gothenburg",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"city\": \"Pune\",\n    \"vehicle\": {\n        \"type\": \"Car\"\n    },\n    \"checkInTime\": [\n        \"2013-01-14 06:00:00\",\n         \"2013-01-14 06:15:00\"\n    ]\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tax-calculate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tax-calculate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Toll-Fee-Calculator-Invalid-Vehicle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "city",
+						"value": "Gothenburg",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"city\": \"Gothenburg\",\n    \"vehicle\": {\n        \"type\": \"Ship\"\n    },\n    \"checkInTime\": [\n        \"2013-01-14 06:00:00\",\n         \"2013-01-14 06:15:00\"\n    ]\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/tax-calculate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"tax-calculate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
