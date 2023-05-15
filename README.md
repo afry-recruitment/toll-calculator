@@ -4,19 +4,22 @@ Welcome to the Toll Fee Calculator. [Requirement document](ASSIGNMENT.md)
 
 ## Implementation
 
-### 1 - Multitenancy
+### 1 - Entity relationship diagram
+   [ER-diagram](ER-diagram.png)
+
+### 2 - Multitenancy
     The application is built as per the Multitenancy architecture. With the same instance, we will be able to configure N number of cities.
 
-### 2 - Data are configurable
+### 3 - Data are configurable
     Almost all the properties moved to the database. So any changes in the city can be modified easily.
 
-### 3 - No tax for days before the public holiday and holiday month
+### 4 - No tax for days before the public holiday and holiday month
     Additionally added before holiday and holiday month also no tax day or month which is again configurable.
 
-### 4 - Change in tax charge pattern
+### 5 - Change in tax charge pattern
     The tax charge for 18:30–05:59 is configued as 18:30 to 11:59 and 00:00 to 05:59 for better calculation.
 
-### 5 - Extended support for all years (2013)
+### 6 - Extended support for all years (2013)
     The tax calculator will not serve only for 2013, but it also serves any data belonging to any year.
 
 ## Requirements
