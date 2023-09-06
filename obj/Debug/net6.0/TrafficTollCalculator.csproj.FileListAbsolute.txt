@@ -1,0 +1,15 @@
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.csproj.AssemblyReference.cache
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.AssemblyInfoInputs.cache
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.AssemblyInfo.cs
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.csproj.CoreCompileInputs.cache
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\bin\Debug\net6.0\TrafficTollCalculator.exe
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\bin\Debug\net6.0\TrafficTollCalculator.deps.json
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\bin\Debug\net6.0\TrafficTollCalculator.runtimeconfig.json
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\bin\Debug\net6.0\TrafficTollCalculator.dll
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\bin\Debug\net6.0\TrafficTollCalculator.pdb
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.dll
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\refint\TrafficTollCalculator.dll
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.pdb
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\TrafficTollCalculator.genruntimeconfig.cache
+C:\Users\baraa\source\repos\afry-recruitment\toll-calculator\obj\Debug\net6.0\ref\TrafficTollCalculator.dll
