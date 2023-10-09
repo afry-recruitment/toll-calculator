@@ -1,0 +1,7 @@
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\bin\Debug\Toll Fee Calculator.exe.config
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\bin\Debug\Toll Fee Calculator.exe
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\bin\Debug\Toll Fee Calculator.pdb
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\obj\Debug\Toll Fee Calculator.csproj.AssemblyReference.cache
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\obj\Debug\Toll Fee Calculator.csproj.CoreCompileInputs.cache
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\obj\Debug\Toll Fee Calculator.exe
+C:\Users\Saad.6284512\source\repos\Toll Fee Calculator\Toll Fee Calculator\obj\Debug\Toll Fee Calculator.pdb
