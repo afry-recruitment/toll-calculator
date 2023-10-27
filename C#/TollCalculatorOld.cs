@@ -1,8 +1,9 @@
-﻿using TollFeeCalculator;
+﻿using System;
+using System.Globalization;
+using TollFeeCalculator;
 
-public class TollCalculator
+public class TollCalculatorOld
 {
-    const int DAILY_MAX_FEE = 60;
 
     /**
      * Calculate the total toll fee for one day
@@ -12,67 +13,34 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(VehicleOld vehicle, DateTime[] dates)
     {
+        DateTime intervalStart = dates[0];
         int totalFee = 0;
-
-        var sortedDates = GetDateTimeSpans(dates);
-
-        foreach(var sortedDatesList in sortedDates)
+        foreach (DateTime date in dates)
         {
-            int oldFee = 0;
+            int nextFee = GetTollFee(date, vehicle);
+            int tempFee = GetTollFee(intervalStart, vehicle);
 
-            foreach(var dt in sortedDatesList)
+            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
+            long minutes = diffInMillies/1000/60;
+
+            if (minutes <= 60)
             {
-                int newFee = GetTollFee(dt, vehicle);
-                if(newFee > oldFee)
-                {
-                    oldFee = newFee;
-                }
-            }
-            
-            totalFee += oldFee;
-        }
-
-        if (totalFee > DAILY_MAX_FEE) totalFee = DAILY_MAX_FEE;
-        return totalFee;
-    }
-
-    /// <summary>
-    /// Split the DateTimes into segments that are each one hour long.
-    /// </summary>
-    /// <param name="dates"></param>
-    /// <returns></returns>
-    public List<List<DateTime>> GetDateTimeSpans(DateTime[] dates)
-    {
-        List<List<DateTime>> dateTimes = new List<List<DateTime>>();
-        for(int i = 0; i < dates.Length; i++)
-        {
-            // Add the first element
-            if(i == 0)
-            {
-                dateTimes.Add(new List<DateTime>());
-                dateTimes[dateTimes.Count - 1].Add(dates[i]);
-                continue;
-            }
-
-            // Compare the current date time to the first element in the list. Has more than one hour passed? If so, start on the next list.
-            if(DateTime.Compare(dates[i],
-                dateTimes[dateTimes.Count - 1][0].AddHours(1)) > 0)
-            {
-                dateTimes.Add(new List<DateTime>());
-                dateTimes[dateTimes.Count - 1].Add(dates[i]);
+                if (totalFee > 0) totalFee -= tempFee;
+                if (nextFee >= tempFee) tempFee = nextFee;
+                totalFee += tempFee;
             }
             else
             {
-                dateTimes[dateTimes.Count - 1].Add(dates[i]);
+                totalFee += nextFee;
             }
         }
-
-        return dateTimes;
+        if (totalFee > 60) totalFee = 60;
+        return totalFee;
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    private bool IsTollFreeVehicle(VehicleOld vehicle)
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
@@ -84,7 +52,7 @@ public class TollCalculator
                vehicleType.Equals(TollFreeVehicles.Military.ToString());
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public int GetTollFee(DateTime date, VehicleOld vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
@@ -95,10 +63,9 @@ public class TollCalculator
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
         else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
         else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 8 && minute >= 30 && minute <= 59) return 8;
-        else if (hour >= 9 && hour <= 14) return 8;
+        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
         else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 29 || hour == 16 && minute <= 59) return 18;
+        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
         else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
         else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
         else return 0;
