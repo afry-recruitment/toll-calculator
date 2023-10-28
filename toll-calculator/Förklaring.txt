@@ -1,0 +1,40 @@
+TollProcessor - Skrivet i C#
+
+Författare: Marcus Klein - kleinmarcus@live.se
+Datum: 2023-10-28
+
+Ändringar:
+- Programmet har konverterats till en konsolapplikation i Visual Studio för enklare körning och felsökning.
+- Tester genereras slumpmässigt och inkluderar 20 fordon med olika datum och tider när de använde vägtullen.
+- Programmet antar månatliga avgifter, alla genererade test-datum är samma månad
+- Betalning har simplifierats från exempelkoden och utförs nu per timme (t.ex. 05:00 - 06:00) istället för varje halvtimme (t.ex. 05:30 - 06:30).
+- Programmet har en del "Bloat" eftersom resultaten ska printas till konsolen i debug-syfte
+
+- Alla krav är uppfyllda:
+  Varierande betalningar vid olika tider på dagen.
+  Högre kostnader under rusningstider.
+  Maximalt 60 SEK per dag.
+  Betalning tas bara en gång per timme.
+  Vissa fordon är befriade från betalning.
+  Vissa datum är befriade från betalning (en lista över röda dagar ingår för att demonstrera funktionalitet, men är inte helt implementerad med olika datum).
+
+Användning:
+  Importera som en 'Solution' i Visual Studio.
+  Starta programmet med 'F5'.
+
+Klasser:
+  - Klassen 'Vehicle' representerar ett fordon.
+    Fordon kan nu identifieras med deras registreringsnummer.
+
+  - Klassen 'TollRecord' representerar ett fordon och alla instanser där det har passerat en vägtull.
+    Varje gång ett fordon har använt vägen kallas för en 'Instans'.
+
+  - Klassen 'TollRecordGenerator' genererar slumpmässigt ett antal TollRecords, med fordon och ett slumpmässigt antal instanser på olika dagar inom samma månad.
+
+  - Klassen 'TollProcessor' beräknar den totala summan som ska betalas för varje TollRecord (fordon).
+    Den skulle kunna returnera en kombinerad klass med mer data, men det är inte nödvändigt för närvarande...
+
+  Program.cs innehåller funktionen 'Main' och startar programmet.
+
+- Bonus:
+  Jag har ingen aning om vilken film GIF:en i erat repository kommer ifrån.
