@@ -1,0 +1,17 @@
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\TollFeeCalculator.exe
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\TollFeeCalculator.deps.json
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\TollFeeCalculator.runtimeconfig.json
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\TollFeeCalculator.dll
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\TollFeeCalculator.pdb
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\bin\Debug\net8.0\Nager.Holiday.dll
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.csproj.AssemblyReference.cache
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.GeneratedMSBuildEditorConfig.editorconfig
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.AssemblyInfoInputs.cache
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.AssemblyInfo.cs
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.csproj.CoreCompileInputs.cache
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeC.3CA44100.Up2Date
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.dll
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\refint\TollFeeCalculator.dll
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.pdb
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\TollFeeCalculator.genruntimeconfig.cache
+D:\code\C#\TollFeeCalculator\TollFeeCalculator\obj\Debug\net8.0\ref\TollFeeCalculator.dll

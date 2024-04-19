@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace TollFeeCalculator
 {
-    public interface Vehicle
+    public class TollFee
     {
-        String GetVehicleType();
+        public int Fee { get; set; }
+        public DateTime TimeStamp { get; set; }
+
     }
 }

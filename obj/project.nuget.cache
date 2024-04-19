@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "6sfVlVvVSNdoYEiQe5S9jQuOebgJciPq5Rav6hlGZ3iLvHGugPcJjpkxACOkpWMhNBgx9CgkPqHj2TegOaMt9Q==",
+  "success": true,
+  "projectFilePath": "F:\\projects\\afry\\C#\\TollFeeCalculator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Fredrik\\.nuget\\packages\\nager.holiday\\1.0.1\\nager.holiday.1.0.1.nupkg.sha512",
+    "C:\\Users\\Fredrik\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\Fredrik\\.nuget\\packages\\system.text.json\\7.0.2\\system.text.json.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
