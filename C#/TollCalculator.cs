@@ -4,6 +4,28 @@ using TollFeeCalculator;
 
 public class TollCalculator
 {
+    /**
+        I made a separate file, Program.cs, to put my own functions in because I didn't want to break 
+        anything before I had a good grasp on what was going on everywhere.
+        Then I ran "dotnet run" to simulate a car or a motorbike driving through the tolls on a random 
+        created day in 2013. 
+
+        Since there is only chargeable vehicle and vehicles free of charge I didn't bother creating more 
+        vehicle options. There is only car and motorbike to demonstrate the difference between chargeable 
+        and free of charge vehicles.
+
+        The given function GetTollFee(Vehicle vehicle, DateTime[] dates) couldn't handle the array 
+        of times my function CreateTripsAndFees() created so I built my own logic for checking each passage
+        and storing the fees accurately.
+
+        I left a lot of the Console.WriteLine on purpose to make the process easier to read and understand.
+
+        The program could benifit from better code commenting throughout. But I do hope that in this case 
+        it will be enough in combinations with the many Console.WriteLine.
+
+        Unfortunatly I haven't seen the movie Hackers, yet... ;) I did, however, see The Net with Sandra 
+        Bullock a long time ago! It was also released in 1995, actually. =)
+    **/
 
     /**
      * Calculate the total toll fee for one day
@@ -13,34 +35,34 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
-    {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
-        {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+    // public static int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    // {
+    //     DateTime intervalStart = dates[0];
+    //     int totalFee = 0;
+    //     foreach (DateTime date in dates)
+    //     {
+    //         int nextFee = GetTollFee(date, vehicle);
+    //         int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+    //         long diffInMillies = date.Millisecond - intervalStart.Millisecond;
+    //         long minutes = diffInMillies/1000/60;
 
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
-        }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
-    }
+    //         if (minutes <= 60)
+    //         {
+    //             if (totalFee > 0) totalFee -= tempFee;
+    //             if (nextFee >= tempFee) tempFee = nextFee;
+    //             totalFee += tempFee;
+    //         }
+    //         else
+    //         {
+    //             totalFee += nextFee;
+    //         }
+    //     }
+    //     if (totalFee > 60) totalFee = 60;
+    //     return totalFee;
+    // }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    public static bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
         String vehicleType = vehicle.GetVehicleType();
@@ -52,26 +74,39 @@ public class TollCalculator
                vehicleType.Equals(TollFreeVehicles.Military.ToString());
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    // public static int GetTollFee(DateTime date, Vehicle vehicle)
+    public static int GetTollFee(DateTime date)
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+        //if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
         int hour = date.Hour;
         int minute = date.Minute;
 
+        // 6:00 - 6:29
         if (hour == 6 && minute >= 0 && minute <= 29) return 8;
+        // 6:30 - 6:59
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
+        // 7:00 - 7:59
         else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
+        // 8:00 - 8:29
         else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
+        // 8:30 - 14:59
+        // else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8; wrong? example 10:15 returned 0
+        else if (hour == 8 && minute >= 30) return 8;
+        else if (hour >= 9 && hour <= 14) return 8;
+        // 15:00 - 15:29
         else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
+        // 15:30 - 16:59
+        //else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18; wrong? 15:00 second time.
+        else if (hour == 15 && minute >= 30 || hour == 16 && minute <= 59) return 18;
+        // 17:00 - 17:59
         else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
+        // 18:00 - 18:29
         else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    public static Boolean IsTollFreeDate(DateTime date)
     {
         int year = date.Year;
         int month = date.Month;
