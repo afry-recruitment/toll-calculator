@@ -1,0 +1,20 @@
+# .pre-commit-config.yaml
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        name: black
+        language_version: python3  # or specify the version you need
+        stages: [commit]  # You can also use [commit-msg] to check commit messages
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest app/test
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true

@@ -1,0 +1,5 @@
+fastapi
+pedantic
+holidays
+pre-commit
+pytest
