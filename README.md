@@ -1,3 +1,24 @@
+# Toll fee calculator 2.0
+A calculator for vehicle toll fees.
+
+Toll Fee calculator is fully customizable in this implementation and accepts custom holiday list, fee table, what is defined a max fine per day and toll-free vehicle list.
+
+Current repository language - C¤
+
+## Using the code
+
+This serves as a core class library that can be used by client, such as an ASP.NET application. 
+
+## Making further adjustments
+
+To be able to expand on a TollCalculator, one could add CRUD functionality for TollFeeSpan Entity, using Entity Framework and a database connection, which in turn would be supplied to create a TollFeeTable that the TollCalculator can be adjusted with.
+Client code can use Nager.Holiday package to supply up-to date country holidays.
+Please take note that the domain code should not be adjusted for the need of EF or client code, so the use of DTOs and correct mappers will be required. 
+
+![the movie is Hackers, but I haven't seen it, I guess I'll have to](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExY29jdzFwYWF1MWU4d3J0ODUyM2YxZjUzamVkb3Fxa29nYjlkZGxjNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/aI7y2ZdVImJdhYOjLn/giphy.gif)
+
+## Find below old documentation and task description
+
 ![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
 
 # Toll fee calculator 1.0
