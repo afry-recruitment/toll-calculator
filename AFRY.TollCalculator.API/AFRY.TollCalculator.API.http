@@ -1,0 +1,60 @@
+@AFRY.TollCalculator.API_HostAddress = https://localhost:7003
+
+GET {{AFRY.TollCalculator.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{AFRY.TollCalculator.API_HostAddress}}/api/calculatetollfee
+Content-Type: application/json
+{
+  "vehicle": {
+        "vehicleType": "Car"
+    },
+    "dates": [
+        "2024-09-17T06:15:00",
+        "2024-09-17T07:30:00",
+        "2024-09-17T08:45:00",
+        "2024-09-17T10:45:00",
+        "2024-09-17T18:45:00"
+    ]
+}
+
+###
+
+POST {{AFRY.TollCalculator.API_HostAddress}}/api/calculatetollfee
+Content-Type: application/json
+{
+  "vehicle": {
+        "vehicleType": "Motorbike"
+    },
+    "dates": [
+        "2024-09-17T06:15:00",
+        "2024-09-17T07:30:00",
+        "2024-09-17T08:45:00"
+    ]
+}
+
+###
+
+POST {{AFRY.TollCalculator.API_HostAddress}}/api/calculatetollfee
+Content-Type: application/json
+{
+  "vehicle": {
+        "vehicleType": "Car"
+    },
+    "dates": [
+        "2024-09-17T06:15:00",
+        "2024-09-17T07:30:00",
+        "2024-09-17T08:45:00",
+        "2024-09-17T10:45:00",
+        "2024-09-17T18:45:00",
+        "2024-10-17T06:15:00",
+        "2024-10-17T07:30:00",
+        "2024-10-17T08:45:00",
+        "2024-10-17T10:45:00",
+        "2024-10-17T18:45:00"
+    ]
+}
+
+###
