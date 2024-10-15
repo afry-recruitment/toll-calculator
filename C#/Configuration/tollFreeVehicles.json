@@ -1,0 +1,14 @@
+[
+  "AMB123", //Ambulance
+  "AMB124", //Ambulance
+  "AMB125", //Ambulance
+  "POL123", // Police
+  "POL124", // Police
+  "POL125", // Police
+  "FIR123", // Fire
+  "FIR124", // Fire
+  "FIR125", // Fire
+  "DIP123", // Diplomatic
+  "DIP124", // Diplomatic
+  "DIP125" // Diplomatic
+]

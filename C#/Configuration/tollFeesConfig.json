@@ -1,0 +1,47 @@
+[
+  {
+    "StartTime": "05:30",
+    "EndTime": "06:29",
+    "Fee": 8
+  },
+  {
+    "StartTime": "06:30",
+    "EndTime": "07:29",
+    "Fee": 13
+  },
+  {
+    "StartTime": "07:30",
+    "EndTime": "08:29",
+    "Fee": 18
+  },
+  {
+    "StartTime": "08:30",
+    "EndTime": "08:59",
+    "Fee": 13
+  },
+  {
+    "StartTime": "09:00",
+    "EndTime": "14:29",
+    "Fee": 8
+  },
+  {
+    "StartTime": "14:30",
+    "EndTime": "15:29",
+    "Fee": 13
+  },
+  {
+    "StartTime": "15:30",
+    "EndTime": "17:29",
+    "Fee": 18
+  },
+  {
+    "StartTime": "17:30",
+    "EndTime": "17:59",
+    "Fee": 13
+  },
+  {
+    "StartTime": "18:00",
+    "EndTime": "18:59",
+    "Fee": 8
+  }
+]
