@@ -1,0 +1,11 @@
+# Ignore IntelliJ IDEA files
+.idea/
+toll-calculator.iml
+
+# Ignore class files
+out/
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

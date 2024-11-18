@@ -1,0 +1,31 @@
+plugins {
+    id 'application'
+}
+
+group 'com.afry'
+version '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+}
+
+test {
+    maxParallelForks = 3
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'com.afry.tollcalculator.TollCalculator' // Replace with your main class path
+}

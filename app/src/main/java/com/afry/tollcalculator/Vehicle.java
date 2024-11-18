@@ -1,3 +1,4 @@
+package com.afry.tollcalculator;
 
 public interface Vehicle {
 
