@@ -1,6 +1,4 @@
 ﻿using TollFeeCalculator.Vehicles;
-using System.Globalization;
-using TollFeeCalculator;
 
 public class TollCalculator
 {
@@ -85,7 +83,7 @@ public class TollCalculator
 
         // The year check should be removed since holidays occur every year
         // For some holidays the date may also change depending on the year
-        if (year == 2013)
+        if (year == 2013) 
         {
             switch (month)
             {
@@ -97,7 +95,7 @@ public class TollCalculator
                 case 7:
                 case 11 when day == 1:
                 case 12 when day == 24 || day == 25 || day == 26 || day == 31:
-                return true;
+                    return true;
             }
         }
         return false;
