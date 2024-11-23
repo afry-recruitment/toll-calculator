@@ -1,4 +1,4 @@
-﻿using System;
+﻿using TollFeeCalculator.Vehicles;
 using System.Globalization;
 using TollFeeCalculator;
 
