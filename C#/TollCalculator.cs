@@ -22,10 +22,10 @@ public class TollCalculator
             int nextFee = GetTollFee(date, vehicle);
             int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            var diffInMillies = (date - intervalStart).TotalMilliseconds;
+            var minutes = diffInMillies/1000/60;
 
-            if (minutes <= 60)
+            if (minutes <= 60) // Should probably not be inclusive
             {
                 if (totalFee > 0) totalFee -= tempFee;
                 if (nextFee >= tempFee) tempFee = nextFee;
