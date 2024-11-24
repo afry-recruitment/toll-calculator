@@ -131,16 +131,16 @@ public class TollFeeCalculatorTests
     }
 
     [Fact]
-    public void GetTollFee_ForMultipleDays_ShouldReturnTotal()
+    public void GetTollFee_ForMultipleDays_ShouldThrowException()
     {
         var tollCalculator = new TollCalculator();
 
-        var fee = tollCalculator.GetTollFee(new Car(), [
+        var action = () => tollCalculator.GetTollFee(new Car(), [
             new DateTime(2024, 12, 2, 6, 30, 0),
             new DateTime(2024, 12, 2, 8, 30, 0),
             new DateTime(2024, 12, 3, 6, 30, 0),
             new DateTime(2024, 12, 3, 8, 30, 0)]);
 
-        fee.Should().Be(42);
+        action.Should().Throw<ArgumentException>().WithMessage("All passes must be in the same day");
     }
 }

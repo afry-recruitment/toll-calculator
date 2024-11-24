@@ -13,6 +13,12 @@ public class TollCalculator
 
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
+        var firstDate = dates[0];
+        if (!dates.All(d => d.Year == firstDate.Year && d.Month == firstDate.Month && d.Day == firstDate.Day))
+        {             
+            throw new ArgumentException("All passes must be in the same day");
+        }
+
         var orderedDates = dates.OrderBy(date => date).ToArray();
         int totalFee = 0;
         for (int i = 0; i < orderedDates.Length; i++)

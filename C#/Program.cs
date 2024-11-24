@@ -46,8 +46,17 @@ while (true)
     if (!DateTime.TryParseExact(input, dateTimePattern, null, DateTimeStyles.None, out var date)) 
     {
         Console.WriteLine("Invalid date and time. Please try again.");
+        continue;
     }
+
+    if (!dates.All(d => d.Year == date.Year && d.Month == date.Month && d.Day == date.Day))
+    {
+        Console.WriteLine("All passes must be in the same day");
+        continue;
+    }
+
     dates.Add(date);
+
 }
 
 var total = tollCalculator.GetTollFee(new Car(), [.. dates]);
