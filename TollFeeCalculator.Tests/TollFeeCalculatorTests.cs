@@ -68,7 +68,7 @@ public class TollFeeCalculatorTests
         var tollCalculator = new TollCalculator();
 
         var fee = tollCalculator.GetTollFee(new Car(), [
-            new DateTime(2024, 12, 2, 6, 30, 0), 
+            new DateTime(2024, 12, 2, 6, 30, 0),
             new DateTime(2024, 12, 2, 7, 30, 0)]);
 
         fee.Should().Be(18);
@@ -84,6 +84,34 @@ public class TollFeeCalculatorTests
             new DateTime(2024, 12, 2, 8, 30, 0)]);
 
         fee.Should().Be(21);
+    }
+
+    [Fact]
+    public void GetTollFee_ForUnorderedPasses_ShouldReturnCorrectFee()
+    {
+        var tollCalculator = new TollCalculator();
+
+        var fee = tollCalculator.GetTollFee(new Car(), [
+            new DateTime(2024, 12, 2, 17, 00, 0),
+            new DateTime(2024, 12, 2, 6, 30, 0),
+            new DateTime(2024, 12, 2, 7, 30, 0)]);
+
+        fee.Should().Be(31);
+    }
+
+    [Fact]
+    public void GetTollFee_ForSpreadOutPasses_ShouldReturnCorrectFee()
+    {
+        var tollCalculator = new TollCalculator();
+
+        var fee = tollCalculator.GetTollFee(new Car(), [
+            new DateTime(2024, 12, 2, 6, 30, 0),
+            new DateTime(2024, 12, 2, 8, 00, 0),
+            new DateTime(2024, 12, 2, 15, 00, 0),
+            new DateTime(2024, 12, 2, 15, 31, 0),
+        ]);
+
+        fee.Should().Be(44);
     }
 
     [Fact]

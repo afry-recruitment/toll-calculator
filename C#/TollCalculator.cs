@@ -13,14 +13,17 @@ public class TollCalculator
 
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
+        var orderedDates = dates.OrderBy(date => date).ToArray();
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        for (int i = 0; i < orderedDates.Length; i++)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            DateTime date = orderedDates[i];
+            DateTime previousDate = i > 0 ? orderedDates[i-1] : date;
 
-            var diffInMillies = (date - intervalStart).TotalMilliseconds;
+            int nextFee = GetTollFee(date, vehicle);
+            int tempFee = GetTollFee(previousDate, vehicle);
+
+            var diffInMillies = (date - previousDate).TotalMilliseconds;
             var minutes = diffInMillies/1000/60;
 
             if (minutes <= 60) // Should probably not be inclusive
