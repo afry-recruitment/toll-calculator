@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TollFeeCalculator
+namespace Toll_Calculator.Vehicles
 {
     public class Motorbike : Vehicle
     {
