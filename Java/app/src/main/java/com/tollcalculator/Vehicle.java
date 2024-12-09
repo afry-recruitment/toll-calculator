@@ -1,3 +1,4 @@
+package com.tollcalculator;
 
 public interface Vehicle {
 
