@@ -1,3 +1,4 @@
+package com.tollcalculator;
 
 public class Motorbike implements Vehicle {
   @Override
