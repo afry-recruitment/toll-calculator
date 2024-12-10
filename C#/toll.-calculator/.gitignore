@@ -1,0 +1,22 @@
+# Ignore the Visual Studio .vs directory
+.vs/
+
+# Ignore compiled binaries
+bin/
+obj/
+
+# Ignore user-specific settings
+*.user
+*.suo
+
+# Ignore temporary files
+*.tmp
+*.log
+
+# Ignore IDE-specific files
+.idea/
+*.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
