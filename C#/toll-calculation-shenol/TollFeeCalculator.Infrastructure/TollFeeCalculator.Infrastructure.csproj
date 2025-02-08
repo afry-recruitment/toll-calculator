@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TollFeeCalculator.Domain\TollFeeCalculator.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -14,9 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TollFeeCalculator.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TollFeeCalculator.Infrastructure", "TollFeeCalculator.Infrastructure\TollFeeCalculator.Infrastructure.csproj", "{C9E19ADE-6DC5-4B32-9D93-60DADFFCA670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculator.API", "TollFeeCalculator.API\TollFeeCalculator.API.csproj", "{38E45AAB-A8D9-4035-98EE-6C47DAB6FD8C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculator.Tests", "TollFeeCalculator.Tests\TollFeeCalculator.Tests.csproj", "{94E3E250-BFC6-42D7-A6C6-64EF168A0D95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TollFeeCalculator.Tests", "TollFeeCalculator.Tests\TollFeeCalculator.Tests.csproj", "{94E3E250-BFC6-42D7-A6C6-64EF168A0D95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +34,6 @@ Global
 		{C9E19ADE-6DC5-4B32-9D93-60DADFFCA670}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9E19ADE-6DC5-4B32-9D93-60DADFFCA670}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9E19ADE-6DC5-4B32-9D93-60DADFFCA670}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38E45AAB-A8D9-4035-98EE-6C47DAB6FD8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E45AAB-A8D9-4035-98EE-6C47DAB6FD8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38E45AAB-A8D9-4035-98EE-6C47DAB6FD8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38E45AAB-A8D9-4035-98EE-6C47DAB6FD8C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94E3E250-BFC6-42D7-A6C6-64EF168A0D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94E3E250-BFC6-42D7-A6C6-64EF168A0D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94E3E250-BFC6-42D7-A6C6-64EF168A0D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
