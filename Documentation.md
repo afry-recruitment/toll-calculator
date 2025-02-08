@@ -60,3 +60,14 @@ Current Issues:
 
 
 I used tests to check my result are correct or not. I used TDD approach to develop the project. Thats why there is no API or Console application for the project. I just used tests to check my results. For proper solution should contains extended solution that I mentioned above but this project is only for test purposes. If I should develop for production, it could consume more time and effort and that's why I just used tests to check my results. From beginning I thought I could use API endpoints and swagger UI documentation but I decided to use tests to check my result because of the time constraints. There are totally 27 test cases that checks many pieces.
+
+### How to run the project
+from Visual Studio 2022:
+
+- Open the project with Visual Studio 2022
+```bash
+- dotnet restore
+- dotnet test
+```
+
+- or from main menu: Test -> Run All Tests

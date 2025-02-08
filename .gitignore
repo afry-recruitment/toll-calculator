@@ -2,9 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/C#/toll-calculation-shenol/.vs/toll-calculation-shenol
-/C#/.vs
 
+.vs
+.github
 # Visual Studio files
 .vs/
 *.suo
@@ -53,16 +53,16 @@ _ReSharper*/
 *.nuget.targets
 
 # Project-specific
-/C#/toll-calculation-shenol/TollFeeCalculator.Application/bin/
-/C#/toll-calculation-shenol/TollFeeCalculator.Application/obj/
-/C#/toll-calculation-shenol/TollFeeCalculator.Domain/bin/
-/C#/toll-calculation-shenol/TollFeeCalculator.Domain/obj/
-/C#/toll-calculation-shenol/TollFeeCalculator.Infrastructure/bin/
-/C#/toll-calculation-shenol/TollFeeCalculator.Infrastructure/obj/
-/C#/toll-calculation-shenol/TollFeeCalculator.API/bin/
-/C#/toll-calculation-shenol/TollFeeCalculator.API/obj/
-/C#/toll-calculation-shenol/TollFeeCalculator.Tests/bin/
-/C#/toll-calculation-shenol/TollFeeCalculator.Tests/obj/
+/TollFeeCalculator.Application/bin/
+/TollFeeCalculator.Application/obj/
+/TollFeeCalculator.Domain/bin/
+/TollFeeCalculator.Domain/obj/
+/TollFeeCalculator.Infrastructure/bin/
+/TollFeeCalculator.Infrastructure/obj/
+/TollFeeCalculator.API/bin/
+/TollFeeCalculator.API/obj/
+/TollFeeCalculator.Tests/bin/
+/TollFeeCalculator.Tests/obj/
 
 # IDE
 .idea/
