@@ -1,0 +1,124 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/C#/toll-calculation-shenol/.vs/toll-calculation-shenol
+/C#/.vs
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Project-specific
+/C#/toll-calculation-shenol/TollFeeCalculator.Application/bin/
+/C#/toll-calculation-shenol/TollFeeCalculator.Application/obj/
+/C#/toll-calculation-shenol/TollFeeCalculator.Domain/bin/
+/C#/toll-calculation-shenol/TollFeeCalculator.Domain/obj/
+/C#/toll-calculation-shenol/TollFeeCalculator.Infrastructure/bin/
+/C#/toll-calculation-shenol/TollFeeCalculator.Infrastructure/obj/
+/C#/toll-calculation-shenol/TollFeeCalculator.API/bin/
+/C#/toll-calculation-shenol/TollFeeCalculator.API/obj/
+/C#/toll-calculation-shenol/TollFeeCalculator.Tests/bin/
+/C#/toll-calculation-shenol/TollFeeCalculator.Tests/obj/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# User-specific files
+*.rsuser
+*.pubxml
+*.publishproj
+
+# Azure Dev Spaces
+.devspaces/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+
+# Local development settings
+appsettings.Development.json
+appsettings.Local.json
+*.Development.json
+*.Local.json
+
+# Secrets
+secrets.json
+*.pfx
+*.key
+*.pem
+
+# Entity Framework
+Migrations/
+
+*.dbmdl
+*.jfm
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
