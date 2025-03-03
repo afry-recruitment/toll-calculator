@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TollFeeCalculator
+namespace TollCalculator.Models;
+
+public abstract class Vehicle
 {
-    public interface Vehicle
-    {
-        String GetVehicleType();
-    }
+    public virtual VehicleType VehicleType { get; }
 }

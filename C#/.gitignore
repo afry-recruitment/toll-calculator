@@ -1,0 +1,23 @@
+# Ignore build outputs
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.generated.cs
+
+# Backup & report files
+*.ncrunch*
+*.localhistory
+*.cache
+*.recommenders
+*.ide
+
+# Visual Studio directory
+.vs/
