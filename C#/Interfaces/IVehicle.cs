@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TollFeeCalculator
+namespace TollFeeCalculator.Interfaces
 {
-    public interface Vehicle
+    public interface IVehicle
     {
         String GetVehicleType();
     }
