@@ -1,0 +1,56 @@
+﻿{
+  "Currency": "SEK",
+  "DailyMaxFee": 60,
+  "TollFeeRates": [
+    {
+      "StartTime": "06:00:00",
+      "EndTime": "06:29:00",
+      "Fee": 8
+    },
+    {
+      "StartTime": "06:30:00",
+      "EndTime": "06:59:00",
+      "Fee": 13
+    },
+    {
+      "StartTime": "07:00:00",
+      "EndTime": "07:59:00",
+      "Fee": 18
+    },
+    {
+      "StartTime": "08:00:00",
+      "EndTime": "08:29:00",
+      "Fee": 13
+    },
+    {
+      "StartTime": "08:30:00",
+      "EndTime": "14:59:00",
+      "Fee": 8
+    },
+    {
+      "StartTime": "15:00:00",
+      "EndTime": "15:29:00",
+      "Fee": 13
+    },
+    {
+      "StartTime": "15:30:00",
+      "EndTime": "16:59:00",
+      "Fee": 18
+    },
+    {
+      "StartTime": "17:00:00",
+      "EndTime": "17:59:00",
+      "Fee": 13
+    },
+    {
+      "StartTime": "18:00:00",
+      "EndTime": "18:29:00",
+      "Fee": 8
+    },
+    {
+      "StartTime": "18:30:00",
+      "EndTime": "05:59:00",
+      "Fee": 0
+    }
+  ]
+}
