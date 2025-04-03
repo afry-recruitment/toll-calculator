@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using TollFeeCalculator;
+﻿using TollFeeCalculator;
 
 public class TollCalculator
 {
@@ -15,86 +13,87 @@ public class TollCalculator
 
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
+        if (IsTollFreeVehicle(vehicle) || dates is null || dates.Length == 0) return 0;
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        DateTime? previousTollTime = null;
+        int previousFee = 0;
+
+        foreach (var time in dates)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
-
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= 60)
+            var currentFee = GetTollFee(time, vehicle);
+            if (!previousTollTime.HasValue || !IsWithinOneHour(time, previousTollTime.Value))
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                totalFee += currentFee;
             }
             else
             {
-                totalFee += nextFee;
+                if (currentFee > previousFee)
+                {
+                    totalFee += currentFee - previousFee;
+                }
             }
+            previousTollTime = time;
+            previousFee = currentFee;
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+        return Math.Min(totalFee, 60);
     }
-
+    private bool IsWithinOneHour(DateTime currentTime, DateTime previousTime)
+    {
+        var timeSinceLastToll = currentTime - previousTime;
+        return timeSinceLastToll <= TimeSpan.FromMinutes(60);
+    }
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        // readable, scalable, maintainable generic code. instead of better performance, but less readable, less maintainable, less scalable code.
+        var tollFreeVehicleTypes = Enum.GetNames(typeof(TollFreeVehicles));
+        return tollFreeVehicleTypes.Any(tollFreeVehicleTypes => tollFreeVehicleTypes.Equals(vehicle.GetVehicleType()));
     }
+
+    private static readonly List<(TimeSpan Start, TimeSpan End, int Fee)> TollRates = new()
+    {
+        (new TimeSpan(6, 0, 0), new TimeSpan(6, 29, 59), 8),
+        (new TimeSpan(6, 30, 0), new TimeSpan(6, 59, 59), 13),
+        (new TimeSpan(7, 0, 0), new TimeSpan(7, 59, 59), 18),
+        (new TimeSpan(8, 0, 0), new TimeSpan(8, 29, 59), 13),
+        (new TimeSpan(8, 30, 0), new TimeSpan(14, 59, 59), 8),
+        (new TimeSpan(15, 0, 0), new TimeSpan(15, 29, 59), 13),
+        (new TimeSpan(15, 30, 0), new TimeSpan(16, 59, 59), 18),
+        (new TimeSpan(17, 0, 0), new TimeSpan(17, 59, 59), 13),
+        (new TimeSpan(18, 0, 0), new TimeSpan(18, 29, 59), 8),
+    };
 
     public int GetTollFee(DateTime date, Vehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
-    }
-
-    private Boolean IsTollFreeDate(DateTime date)
-    {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
-
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
+        var time = date.TimeOfDay;
+        var result = 0;
+        foreach (var (start, end, fee) in TollRates)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
+            if (time >= start && time <= end)
             {
-                return true;
+                result = fee;
+                break;
             }
         }
-        return false;
+        return result;
     }
+
+    private static readonly HashSet<(int Month, int Day)> TollFreeDates = new()
+    {
+        (1, 1),
+        (3, 28), (3, 29),
+        (4, 1), (4, 30),
+        (5, 1), (5, 8), (5, 9),
+        (6, 5), (6, 6), (6, 21),
+        (11, 1),
+        (12, 24), (12, 25), (12, 26), (12, 31)
+    };
+
+    private Boolean IsTollFreeDate(DateTime date) =>
+           date.DayOfWeek == DayOfWeek.Saturday
+        || date.DayOfWeek == DayOfWeek.Sunday
+        || date.Month == 7
+        || TollFreeDates.Contains((date.Month, date.Day));
 
     private enum TollFreeVehicles
     {
