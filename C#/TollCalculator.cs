@@ -1,108 +1,157 @@
-﻿using System;
-using System.Globalization;
-using TollFeeCalculator;
-
-public class TollCalculator
+﻿namespace TollFeeCalculator
 {
-
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public static class TollCalculator
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
+        private const int lowFee = 8;
+        private const int mediumFee = 13;
+        private const int highFee = 18;
+
+        // The fee is the first one not yet reached
+        private static readonly TollFee[] fees = [
+            new(06, 00, 0),
+            new(06, 30, lowFee),
+            new(07, 00, mediumFee),
+            new(08, 00, highFee),
+            new(08, 30, mediumFee),
+            new(15, 00, lowFee),
+            new(15, 30, mediumFee),
+            new(17, 00, highFee),
+            new(18, 00, mediumFee),
+            new(18, 30, lowFee),
+        ];
+
+
+        /// <summary>
+        /// Calculates the toll for a vehicle during one day
+        /// </summary>
+        /// <param name="vehicle">The vehicle to calculate the toll for</param>
+        /// <param name="times">A sorted array of timestamps from the same day</param>
+        /// <returns>The total fee incurred by the vehicle</returns>
+        /// <exception cref="ArgumentException">Thrown if there are no times, or they are from different days, not in ascending order or duplicates.</exception>
+        public static int GetTollFee(IVehicle vehicle, DateTime[] times)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            ArgumentNullException.ThrowIfNull(vehicle);
+            ArgumentNullException.ThrowIfNull(times);
+            if (times.Length == 0)
+                throw new ArgumentException("No times supplied", nameof(times));
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            DateTime prev = times[0];
+            for (int i = 1; i < times.Length; i++)
+            {
+                DateTime date = times[i];
+                if (date.Year != prev.Year || date.Month != prev.Month || date.Day != prev.Day)
+                    throw new ArgumentException("All times must be from the same day", nameof(times));
+                else if (prev > date)
+                    throw new ArgumentException("All times must be in ascending order", nameof(times));
+                else if (prev == date)
+                    throw new ArgumentException("Duplicate times found", nameof(times));
+                prev = date;
+            }
 
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
-            }
+            if (vehicle.IsTollFree() || IsTollFreeDate(times[0]))
+                return 0;
+
+            // Calculate the total fee for the day using the ExtendingOnHigherFee variant (see comment further down for more info)
+            return GetTotalFee(times, 60, TimeFrameVariant.ExtendingOnHigherFee);
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
-    }
+                
+        private static bool IsTollFreeDate(DateTime date) => 
+            date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday || HolidayHelper.IsSwedishBankHoliday(date);
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
-    {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
-    }
+        /*  From the requirements:
+              A vehicle should only be charged once an hour
+                  - In the case of multiple fees in the same hour period, the highest one applies.
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
-    {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+            However, this can be interpreted in many different ways.
 
-        int hour = date.Hour;
-        int minute = date.Minute;
+            To visualize this let's consider a vehicle incurring a fee every 40 minutes throughout the day
+            and let's imagine the individual tolls would be the following:
+            A: 8
+            B: 8
+            C: 13
+            D: 18
+            E: 13
+            F: 8
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
-    }
+            If we let the time frame extend (as in the TimeFrameVariant.Extending implementation) since only
+            40 minutes has passed since the last fee, all fees would be considered to be within the same hour.
+            This would result in the vehicle only being charged for D for a total of 18.
 
-    private Boolean IsTollFreeDate(DateTime date)
-    {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
+            If we instead set a fixed time frame (as in the TimeFrameVariant.Fixed implementation) the vehicle
+            would be charged for multiple passings. Once the vehicle reaches C more than an hour has passed since
+            A so a new fee is incurred. However since there's only 40 minutes to D that higher fee is used for
+            this hourly period. The vehicle then incurrs a fee for E as well since more than an hour has passed
+            since C where the period started. The vehicle will therefore be charged for A, D and E for a total
+            of 39.
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
+            The first approach lets the vehicle skip payment by merging all instances into a single "hour" but
+            the second approach technically charged it for two tolls only 40 minutes apart. We can address this
+            with another variant (as in the TimeFrameVariant.ExtendingOnHigherFee implementation) where we only
+            consider the time since the actual charge. This would incurr payments at A, D and F for a total of
+            34.
 
-        if (year == 2013)
+            While this third approach looks good given this example, it's possible to think up a scenario where
+            the resulting fee doesn't seem to match "what one would expect". For instance, if the vehicle
+            never appeared at A, we would only charge for D and F. This means B would be skipped despite being 
+            80 minutes before the first actual charge. However, charging for B would go against the requirement
+            since C is within the hour with a higher fee, but we can't charge for C since it's within 40 minutes
+            of D.
+
+            In conclusion, the requirement of "A vehicle should only be charged once an hour" is rather unclear.
+        */
+        private static int GetTotalFee(DateTime[] times, int max, TimeFrameVariant variant)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+            int total = 0;
+            int prevFee = 0;
+            DateTime? prevTime = null;
 
-    private enum TollFreeVehicles
-    {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
+            foreach (DateTime time in times)
+            {
+                int fee = GetTollFee(time);
+                if (fee == 0)
+                    continue;
+
+                // A new hour has started
+                if (!prevTime.HasValue || (time - prevTime.Value).TotalHours > 1)
+                {
+                    total += fee;
+                    prevFee = fee;
+                    prevTime = time;
+                }
+                // Same hour as previous fee, and it should be replaced
+                else if (fee > prevFee)
+                {
+                    total += fee - prevFee;
+                    prevFee = fee;
+                    if (variant != TimeFrameVariant.Fixed)
+                        prevTime = time;
+                }
+                // Same hour as previous fee, but the previous fee was higher
+                else if (variant == TimeFrameVariant.Extending)
+                    prevTime = time;
+
+                // No need to continue if the max is reached
+                if (total >= max)
+                    return max;
+            }
+
+            return total;
+        }
+
+        private static int GetTollFee(DateTime time)
+        {
+            foreach (TollFee fee in fees)
+                if (fee.TryGetFee(time, out int v))
+                    return v;
+
+            return 0;
+        }
+
+        private enum TimeFrameVariant
+        {
+            Fixed,
+            Extending,
+            ExtendingOnHigherFee,
+        }
     }
 }
