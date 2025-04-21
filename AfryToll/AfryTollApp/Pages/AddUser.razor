@@ -1,0 +1,47 @@
+﻿@page "/AddUser"
+@inherits AddUserBase
+
+<h1 style="background-color: coral; margin: 10px auto; text-align: center;"><b>CarRegister</b></h1>
+
+
+<EditForm Model="@User" OnValidSubmit="@Add">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div style="margin: auto; text-align: center;">
+        <label for="price"><b>PlateNumber</b></label>
+        <InputText id="name" @bind-Value="User.PlateNumber" placeholder="Name" class="form-control" />
+    </div>
+    <div style="margin: auto; text-align: center;">
+        <label for="price"><b>Password</b></label>
+        <InputText id="name" @bind-Value="User.Password" placeholder="Name" class="form-control" />
+    </div>
+    <div style="margin: auto; text-align: center;">
+        <button type="submit" class="btn btn-success"> <b>Submit</b></button>
+    </div>
+
+</EditForm>
+
+@if (Categories != null)
+{
+    <table class="table" style="background-color: gainsboro;margin: 10px auto; text-align: center;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Categories)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => SelectCategory(item.Id)">
+                            Select
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

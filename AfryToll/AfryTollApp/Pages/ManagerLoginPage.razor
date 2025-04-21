@@ -1,0 +1,47 @@
+﻿@page "/ManagerLoginPage"
+
+
+@using Microsoft.AspNetCore.Components
+
+<div style="text-align: center; padding-top: 10px;">
+    <img src="/images/index.jpg" alt="Logo" style="width: 1000px; height: 300px;" />
+</div>
+
+<div style="margin: auto; text-align: center; padding-top: 20px;">
+    <label>UserName:</label><br />
+    <input @bind="username" /><br /><br />
+
+    <label>Password:</label><br />
+    <input type="password" @bind="password" /><br /><br />
+
+    <button @onclick="CheckLogin">Login</button><br /><br />
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <p style="color:red">@message</p>
+    }
+</div>
+
+@code {
+    private string username;
+    private string password;
+    private string message;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+    private void CheckLogin()
+    {
+        if (username == "admin" && password == "admin")
+        {
+            Navigation.NavigateTo("/ManagerPage");
+        }
+        else
+        {
+            message = "Invalid username or password.";
+
+
+        }
+    }
+}
+

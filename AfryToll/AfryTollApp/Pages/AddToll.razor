@@ -1,0 +1,79 @@
+@page "/AddToll/{CategoryId:int}/{UserId:int}"
+@inherits AddTollBase
+
+
+<h1 style="background-color: red; margin: 10px auto; text-align: center;">
+    <b>Journey</b>
+</h1>
+
+
+<label for="price" ID="Label1">Date:@LabelcurrentdateText</label>
+<h1></h1>
+<label for="price" ID="Label2">Today:@LabeldayofweekText</label>
+
+
+
+<label for="price" ID="Labelholiday">@LabelHolidayText</label>
+<h1></h1>
+
+
+
+<label for="price" ID="Label23">Cost to pay = @LabelCostText</label>
+
+<div>
+
+</div>
+
+
+@if (ErrorMessage != null || TollCost==null)
+{
+    <DisplayError ErrorMessage="@ErrorMessage"></DisplayError>
+}
+
+<button type="Enter" @onclick="(() => EnterUser())"
+        class="btn btn-danger sm" disabled="@(!btnEnterEnabled)">
+    StartTrip
+ 
+</button>
+
+
+@if (LoadTolls == null)
+{
+    <label for="price" ID="Labeltable">@LabeltableText</label>
+}
+else
+{
+    
+    <h1 style="background-color: coral; margin: 10px auto; text-align: center;"><b>History of your today toll</b></h1>
+    <table class="table" style="background-color: gainsboro;margin: 10px auto; text-align: center; width:500px">
+        <thead>
+            
+            <tr>
+                <th>CategoryName</th>
+                <th>CostTrip</th>
+                 <th>Date</th>
+                  <th>Time</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in LoadTolls)
+            {
+                <tr>
+                  
+                    <td>@item.TollCostCategoryName</td>
+             
+                    <td>@item.UserCost</td>
+                   <td>@item.Date</td>
+                   <td>@item.Time</td>
+                  
+
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+

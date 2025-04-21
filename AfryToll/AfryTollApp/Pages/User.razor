@@ -1,0 +1,32 @@
+﻿@page "/User"
+@inherits UserBase
+
+
+
+<div >
+    <div style="text-align: center; padding-top: 10px;">
+        <img src="images/index.jpg" alt="Logo" style="width: 1000px; height: 300px;" />
+    </div>
+    <div style="margin: auto;text-align: center">
+        <label for="price" style="margin:auto">PlateNumber</label>
+        <input type="text" @bind-value="PlateNumber" />
+    </div>
+    <div>
+        <h1></h1>
+    </div>
+    <div style="margin: auto;text-align: center">
+        <label for="price" style="margin:auto">Password</label>
+        <input type="password" @bind-value="Password" />
+    </div>
+    <div style="margin: auto;text-align: center">
+    <button  type="Enter" @onclick="(() =>  AuthenticateUser())"
+            class="btn btn-success sm">
+        Enter
+        @*  <i class="fa fa-trash"></i>*@
+    </button>
+    </div>
+    <label for="price" ID="Labelholiday">@LabelerrorText</label>
+</div>
+
+
+

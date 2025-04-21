@@ -1,0 +1,89 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = AfryTollApp
+build_property.RootNamespace = AfryTollApp
+build_property.ProjectDir = E:\Samere.Projects\AfryTestFinish\AfryToll\AfryTollApp\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\Samere.Projects\AfryTestFinish\AfryToll\AfryTollApp
+build_property._RazorSourceGeneratorDebug = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/AddToll.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkVG9sbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/AddUser.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkVXNlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmV0Y2hEYXRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/ManageCategory.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlQ2F0ZWdvcnkucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/ManagerLoginPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlckxvZ2luUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/ManagerPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlclBhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/ManageTollCost.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFuYWdlVG9sbENvc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/Toll.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVG9sbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/User.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Pages/Welcom.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VsY29tLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8c5wb7ie2i
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Shared/ManagerLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1hbmFnZXJMYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-widy2ivaej
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Shared/ManagerNavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1hbmFnZXJOYXZNZW51LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-7hjxqjd861
+
+[E:/Samere.Projects/AfryTestFinish/AfryToll/AfryTollApp/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-h2wza1qu1b

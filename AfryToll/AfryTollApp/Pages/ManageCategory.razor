@@ -1,0 +1,61 @@
+﻿@page "/ManageCategory"
+@inherits ManageCategoryBase
+@layout ManagerLayout
+
+<h1 style="background-color: coral; margin: 10px auto; text-align: center;"><b>Managment</b></h1>
+
+
+<EditForm Model="@Category" OnSubmit="@Add">
+    <div style="margin: auto; text-align: center;">
+        <label for="price"><b>Name</b></label>
+        <InputText id="name" @bind-Value="Category.Name" placeholder="Name" class="form-control" />
+    </div>
+
+    <div style="margin: auto; text-align: center; padding:10px;">
+        <label for="Status"><b>Status</b></label>
+        <InputCheckbox id="status" @bind-Value="Category.Status" />
+    </div>
+
+
+
+    <div style="margin: auto; text-align: center;">
+        <button type="submit" class="btn btn-success"> <b>Submit</b></button>
+    </div>
+
+</EditForm>
+
+@if (Categories != null)
+{
+
+    <table class="table" style="background-color: gainsboro;margin: 10px auto; text-align: center;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Categories)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+
+                    @if (!item.Status)
+            {
+                        <td><a href="/ManageTollCost/@item.Id">Add Cost</a></td>
+                    }
+                    else
+                    {
+                        <td></td> 
+                    }
+                </tr>
+
+
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,72 @@
+﻿@page "/ManageTollCost/{CategoryId:int}"
+@inherits ManageTollCostBase
+
+@layout ManagerLayout
+
+
+<EditForm Model="@TollCost" OnSubmit="@Add">
+
+
+    <div>
+    </div>
+    <div>
+        <label for="Time"><b>Time</b></label>
+        <InputText id="Time" @bind-Value="TollCost.Time" placeholder="Time" class="form-control" />
+    </div>
+    <div>
+        <label for="price">Cost</label>
+        <InputNumber id="name" @bind-Value="TollCost.Cost" placeholder="Name" class="form-control" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+
+</EditForm>
+<div>
+    <label for="price" ID="Label1">@LabelMassage</label>
+</div>
+<div>
+    <button type="submit" class="btn btn-success" @onclick="(() => AddRushHour())">Rush hour</button>
+</div>
+
+@if (TollCosts != null)
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+
+                <th>Time</th>
+                <th>Cost</th>
+                <td>Remove</td>
+
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in TollCosts)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+
+
+
+                    <td>@item.Time</td>
+                    <td>@item.Cost</td>
+
+
+
+                    <button type="Remove" @onclick="(() => Delete_Click(item.Id))"
+                            class="btn btn-danger sm">
+                        Remove
+                        @*  <i class="fa fa-trash"></i>*@
+                    </button>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
