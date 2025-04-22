@@ -43,7 +43,7 @@ public class TollCalculator
         return Enum.TryParse<TollFreeVehicles>(vehicle?.GetVehicleType(), out _);
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public static int GetTollFee(DateTime date, Vehicle vehicle)
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 

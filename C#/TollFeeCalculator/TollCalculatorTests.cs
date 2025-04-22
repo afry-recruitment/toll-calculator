@@ -65,4 +65,32 @@ public class TollCalculatorTests(ITestOutputHelper testOutput)
     {
         Assert.True(TollCalculator.IsTollFreeDate(date));
     }
+
+    /// <summary>
+    /// Returns 10-minute intervals between 06:00 and 18:30
+    /// </summary>
+    public static IEnumerable<object[]> TimesBetween0600And1830
+    {
+        get
+        {
+            DateTime time = new DateTime(2025, 3, 31, 6, 0, 0);
+            while (time < new DateTime(2025, 3, 31, 18, 30, 0))
+            {
+                yield return [time];
+                time = time.AddMinutes(10);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Check every 10-minute interval between 06:00 and 18:30
+    /// to see that we haven't missed any time period in there.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(TimesBetween0600And1830))]
+    public void There_are_no_missed_windows_in_the_toll_schedule(DateTime time)
+    {
+        // Each time interval should get a non-zero toll fee.
+        Assert.True(0 < TollCalculator.GetTollFee(time, new Car()));
+    }
 }
