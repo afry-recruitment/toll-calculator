@@ -93,4 +93,26 @@ public class TollCalculatorTests(ITestOutputHelper testOutput)
         // Each time interval should get a non-zero toll fee.
         Assert.True(0 < TollCalculator.GetTollFee(time, new Car()));
     }
+
+    /// <summary>
+    /// Tests a specific scenario and checks if GetTollFee calculates the correct fee.
+    /// </summary>
+    [Fact]
+    public void Calculates_the_correct_total()
+    {
+        DateTime[] dates =
+        {
+            new(2025, 3, 31, 7, 10, 0),  // 18
+            new(2025, 3, 31, 7, 50, 0),  // 18, ignored since less than one hour after previous
+            new(2025, 3, 31, 8, 20, 0),  // 13
+            new(2025, 3, 31, 8, 50, 0),  // 8, ignored since less than one hour after previous
+            new(2025, 3, 31, 15, 10, 0), // 13, replaced by 18 from below
+            new(2025, 3, 31, 15, 40, 0), // 18, less than one hour since previous, but higher fee
+            new(2025, 3, 31, 23, 00, 0), // 0
+        };
+
+        int expectedTotal = 49; // 18 + 13 + 18
+
+        Assert.Equal(expectedTotal, TollCalculator.GetTollFee(new Car(), dates));
+    }
 }
