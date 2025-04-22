@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using TollFeeCalculator;
+﻿namespace TollFeeCalculator;
 
 public class TollCalculator
 {
@@ -23,7 +21,7 @@ public class TollCalculator
             int tempFee = GetTollFee(intervalStart, vehicle);
 
             long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            long minutes = diffInMillies / 1000 / 60;
 
             if (minutes <= 60)
             {
