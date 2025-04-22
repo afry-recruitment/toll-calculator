@@ -47,20 +47,43 @@ public class TollCalculator
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
-        int hour = date.Hour;
-        int minute = date.Minute;
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        return TollFees.FirstOrDefault(f => f.IsMatch(date)) is { } fee
+                   ? fee.Fee
+                   : 0;
     }
+
+    private static readonly TollFeeSpecification[] TollFees =
+    [
+        new TollFeeSpecification(0600..0630, 8),
+        new TollFeeSpecification(0630..0700, 13),
+        new TollFeeSpecification(0700..0800, 18),
+        new TollFeeSpecification(0800..0830, 13),
+        new TollFeeSpecification(0830..1500, 8),
+        new TollFeeSpecification(1500..1530, 13),
+        new TollFeeSpecification(1530..1700, 18),
+        new TollFeeSpecification(1700..1800, 13),
+        new TollFeeSpecification(1800..1830, 8),
+    ];
+
+    /// <summary>
+    /// Specifies the toll fee for a specific time interval.
+    /// </summary>
+    /// <param name="interval">A time interval in the form of an integer range.
+    /// The hundreds and thousands digits form the hour, and the ones and tens form the minute.</param>
+    /// <param name="fee">The toll fee for the time interval.</param>
+    private readonly struct TollFeeSpecification(Range interval, int fee)
+    {
+        public int Fee => fee;
+
+        /// <summary>
+        /// Checks if this toll fee matches a specific time.
+        /// </summary>
+        public bool IsMatch(DateTime time)
+        {
+            int integerTime = time.Hour * 100 + time.Minute;
+            return integerTime >= interval.Start.Value && integerTime < interval.End.Value;
+        }
+    };
 
     public static bool IsTollFreeDate(DateTime date)
     {
