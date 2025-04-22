@@ -107,6 +107,7 @@ public class TollCalculatorTests(ITestOutputHelper testOutput)
             new(2025, 3, 31, 8, 20, 0),  // 13
             new(2025, 3, 31, 8, 50, 0),  // 8, ignored since less than one hour after previous
             new(2025, 3, 31, 15, 10, 0), // 13, replaced by 18 from below
+            new(2025, 3, 31, 15, 20, 0), // 13, replaced by 18 from below
             new(2025, 3, 31, 15, 40, 0), // 18, less than one hour since previous, but higher fee
             new(2025, 3, 31, 23, 00, 0), // 0
         };

@@ -2,40 +2,62 @@
 
 public class TollCalculator
 {
+    /// <summary>
+    /// The highest total fee that a vehicle can accumulate on a single day. 
+    /// </summary>
+    const int MaxDailyTotal = 60;
 
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    /// <summary>
+    /// Calculate the total toll fee for one day
+    /// </summary>
+    /// <param name="vehicle">the vehicle</param>
+    /// <param name="dates">date and time of all passes on one day</param>
+    /// <returns>the total toll fee for that day</returns>
+    public static int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
-        foreach (DateTime date in dates)
+        if (IsTollFreeVehicle(vehicle)) return 0;
+        if (dates.Length == 0) return 0;
+        if (dates.Length == 1) return GetTollFee(dates[0], vehicle);
+
+        // There are multiple passes on one day so we have to check if any of them
+        // occur within an hour of each other, and then sum everything.
+
+        // Create a list of passes with the fee for each pass, and keep it in chronological order.
+        List<(DateTime Time, int Fee)> passes = dates.Select(d => (Time: d, Fee: GetTollFee(d, vehicle)))
+                                                     .OrderBy(x => x.Time)
+                                                     .ToList();
+
+        RemoveSubHourIntervals();
+
+        int totalFee = passes.Sum(x => x.Fee);
+        return Math.Min(totalFee, MaxDailyTotal);
+
+
+        void RemoveSubHourIntervals()
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            // This goes through the list of passes and removes passes that occur less than 1 hour
+            // after the previous pass, keeping the highest fee of the two.
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies / 1000 / 60;
+            int i = 0;
+            while (i < passes.Count - 1)
+            {
+                var timeA = passes[i];
+                var timeB = passes[i + 1];
 
-            if (minutes <= 60)
-            {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
-            }
-            else
-            {
-                totalFee += nextFee;
+                TimeSpan timeBetween = timeB.Time - timeA.Time;
+                if (timeBetween < TimeSpan.FromHours(1))
+                {
+                    // The two passes are less than 1 hour apart. Update the first one
+                    // with the higher fee and remove the second one.
+                    passes[i] = timeA with { Fee = Math.Max(timeA.Fee, timeB.Fee) };
+                    passes.RemoveAt(i + 1);
+                }
+                else
+                {
+                    i += 1;
+                }
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
     }
 
     public static bool IsTollFreeVehicle(Vehicle? vehicle)
