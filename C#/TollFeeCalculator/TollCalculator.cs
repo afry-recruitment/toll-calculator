@@ -62,7 +62,7 @@ public class TollCalculator
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    public static bool IsTollFreeDate(DateTime date)
     {
         int year = date.Year;
         int month = date.Month;
