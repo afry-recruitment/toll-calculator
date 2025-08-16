@@ -14,6 +14,7 @@ namespace TollCalculatorSystem.Services
          * @return - the total toll fee for that day
          */
 
+        // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
         public int GetTollFee(Vehicle vehicle, DateTime[] dates)
         {
             DateTime intervalStart = dates[0];
@@ -60,16 +61,19 @@ namespace TollCalculatorSystem.Services
             int hour = date.Hour;
             int minute = date.Minute;
 
-            if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-            else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-            else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-            else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-            else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-            else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-            else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-            else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-            else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-            else return 0;
+            if (hour == 6 && minute <= 29) return 8;            // 6 - 6.29
+            if (hour == 6) return 13;                           // 6 - 6.59
+            if (hour == 7) return 18;                           // 7 - 7.59
+            if (hour == 8 && minute <= 29) return 13;           // 8 - 8.29
+            if (hour == 8 && minute >= 30) return 8;            // 8.30 - 8-59
+            if (hour >= 9 && hour <= 14) return 8;              // 8.30 - 14.59
+            if (hour == 15 && minute <= 29) return 13;          // 15 - 15.29
+            if ((hour == 15 && minute >= 30) || hour == 16)
+                return 18;                                      // 15.30 - 16.59
+            if (hour == 17) return 13;                          // 17 - 17.59
+            if (hour == 18 && minute <= 29) return 8;           // 18 - 18.29
+
+            return 0;                                           // 18.30 - 05.59 no fee
         }
 
         private Boolean IsTollFreeDate(DateTime date)
@@ -105,6 +109,24 @@ namespace TollCalculatorSystem.Services
             Diplomat = 3,
             Foreign = 4,
             Military = 5
+        }
+        public void InspectAllTimeSlots()
+        {
+            var car = new Car();
+            var date = new DateTime(2025, 8, 15); // weekday
+
+            for (int hour = 0; hour < 24; hour++)
+            {
+                for (int minute = 0; minute < 60; minute++)
+                {
+                    var time = date.AddHours(hour).AddMinutes(minute);
+                    int fee = GetTollFee(time, car);
+
+                    Console.WriteLine($"{hour:D2}:{minute:D2} | {fee, 4}");
+
+                    if (minute == 29 || minute == 59) Console.WriteLine("---------------------");
+                }
+            }
         }
     }
 }

@@ -6,14 +6,19 @@ var car = new Car();
 
 var passes = new[]
 {
-    new DateTime(2025, 8, 16, 06, 15, 00),
-    new DateTime(2025, 8, 16, 06, 45, 00),
-    new DateTime(2025, 8, 16, 07, 30, 00)
+    new DateTime(2025, 8, 15, 09, 15, 00),
+    new DateTime(2025, 8, 15, 06, 45, 00),
+    new DateTime(2025, 8, 15, 07, 30, 00)
 };
 
 var fee = calculator.GetTollFee(car, passes);
 
 Console.WriteLine($"Calculated fee: {fee}");
+
+// Visually inspect passes and fees
+var tester = new TollCalculator();
+tester.InspectAllTimeSlots();
+
 
 // BUG FIXES (CRITICAL)
 // - Fix time calculation bug: date.Millisecond → (date - intervalStart).TotalMinutes is not right
