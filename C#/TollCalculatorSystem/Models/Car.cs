@@ -1,7 +1,7 @@
 ﻿
 namespace TollCalculatorSystem.Models
 {
-    public class Car : Vehicle
+    public class Car : IVehicle
     {
         public string GetVehicleType()
         {

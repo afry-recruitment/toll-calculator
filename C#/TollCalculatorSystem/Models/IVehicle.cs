@@ -1,7 +1,7 @@
 ﻿
 namespace TollCalculatorSystem.Models
 {
-    public interface Vehicle
+    public interface IVehicle
     {
         string GetVehicleType();
     }

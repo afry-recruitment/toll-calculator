@@ -6,8 +6,8 @@ var car = new Car();
 
 var passes = new[]
 {
-    new DateTime(2025, 8, 15, 09, 15, 00),
-    new DateTime(2025, 8, 15, 06, 45, 00),
+    new DateTime(2025, 8, 15, 15, 00, 00),
+    new DateTime(2025, 8, 15, 06, 15, 00),
     new DateTime(2025, 8, 15, 07, 30, 00)
 };
 

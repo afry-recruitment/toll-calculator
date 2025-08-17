@@ -15,34 +15,47 @@ namespace TollCalculatorSystem.Services
          */
 
         // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
-        public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+        public int GetTollFee(IVehicle vehicle, DateTime[] passageTimes)
         {
-            DateTime intervalStart = dates[0];
+            if (vehicle == null)
+                throw new ArgumentNullException(nameof(vehicle));
+
+            if (passageTimes == null || passageTimes.Length == 0)
+                return 0;
+
+            Array.Sort(passageTimes);
+
+            DateTime windowStart = passageTimes[0];    // first passage
             int totalFee = 0;
-            foreach (DateTime date in dates)
+            var windowMaxFee = GetTollFee(windowStart, vehicle);
+
+            for (int i = 1; i < passageTimes.Length; i++)
             {
-                int nextFee = GetTollFee(date, vehicle);
-                int tempFee = GetTollFee(intervalStart, vehicle);
+                var currentPassageTime = passageTimes[i];
 
-                long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-                long minutes = diffInMillies / 1000 / 60;
+                var timeSinceWindowStart = currentPassageTime - windowStart;
 
-                if (minutes <= 60)
+                if (timeSinceWindowStart >= TimeSpan.FromMinutes(60))
                 {
-                    if (totalFee > 0) totalFee -= tempFee;
-                    if (nextFee >= tempFee) tempFee = nextFee;
-                    totalFee += tempFee;
+                    totalFee += windowMaxFee;
+                    windowStart = currentPassageTime; // start new time window
+                    windowMaxFee = GetTollFee(currentPassageTime, vehicle); // new max fee
                 }
                 else
                 {
-                    totalFee += nextFee;
+                    var fee = GetTollFee(currentPassageTime, vehicle);
+                    if (fee > windowMaxFee)
+                        windowMaxFee = fee;
                 }
             }
-            if (totalFee > 60) totalFee = 60;
-            return totalFee;
+
+            totalFee += windowMaxFee;
+
+            if (totalFee > 60) return 60;
+            else return totalFee;
         }
 
-        private bool IsTollFreeVehicle(Vehicle vehicle)
+        private bool IsTollFreeVehicle(IVehicle vehicle)
         {
             if (vehicle == null) return false;
             String vehicleType = vehicle.GetVehicleType();
@@ -54,7 +67,7 @@ namespace TollCalculatorSystem.Services
                    vehicleType.Equals(TollFreeVehicles.Military.ToString());
         }
 
-        public int GetTollFee(DateTime date, Vehicle vehicle)
+        public int GetTollFee(DateTime date, IVehicle vehicle)
         {
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
@@ -122,7 +135,7 @@ namespace TollCalculatorSystem.Services
                     var time = date.AddHours(hour).AddMinutes(minute);
                     int fee = GetTollFee(time, car);
 
-                    Console.WriteLine($"{hour:D2}:{minute:D2} | {fee, 4}");
+                    Console.WriteLine($"{hour:D2}:{minute:D2} | {fee,4}");
 
                     if (minute == 29 || minute == 59) Console.WriteLine("---------------------");
                 }
