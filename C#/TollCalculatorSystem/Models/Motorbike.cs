@@ -3,9 +3,9 @@ namespace TollCalculatorSystem.Models
 {
     public class Motorbike : IVehicle
     {
-        public string GetVehicleType()
+        public VehicleType GetVehicleType()
         {
-            return "Motorbike";
+            return VehicleType.Motorbike;
         }
     }
 }

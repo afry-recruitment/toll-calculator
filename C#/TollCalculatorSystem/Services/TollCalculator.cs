@@ -15,7 +15,7 @@ namespace TollCalculatorSystem.Services
          */
 
         // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
-        public int GetTollFee(IVehicle vehicle, DateTime[] passageTimes)
+        public int CalculateTollFee(IVehicle vehicle, DateTime[] passageTimes)
         {
             if (vehicle == null)
                 throw new ArgumentNullException(nameof(vehicle));
@@ -23,9 +23,17 @@ namespace TollCalculatorSystem.Services
             if (passageTimes == null || passageTimes.Length == 0)
                 return 0;
 
+            // Early return if toll free vehicle
+            if (IsTollFreeVehicle(vehicle))
+                return 0;
+
             Array.Sort(passageTimes);
 
-            DateTime windowStart = passageTimes[0];    // first passage
+            DateTime windowStart = passageTimes[0];    // First passage
+            // Eearly return if toll free date
+            if (IsTollFreeDate(windowStart))
+                return 0;
+
             int totalFee = 0;
             var windowMaxFee = GetTollFee(windowStart, vehicle);
 
@@ -38,8 +46,8 @@ namespace TollCalculatorSystem.Services
                 if (timeSinceWindowStart >= TimeSpan.FromMinutes(60))
                 {
                     totalFee += windowMaxFee;
-                    windowStart = currentPassageTime; // start new time window
-                    windowMaxFee = GetTollFee(currentPassageTime, vehicle); // new max fee
+                    windowStart = currentPassageTime; // Start new time window
+                    windowMaxFee = GetTollFee(currentPassageTime, vehicle); // New max fee
                 }
                 else
                 {
@@ -58,19 +66,24 @@ namespace TollCalculatorSystem.Services
         private bool IsTollFreeVehicle(IVehicle vehicle)
         {
             if (vehicle == null) return false;
-            String vehicleType = vehicle.GetVehicleType();
-            return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-                   vehicleType.Equals(TollFreeVehicles.Military.ToString());
+
+            return vehicle.GetVehicleType() switch
+            {
+                VehicleType.Motorbike or
+                VehicleType.Tractor or
+                VehicleType.Emergency or
+                VehicleType.Diplaomat or
+                VehicleType.Foreign or
+                VehicleType.Military => true,
+                _ => false
+            };
         }
 
         public int GetTollFee(DateTime date, IVehicle vehicle)
         {
-            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
-
+            if (vehicle == null)
+                throw new ArgumentNullException(nameof(vehicle));
+            
             int hour = date.Hour;
             int minute = date.Minute;
 
@@ -112,16 +125,6 @@ namespace TollCalculatorSystem.Services
                 }
             }
             return false;
-        }
-
-        private enum TollFreeVehicles
-        {
-            Motorbike = 0,
-            Tractor = 1,
-            Emergency = 2,
-            Diplomat = 3,
-            Foreign = 4,
-            Military = 5
         }
         public void InspectAllTimeSlots()
         {

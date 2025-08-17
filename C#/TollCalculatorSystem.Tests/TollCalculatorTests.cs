@@ -17,7 +17,7 @@ namespace TollCalculatorSystem.Tests
                 new DateTime(2025, 8, 15, 7, 14, 59) // 18 (same 60 min window with 1 second)
             };
 
-            var fee = calculator.GetTollFee(car, passes);
+            var fee = calculator.CalculateTollFee(car, passes);
             Assert.Equal(18, fee);
         }
 
@@ -33,7 +33,7 @@ namespace TollCalculatorSystem.Tests
                 new DateTime(2025, 8, 15, 7, 15, 0) // 18 (new 60 min window)
             };
 
-            var fee = calculator.GetTollFee(car, passes);
+            var fee = calculator.CalculateTollFee(car, passes);
 
             Assert.Equal(26, fee);
         }
@@ -54,7 +54,7 @@ namespace TollCalculatorSystem.Tests
                 new DateTime(2025, 8, 15, 17, 0, 0), // 13
             };
 
-            var fee = calculator.GetTollFee(car, passes);
+            var fee = calculator.CalculateTollFee(car, passes);
             Assert.Equal(60, fee);
         }
 
@@ -64,7 +64,7 @@ namespace TollCalculatorSystem.Tests
             var calculator = new TollCalculator();
             Car car = new Car();
 
-            int result = calculator.GetTollFee(car, null);
+            int result = calculator.CalculateTollFee(car, null);
 
             Assert.Equal(0, result);
         }
@@ -79,7 +79,40 @@ namespace TollCalculatorSystem.Tests
                 new DateTime(2025, 8, 15, 7, 0, 0)
             };
 
-            Assert.Throws<ArgumentNullException>(() => calculator.GetTollFee(null, passes));
+            Assert.Throws<ArgumentNullException>(() => calculator.CalculateTollFee(null, passes));
+        }
+
+        [Fact]
+        public void ShouldReturnZero_IfFirstDateIsTollFree()
+        {
+            var calculator = new TollCalculator();
+            var car = new Car();
+            var passes = new[]
+            {
+                // saturday
+                new DateTime(2025, 8, 16, 6, 0, 0),
+            };
+
+            var result = calculator.CalculateTollFee(car, passes);
+
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void Motorbike_ShouldBeTollFree_ReturnZero()
+        {
+            var calculator = new TollCalculator();
+            var mc = new Motorbike();
+            var passes = new[]
+            {
+                // Thursday
+                new DateTime(2025, 8, 14, 14, 0, 0),
+                new DateTime(2025, 8, 14, 8, 0, 0),
+            };
+
+            var result = calculator.CalculateTollFee(mc, passes);
+
+            Assert.Equal(0, result);
         }
     }
 }
