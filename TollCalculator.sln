@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33927.289
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculator", "TollCalculator.csproj", "{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollCalculatorTests", "TollCalculatorTests\TollCalculatorTests.csproj", "{0CC34670-96C6-4454-BF29-28FF0D376689}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484} = {BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Debug|x86.ActiveCfg = Debug|x86
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Debug|x86.Build.0 = Debug|x86
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Release|Any CPU.ActiveCfg = Release|x86
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Release|x86.ActiveCfg = Release|x86
+		{BF65F4F7-FB4F-4D91-B1E9-19A5FA708484}.Release|x86.Build.0 = Release|x86
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Debug|x86.Build.0 = Debug|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Release|x86.ActiveCfg = Release|Any CPU
+		{0CC34670-96C6-4454-BF29-28FF0D376689}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E480B92-8EF4-49FF-9656-0EF9A7041803}
+	EndGlobalSection
+EndGlobal
