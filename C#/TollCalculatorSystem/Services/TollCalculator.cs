@@ -6,18 +6,36 @@ namespace TollCalculatorSystem.Services
 
     public class TollCalculator
     {
+        private readonly record struct FeeChange(TimeOnly StartTime, int Fee);
 
-        /**
-         * Calculate the total toll fee for one day
-         *
-         * @param vehicle - the vehicle
-         * @param dates   - date and time of all passes on one day
-         * @return - the total toll fee for that day
-         */
+        private const int Free = 0;
+        private const int LowFee = 8;
+        private const int MediumFee = 13;
+        private const int HighFee = 18;
+
+        private static readonly FeeChange[] FeeTable =
+        {
+            // Fallback rule: from midnight (00:00) fee is always 0.
+            // Ensures there's always at least one matching rule before the first toll interval start.
+            // Without this row, queries before 06:00 would give an empty result and First() would throw exception.
+            new(TimeOnly.MinValue, Free),
+
+            new(new TimeOnly(6, 00), LowFee),
+            new(new TimeOnly(6, 30), MediumFee),
+            new(new TimeOnly(7, 00), HighFee),
+            new(new TimeOnly(8, 00), MediumFee),
+            new(new TimeOnly(8, 30), LowFee),
+            new(new TimeOnly(15, 00), MediumFee),
+            new(new TimeOnly(17, 00), MediumFee),
+            new(new TimeOnly(18, 00), LowFee),
+            new(new TimeOnly(18, 30), Free),
+        };
 
         // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
         public int CalculateTollFee(IVehicle vehicle, DateTime[] passageTimes)
         {
+            // Check to ensure it is one day
+
             if (vehicle == null)
                 throw new ArgumentNullException(nameof(vehicle));
 
@@ -80,24 +98,17 @@ namespace TollCalculatorSystem.Services
             };
         }
 
-        public int GetTollFeeBasedOnTimeOfDay(DateTime date)
+        public int GetTollFeeBasedOnTimeOfDay(DateTime passageTime)
         {
-            int hour = date.Hour;
-            int minute = date.Minute;
+            var timeOfDay = TimeOnly.FromDateTime(passageTime);
 
-            if (hour == 6 && minute <= 29) return 8;            // 6 - 6.29
-            if (hour == 6) return 13;                           // 6 - 6.59
-            if (hour == 7) return 18;                           // 7 - 7.59
-            if (hour == 8 && minute <= 29) return 13;           // 8 - 8.29
-            if (hour == 8 && minute >= 30) return 8;            // 8.30 - 8-59
-            if (hour >= 9 && hour <= 14) return 8;              // 8.30 - 14.59
-            if (hour == 15 && minute <= 29) return 13;          // 15 - 15.29
-            if ((hour == 15 && minute >= 30) || hour == 16)
-                return 18;                                      // 15.30 - 16.59
-            if (hour == 17) return 13;                          // 17 - 17.59
-            if (hour == 18 && minute <= 29) return 8;           // 18 - 18.29
+            var fee = FeeTable
+                .Where(rule => rule.StartTime <= timeOfDay)   // Keep rules (passed time/fees) that already have started (StartTime <= timeOfDay)
+                .OrderByDescending(rule => rule.StartTime)    // Put most recent started rule first
+                .First()                                      // Select most recent rule
+                .Fee;                                         // Take fee from recent rule
 
-            return 0;                                           // 18.30 - 05.59 no fee
+            return fee;
         }
 
         private Boolean IsTollFreeDate(DateTime date)
