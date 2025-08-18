@@ -1,0 +1,9 @@
+E:\Users\Desktop\Code-test-afry\bin\Debug\ConsoleApplication.exe
+E:\Users\Desktop\Code-test-afry\bin\Debug\ConsoleApplication.pdb
+E:\Users\Desktop\Code-test-afry\bin\Debug\PublicHoliday.dll
+E:\Users\Desktop\Code-test-afry\bin\Debug\PublicHoliday.xml
+E:\Users\Desktop\Code-test-afry\obj\x86\Debug\TollCalculator.csproj.AssemblyReference.cache
+E:\Users\Desktop\Code-test-afry\obj\x86\Debug\TollCalculator.csproj.CoreCompileInputs.cache
+E:\Users\Desktop\Code-test-afry\obj\x86\Debug\TollCalculator.csproj.CopyComplete
+E:\Users\Desktop\Code-test-afry\obj\x86\Debug\ConsoleApplication.exe
+E:\Users\Desktop\Code-test-afry\obj\x86\Debug\ConsoleApplication.pdb
