@@ -1,4 +1,5 @@
 ﻿using TollCalculatorSystem.Models;
+using PublicHoliday;
 
 namespace TollCalculatorSystem.Services
 {
@@ -35,7 +36,7 @@ namespace TollCalculatorSystem.Services
                 return 0;
 
             int totalFee = 0;
-            var windowMaxFee = GetTollFee(windowStart, vehicle);
+            var windowMaxFee = GetTollFeeBasedOnTimeOfDay(windowStart);
 
             for (int i = 1; i < passageTimes.Length; i++)
             {
@@ -47,11 +48,11 @@ namespace TollCalculatorSystem.Services
                 {
                     totalFee += windowMaxFee;
                     windowStart = currentPassageTime; // Start new time window
-                    windowMaxFee = GetTollFee(currentPassageTime, vehicle); // New max fee
+                    windowMaxFee = GetTollFeeBasedOnTimeOfDay(currentPassageTime); // New max fee
                 }
                 else
                 {
-                    var fee = GetTollFee(currentPassageTime, vehicle);
+                    var fee = GetTollFeeBasedOnTimeOfDay(currentPassageTime);
                     if (fee > windowMaxFee)
                         windowMaxFee = fee;
                 }
@@ -79,11 +80,8 @@ namespace TollCalculatorSystem.Services
             };
         }
 
-        public int GetTollFee(DateTime date, IVehicle vehicle)
+        public int GetTollFeeBasedOnTimeOfDay(DateTime date)
         {
-            if (vehicle == null)
-                throw new ArgumentNullException(nameof(vehicle));
-            
             int hour = date.Hour;
             int minute = date.Minute;
 
@@ -104,27 +102,10 @@ namespace TollCalculatorSystem.Services
 
         private Boolean IsTollFreeDate(DateTime date)
         {
-            int year = date.Year;
-            int month = date.Month;
-            int day = date.Day;
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                return true;
 
-            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-            if (year == 2013)
-            {
-                if (month == 1 && day == 1 ||
-                    month == 3 && (day == 28 || day == 29) ||
-                    month == 4 && (day == 1 || day == 30) ||
-                    month == 5 && (day == 1 || day == 8 || day == 9) ||
-                    month == 6 && (day == 5 || day == 6 || day == 21) ||
-                    month == 7 ||
-                    month == 11 && day == 1 ||
-                    month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return new SwedenPublicHoliday().IsPublicHoliday(date);
         }
         public void InspectAllTimeSlots()
         {
@@ -136,7 +117,7 @@ namespace TollCalculatorSystem.Services
                 for (int minute = 0; minute < 60; minute++)
                 {
                     var time = date.AddHours(hour).AddMinutes(minute);
-                    int fee = GetTollFee(time, car);
+                    int fee = GetTollFeeBasedOnTimeOfDay(time);
 
                     Console.WriteLine($"{hour:D2}:{minute:D2} | {fee,4}");
 
