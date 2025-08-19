@@ -6,6 +6,7 @@ namespace TollCalculatorSystem.Services
 
     public class TollCalculator
     {
+        private static readonly SwedenPublicHoliday _sweHolidayProvider = new();
         private readonly record struct FeeChange(TimeOnly StartTime, int Fee);
 
         private const int Free = 0;
@@ -26,6 +27,7 @@ namespace TollCalculatorSystem.Services
             new(new TimeOnly(8, 00), MediumFee),
             new(new TimeOnly(8, 30), LowFee),
             new(new TimeOnly(15, 00), MediumFee),
+            new(new TimeOnly(15, 30), HighFee),
             new(new TimeOnly(17, 00), MediumFee),
             new(new TimeOnly(18, 00), LowFee),
             new(new TimeOnly(18, 30), Free),
@@ -34,13 +36,16 @@ namespace TollCalculatorSystem.Services
         // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
         public int CalculateTollFee(IVehicle vehicle, DateTime[] passageTimes)
         {
-            // Check to ensure it is one day
-
             if (vehicle == null)
                 throw new ArgumentNullException(nameof(vehicle));
 
             if (passageTimes == null || passageTimes.Length == 0)
                 return 0;
+
+            // Verify same day
+            var firstDate = passageTimes[0].Date;
+            if (passageTimes.Any(t => t.Date != firstDate))
+                throw new ArgumentException("All passages must be from the same day", nameof(passageTimes));
 
             // Early return if toll free vehicle
             if (IsTollFreeVehicle(vehicle))
@@ -78,8 +83,7 @@ namespace TollCalculatorSystem.Services
 
             totalFee += windowMaxFee;
 
-            if (totalFee > 60) return 60;
-            else return totalFee;
+            return totalFee > 60 ? 60 : totalFee;
         }
 
         private bool IsTollFreeVehicle(IVehicle vehicle)
@@ -91,7 +95,7 @@ namespace TollCalculatorSystem.Services
                 VehicleType.Motorbike or
                 VehicleType.Tractor or
                 VehicleType.Emergency or
-                VehicleType.Diplaomat or
+                VehicleType.Diplomat or
                 VehicleType.Foreign or
                 VehicleType.Military => true,
                 _ => false
@@ -116,7 +120,7 @@ namespace TollCalculatorSystem.Services
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                 return true;
 
-            return new SwedenPublicHoliday().IsPublicHoliday(date);
+            return _sweHolidayProvider.IsPublicHoliday(date);
         }
         public void InspectAllTimeSlots()
         {

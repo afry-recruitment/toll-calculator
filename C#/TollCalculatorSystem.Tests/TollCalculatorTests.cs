@@ -129,5 +129,20 @@ namespace TollCalculatorSystem.Tests
             var fee = _calc.GetTollFeeBasedOnTimeOfDay(time);
             Assert.Equal(expected, fee);
         }
+
+
+        [Fact]
+        public void MixedPassageTimes_OnDifferentDays_ShouldThrow()
+        {
+            var car = new Car();
+            var mixedPasses = new[]
+            {
+                new DateTime(2025, 8, 15, 16, 15, 0),
+                new DateTime(2025, 8, 18, 7, 15, 0),
+                new DateTime(2025, 8, 20, 9, 45, 0)
+            };
+
+            Assert.Throws<ArgumentException>(() => _calc.CalculateTollFee(car, mixedPasses));
+        }
     }
 }

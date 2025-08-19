@@ -12,7 +12,7 @@ namespace TollCalculatorSystem.Models
        Motorbike,
        Tractor,
        Emergency,
-       Diplaomat,
+       Diplomat,
        Foreign,
        Military
     }
