@@ -6,6 +6,17 @@ namespace TollCalculatorSystem.Services
 
     public class TollCalculator
     {
+        private static readonly HashSet<VehicleType> TollFreeVehicles =
+            new()
+            {
+                VehicleType.Motorbike,
+                VehicleType.Tractor,
+                VehicleType.Emergency,
+                VehicleType.Diplomat,
+                VehicleType.Foreign,
+                VehicleType.Military
+            };
+
         private static readonly SwedenPublicHoliday _sweHolidayProvider = new();
         private readonly record struct FeeChange(TimeOnly StartTime, int Fee);
 
@@ -13,6 +24,7 @@ namespace TollCalculatorSystem.Services
         private const int LowFee = 8;
         private const int MediumFee = 13;
         private const int HighFee = 18;
+        private const int DailyMaxFee = 60;
 
         private static readonly FeeChange[] FeeTable =
         {
@@ -34,26 +46,27 @@ namespace TollCalculatorSystem.Services
         };
 
         // Note: Keeping int since swedish congestion charges are whole SEK. Would use decimal for proper monetary calculations in prod
-        public int CalculateTollFee(IVehicle vehicle, DateTime[] passageTimes)
+        public int CalculateTollFee(VehicleType vehicleType, DateTime[] passageTimes)
         {
-            if (vehicle == null)
-                throw new ArgumentNullException(nameof(vehicle));
-
             if (passageTimes == null || passageTimes.Length == 0)
-                return 0;
-
-            // Verify same day
-            var firstDate = passageTimes[0].Date;
-            if (passageTimes.Any(t => t.Date != firstDate))
-                throw new ArgumentException("All passages must be from the same day", nameof(passageTimes));
+                throw new ArgumentException("No passes", nameof(passageTimes));
 
             // Early return if toll free vehicle
-            if (IsTollFreeVehicle(vehicle))
+            if (IsTollFreeVehicle(vehicleType))
                 return 0;
 
-            Array.Sort(passageTimes);
+            var sortedPassages = passageTimes
+                .Distinct()
+                .OrderBy(t => t)
+                .ToArray();
 
-            DateTime windowStart = passageTimes[0];    // First passage
+            // Verify same day
+            var firstDate = sortedPassages[0].Date;
+            if (sortedPassages.Any(t => t.Date != firstDate))
+                throw new ArgumentException("All passages must be from the same day", nameof(sortedPassages));
+
+            DateTime windowStart = sortedPassages[0];    // First passage
+
             // Eearly return if toll free date
             if (IsTollFreeDate(windowStart))
                 return 0;
@@ -61,16 +74,17 @@ namespace TollCalculatorSystem.Services
             int totalFee = 0;
             var windowMaxFee = GetTollFeeBasedOnTimeOfDay(windowStart);
 
-            for (int i = 1; i < passageTimes.Length; i++)
+            // Only runs if more than 1 pass
+            for (int i = 1; i < sortedPassages.Length; i++)
             {
-                var currentPassageTime = passageTimes[i];
+                var currentPassageTime = sortedPassages[i];
 
                 var timeSinceWindowStart = currentPassageTime - windowStart;
 
                 if (timeSinceWindowStart >= TimeSpan.FromMinutes(60))
                 {
-                    totalFee += windowMaxFee;
-                    windowStart = currentPassageTime; // Start new time window
+                    totalFee += windowMaxFee;           // Close current time window
+                    windowStart = currentPassageTime;   // Start new time window
                     windowMaxFee = GetTollFeeBasedOnTimeOfDay(currentPassageTime); // New max fee
                 }
                 else
@@ -81,25 +95,15 @@ namespace TollCalculatorSystem.Services
                 }
             }
 
+            // Add last open window
             totalFee += windowMaxFee;
 
-            return totalFee > 60 ? 60 : totalFee;
+            return totalFee > DailyMaxFee ? DailyMaxFee : totalFee;
         }
 
-        private bool IsTollFreeVehicle(IVehicle vehicle)
+        private bool IsTollFreeVehicle(VehicleType vehicle)
         {
-            if (vehicle == null) return false;
-
-            return vehicle.GetVehicleType() switch
-            {
-                VehicleType.Motorbike or
-                VehicleType.Tractor or
-                VehicleType.Emergency or
-                VehicleType.Diplomat or
-                VehicleType.Foreign or
-                VehicleType.Military => true,
-                _ => false
-            };
+            return TollFreeVehicles.Contains(vehicle);
         }
 
         public int GetTollFeeBasedOnTimeOfDay(DateTime passageTime)
@@ -115,30 +119,12 @@ namespace TollCalculatorSystem.Services
             return fee;
         }
 
-        private Boolean IsTollFreeDate(DateTime date)
+        private bool IsTollFreeDate(DateTime date)
         {
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                 return true;
 
             return _sweHolidayProvider.IsPublicHoliday(date);
-        }
-        public void InspectAllTimeSlots()
-        {
-            var car = new Car();
-            var date = new DateTime(2025, 8, 15); // weekday
-
-            for (int hour = 0; hour < 24; hour++)
-            {
-                for (int minute = 0; minute < 60; minute++)
-                {
-                    var time = date.AddHours(hour).AddMinutes(minute);
-                    int fee = GetTollFeeBasedOnTimeOfDay(time);
-
-                    Console.WriteLine($"{hour:D2}:{minute:D2} | {fee,4}");
-
-                    if (minute == 29 || minute == 59) Console.WriteLine("---------------------");
-                }
-            }
         }
     }
 }
