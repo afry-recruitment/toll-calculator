@@ -1,4 +1,5 @@
-from datetime import datetime, date
+from datetime import datetime
+from holidays import Holidays
 import VehicleTypes
 import numpy as np
 
@@ -8,7 +9,7 @@ import numpy as np
     The script assumes that the dates are within the same day, and are sorted. 
 """
 
-class CalcTollFee:
+class TollCalculator:
     def __init__(self, vehicle_type : VehicleTypes.VehicleType, dates : list):
         self.vehicle_type = vehicle_type
         self.dates = dates 
@@ -18,7 +19,7 @@ class CalcTollFee:
         Motorbike, Emergency, Diplomat, Foreign, Military and Tractor
     """
     
-    def is_toll_free_vehicle(self, vehicle_enum) -> bool:
+    def isTollFreeVehicle(self, vehicle_enum) -> bool:
         if (vehicle_enum == VehicleTypes.VehicleType.MOTORBIKE or vehicle_enum == VehicleTypes.VehicleType.EMERGENCY or \
            vehicle_enum == VehicleTypes.VehicleType.DIPLOMAT or vehicle_enum == VehicleTypes.VehicleType.FOREIGN \
             or vehicle_enum == VehicleTypes.VehicleType.MILITARY or vehicle_enum == VehicleTypes.VehicleType.TRACTOR):
@@ -27,36 +28,31 @@ class CalcTollFee:
             return False
 
     """ 
-    Toll free dates: 
+    Always toll free dates: 
         Satudays and Sundays 
-        January 1st, March 28th, March 29th, April 1st, April 30th,
-        May 1st, May 8th, May 9th, June 5th, June 6th, June 21st, 
+        January 1st, January 5th, January 6th (Trettondagen) 
+        April 30th (Valborgsmässoafton), 
+        May 1st, 
+        June 5th, June 6th,  
         ALL July,
-        November 1st, December 24th, December 25th, December 26th, December 31st
+        December 24th, December 25th, December 26th, December 31st
+
+    Flexibel toll free dates:
+        Skärtorsdagen, Långfredagen, Annandagen
+        Kristihimmelfärdsdagen, 
+        Midsommarafton, 
+        Alla helgons afton (Friday between 31th of October and 6th of November)
     """
     
-    def is_toll_free_date(self, date) -> bool:
-        if date.weekday() in [5, 6]:
-            return True 
-        elif date.month == 1 and date.day == 1:
+    def isTollFreeDate(self, date) -> bool:
+        if Holidays(date.year, date).check_date():
             return True
-        elif date.month == 3 and date.day in [28, 29]:
-            return True
-        elif date.month == 4 and date.day in [1, 30]:
-            return True
-        elif date.month == 5 and date.day in [1, 8, 9]:
-            return True
-        elif date.month == 6 and date.day in [5, 6, 21]:
-            return True
-        elif date.month == 7:
-            return True
-        elif date.month == 11 and date.day == 1:
-            return True
-        elif date.month == 12 and date.day in [24, 25, 26, 31]:
-            return True
+        else:
+            return False
     
-    def get_time(self, date):
+    def get_time(self, date) -> tuple:
         return date.hour, date.minute
+    
     
     """ 
     Cost each hour:
@@ -73,20 +69,20 @@ class CalcTollFee:
     
     """
 
-    def get_current_toll_fee(self, date): 
+    def get_current_toll_fee(self, date) -> float: 
         hours, minutes = self.get_time(date)
 
         if (hours == 6 and minutes <= 29) or (hours == 18 and minutes <= 29):
-            new_toll_fee = 8.0
-        elif ((hours == 6 and minutes >= 30) or (hours == 8 and minutes <= 29) or
+            return 8.0
+        if ((hours == 6 and minutes >= 30) or (hours == 8 and minutes <= 29) or
             (hours == 15 and minutes <= 29) or (hours == 17)):
-            new_toll_fee = 13.0
-        elif (hours == 7) or (hours == 15 and minutes >= 30) or (hours == 16):
-            new_toll_fee = 18.0
+            return 13.0
+        if (hours == 7) or (hours == 15 and minutes >= 30) or (hours == 16):
+            return 18.0
+        if (hours == 8 and minutes >= 30) or ( 9 <= hours <= 14 and minutes <= 59) or (hours == 18 and minutes <= 29):
+            return 8.0
         else:
-            new_toll_fee = 0.0
-
-        return new_toll_fee
+            return 0.0
 
     """ This function returns a list of Booleans: 
         True if the time stamp is within one hour of the previous one
@@ -114,14 +110,22 @@ class CalcTollFee:
         return time_diff_lst
             
 
-    def calc_toll_fee(self):
+    """ 
+        The function calc_toll_fee calculates the total toll fee for a vehicle on a given date.
+        The output is a list with two elements:
+        - The date in question 
+        - The total toll fee 
+    """
+
+    def calc_toll_fee(self) -> list:
+        final_date = self.dates[0].date().isoformat()
 
         # Check if vehicle type or date is toll free
-        if self.is_toll_free_vehicle(self.vehicle_type) or self.is_toll_free_date(self.dates[0]):
-            return 0.0
+        if self.isTollFreeVehicle(self.vehicle_type) or self.isTollFreeDate(self.dates[0]):
+            return [final_date, 0.0]
         
         if len(self.dates) == 1:
-            return self.get_current_toll_fee(self.dates[0])
+            return [final_date, self.get_current_toll_fee(self.dates[0])]
         
         total_toll_fee = 0.0
         time_diff_lst = self.calc_timestamps_diff(self.dates)
@@ -144,5 +148,5 @@ class CalcTollFee:
         if total_toll_fee > 60.0:
             total_toll_fee = 60.0
 
-        return total_toll_fee
+        return [final_date, total_toll_fee]
      
