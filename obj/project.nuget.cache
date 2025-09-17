@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LBvhRGv6fNM=",
+  "dgSpecHash": "Ee9KMkzdWi8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\tollCalculator.csproj",
+  "projectFilePath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\tollCalculator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\derpe\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\derpe\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -16,8 +16,8 @@ namespace tollCalculator.Models
 
 	public enum VehicleTypeEnum
 	{
-		[Display(Name = "Okänd")]
-		Okand = 0,
+		[Display(Name = "Tullpliktig")]
+		Tullpliktig = 0,
 
 		[Display(Name = "Utryckningsfordon")]
 		Utryckningsfordon = 1,

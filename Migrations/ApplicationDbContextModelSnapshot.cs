@@ -33,9 +33,6 @@ namespace tollCalculator.Migrations
                     b.Property<DateTime?>("CurrentCheckIn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("StartCheckIn")
                         .HasColumnType("datetime2");
 

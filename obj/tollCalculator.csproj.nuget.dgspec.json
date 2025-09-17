@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\tollCalculator.csproj": {}
+    "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\tollCalculator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\tollCalculator.csproj": {
+    "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\tollCalculator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\tollCalculator.csproj",
+        "projectUniqueName": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\tollCalculator.csproj",
         "projectName": "tollCalculator",
-        "projectPath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\tollCalculator.csproj",
+        "projectPath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\tollCalculator.csproj",
         "packagesPath": "C:\\Users\\derpe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\tollCalculator\\obj\\",
+        "outputPath": "C:\\Users\\derpe\\source\\repos\\toll-calculator\\toll-calculator\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

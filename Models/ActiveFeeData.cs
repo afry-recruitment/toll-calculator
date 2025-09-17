@@ -14,8 +14,6 @@ namespace tollCalculator.Models
 
 		public decimal? TotalFee { get; set; }
 
-		public bool IsActive { get; set; } = false;
-
 		public virtual Vehicle? Vehicle { get; set; }
 
 	}
