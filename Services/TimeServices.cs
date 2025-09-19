@@ -1,13 +1,24 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tollCalculator.Data;
+using tollCalculator.Models;
 
 namespace tollCalculator.Services
 {
 	public class TimeServices
 	{
+		private readonly ApplicationDbContext _dbContext;
+
+		public TimeServices(ApplicationDbContext dbContext)
+		{
+			_dbContext = dbContext;
+
+		}
+
 		public DateTime getCurrentDateTime()
 		{
 			return DateTime.Now;
@@ -73,9 +84,24 @@ namespace tollCalculator.Services
 				return false;
 			}
 		}
+
+		//public bool IsWithinTheHour(Vehicle vehicle)
+		//{
+		//	try
+		//	{
+		//		DateTime? tempTotalFee = _dbContext.ActiveFeeDatas
+		//		.Where(a => a.ActiveFeeDataID == vehicle.ActiveFeeDataID)
+		//		.Select(a => a.TotalFee)
+		//		.FirstOrDefault();
+
+		//		return true;
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return false;
+		//	}
+
+		//}
+
 	}
 }
-
-	
-				
-

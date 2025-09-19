@@ -47,12 +47,11 @@ internal class Program
 			bool isHoliday = false;
 			bool isWeekEnd = false;
 			bool isRushour = false;
-			DateTime startCheckin;
+			//DateTime? startCheckin = null;
 
 			while (true)
 			{
-
-
+				
 				now = timeServices.getCurrentDateTime();
 				List<DateTime> holidayDates = holidayService.ReadCsv(filePath);
 				isWeekEnd = timeServices.isWeekEnd(now);
@@ -61,11 +60,26 @@ internal class Program
 				var result = vehicleServices.isVehicleRetrieved();
 				if (result.success)
 				{
-					bool taxExempt = vehicleServices.isTaxExempt(result.vehicle);
+					//temp variables
+					//----------------
+					DateTime? startCheckIn = null;
+					DateTime? currentCheckIn = null; ;
+					decimal totalFee = 0;
+					FeeDataReceipt tempFeeReceipt = new FeeDataReceipt();
+					ActiveFeeData tempActiveFeeData = new ActiveFeeData();
+					//----------------------------------------
 
+					bool taxExempt = vehicleServices.isTaxExempt(result.vehicle);
 					bool openRecord = activeFeeDataServices.VehicleHasOpenRecord(result.vehicle);
-					activeFeeDataServices.CreateNewRecord(result.vehicle, openRecord);
+					bool? success = activeFeeDataServices.CreateNewRecord(result.vehicle, openRecord);
+					if (success == false)
+						continue;
+
 					bool sameDay = activeFeeDataServices.IsWithinSameDay(result.vehicle, now);
+					activeFeeDataServices.SettingTimeVariables(sameDay, now, startCheckIn, currentCheckIn, totalFee);
+
+					bool isHolidayOrTaxExempt = activeFeeDataServices.IsHolidayOrTollExempt(isHoliday, taxExempt);
+					activeFeeDataServices.ActionBranchTollOrNot(isHolidayOrTaxExempt, result.vehicle, tempFeeReceipt, now, tempActiveFeeData);
 
 				}
 
