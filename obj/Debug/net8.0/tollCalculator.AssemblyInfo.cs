@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("tollCalculator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54ff651432be20702f4bdd128869060c319c74e6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cd31e93855b8d8308b32fdd2245bec4696ae719f")]
 [assembly: System.Reflection.AssemblyProductAttribute("tollCalculator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("tollCalculator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

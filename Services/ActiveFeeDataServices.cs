@@ -128,9 +128,13 @@ namespace tollCalculator.Services
 			FeeDataReceipt? latestPaidFeeDataReceipt = GetLatestPaidReceiptSameDay(vehicle.VehicleID, now);
 			bool withinSameHour = IsWithinSameHour(now, latestPaidFeeDataReceipt);
 
+			bool higherFeeExists = false;
+
 			//All exeptions when not paying toll fee
 			if (isHolidayOrTaxExempt || withinSameHour || isDuringNoTollHours)
 			{
+				
+
 				if (isHolidayOrTaxExempt && !sameDay)
 				{
 					tempActiveFeeData.StartCheckIn = now;
@@ -152,11 +156,18 @@ namespace tollCalculator.Services
 				}
 				else if (withinSameHour)
 				{
+					decimal fee = CalculatingToll(isRushHour, now);
+					higherFeeExists = HighestFeeApplies(latestPaidFeeDataReceipt, activeFeeDataRecord, tempActiveFeeData, tempFeeReceipt, fee);
 					tempActiveFeeData.StartCheckIn = activeFeeDataRecord.StartCheckIn;
+					bool success = UpdateExistingReceipt(latestPaidFeeDataReceipt, fee);
 				}
 
 				UpdateActiveFeeData(tempActiveFeeData, activeFeeDataRecord, vehicle);
-				CreateFeeDataReceipt(tempFeeReceipt);
+				// Only create new receipt if not within same hour with a higher fee
+				if (!higherFeeExists)
+				{
+					CreateFeeDataReceipt(tempFeeReceipt);
+				}
 				return;
 			}
 
@@ -331,5 +342,45 @@ namespace tollCalculator.Services
 			}
 			
 		}
+
+		/// <summary>
+		/// Checks if this time's toll is greater than the last paid receipt's. If true, adjust total sum for ActiveFeeData
+		/// </summary>
+		/// <param name="latestPaidReceipt"></param>
+		/// <param name="activeFeeData"></param>
+		/// <param name="tempActiveFeeData"></param>
+		/// <param name="tempFeeReceipt"></param>
+		/// <param name="fee"></param>
+		/// <returns>Bool</returns>
+		public bool HighestFeeApplies(FeeDataReceipt latestPaidReceipt, ActiveFeeData activeFeeData, ActiveFeeData tempActiveFeeData, FeeDataReceipt tempFeeReceipt, decimal fee)
+		{
+			if (latestPaidReceipt.FeeAmount < fee)
+			{
+				tempActiveFeeData.TotalFee = activeFeeData.TotalFee - latestPaidReceipt.FeeAmount + fee;
+				return true;
+			}
+			else
+			{ 
+				return false;
+			}
+				
+		}
+
+		public bool UpdateExistingReceipt(FeeDataReceipt latestPaidReceipt, decimal sum)
+		{
+			try
+			{
+				latestPaidReceipt.FeeAmount = sum;
+				_dbContext.SaveChanges();
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error updating record: {ex.Message}");
+
+				return false;
+			}
+		}
+		}
 	}
-}

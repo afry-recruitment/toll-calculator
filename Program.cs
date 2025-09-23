@@ -65,6 +65,7 @@ internal class Program
 
 					///Testing times and dates
 					//now = new DateTime(2025,10,6,7,35,0); //Rush hour
+					now = new DateTime(2025,10,6,15,15,0); //Rush hour
 					//now = new DateTime(2025, 10, 6, 10, 11, 0); //Regular fee hours
 					//now = new DateTime(2025, 10, 11, 10, 11, 0); //Weekend- Saturday
 					//now = new DateTime(2025,12,25,12,00,0); //Holiday
