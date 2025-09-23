@@ -23,29 +23,7 @@ namespace tollCalculator.Services
 		{
 			return DateTime.Now;
 		}
-
-		//public DateTime getCurrentDateTime()
-		//{
-		//	DateTime julafton = new DateTime(2025, 12, 24, 14, 3, 0);
-
-		//	return julafton;
-		//}
-
-		//public DateTime getCurrentDateTime()
-		//{
-		//	var sunday = new DateTime(2025, 9, 21);
-
-		//	return sunday;
-		//}
-
-		//public DateTime getCurrentDateTime()
-		//{
-		//	var rushHour = new DateTime(2025, 9, 24, 7, 15, 0);
-		//	var rushHour = new DateTime(2025, 9, 24, 17, 08, 0);
-
-		//	return rushHour;
-		//}
-
+		
 		public bool IsHoliday(DateTime date, List<DateTime> holidayList)
 		{
 			foreach (var holiday in holidayList)

@@ -10,7 +10,7 @@ namespace tollCalculator.Services
 	public class HolidayServices
 	{
 		/// <summary>
-		/// Reads csv file folder, which non-IT administration could easily update if needed
+		/// Reads csv file(s), which non-IT administration could easily update if needed
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <returns>List of DateTime objects</returns>

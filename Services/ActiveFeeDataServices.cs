@@ -94,9 +94,9 @@ namespace tollCalculator.Services
 			return activeFeeDataRecord.StartCheckIn.Value.Date == now.Date;
 		}
 
-		public bool IsHolidayOrTollExempt(bool isHoliday, bool isTaxExempt)
+		public bool IsHolidayOrTollExempt(bool isHoliday, bool isTaxExempt, bool isWeekend)
 		{
-			if (isHoliday == true || isTaxExempt == true)
+			if (isHoliday == true || isTaxExempt == true || isWeekend)
 			{
 				return true;
 			}
@@ -140,6 +140,15 @@ namespace tollCalculator.Services
 				{
 					tempActiveFeeData.StartCheckIn = activeFeeDataRecord.StartCheckIn;
 					tempActiveFeeData.TotalFee = 0m;
+				}
+				else if (isDuringNoTollHours && !sameDay)
+				{
+					tempActiveFeeData.StartCheckIn = now;
+					tempActiveFeeData.TotalFee = 0m;
+				}
+				else if (isDuringNoTollHours && sameDay)
+				{
+					tempActiveFeeData.StartCheckIn = activeFeeDataRecord?.StartCheckIn;
 				}
 				else if (withinSameHour)
 				{
@@ -205,7 +214,8 @@ namespace tollCalculator.Services
 			{
 				try 
 				{ 
-				activeFeeDataRecord.StartCheckIn = tempActiveFeeData.StartCheckIn;
+					
+				activeFeeDataRecord.StartCheckIn = tempActiveFeeData.StartCheckIn;					
 				activeFeeDataRecord.CurrentCheckIn = tempActiveFeeData.CurrentCheckIn;
 				activeFeeDataRecord.TotalFee = tempActiveFeeData.TotalFee;
 
@@ -248,11 +258,11 @@ namespace tollCalculator.Services
 		}
 
 		/// <summary>
-		/// 
+		/// Checks if current check in is within or exactly 60 min since last _paid_ check in.
 		/// </summary>
 		/// <param name="now"></param>
 		/// <param name="latestPaidReceipt"></param>
-		/// <returns></returns>
+		/// <returns>bool</returns>
 		public bool IsWithinSameHour(DateTime now, FeeDataReceipt latestPaidReceipt)
 		{
 			if (latestPaidReceipt == null)
