@@ -16,6 +16,8 @@ namespace tollCalculator.Models
 
 	public enum VehicleTypeEnum
 	{
+		//https://www.transportstyrelsen.se/sv/vagtrafik/fordon/skatter-och-avgifter/trangselskatt/undantag-fran-trangselskatt/
+
 		[Display(Name = "Tullpliktig")]
 		Tullpliktig = 0,
 

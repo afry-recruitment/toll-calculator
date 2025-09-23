@@ -14,6 +14,6 @@ namespace tollCalculator.Models
 		public DateTime FeeCheckInTime { get; set; }
 		public decimal FeeAmount { get; set; }
 		public int VehicleID { get; set; }
-		public virtual Vehicle Vehicle { get; set; }
+		public virtual Vehicle? Vehicle { get; set; }
 	}
 }

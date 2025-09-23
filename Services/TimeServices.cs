@@ -19,7 +19,7 @@ namespace tollCalculator.Services
 
 		}
 
-		public DateTime getCurrentDateTime()
+		public DateTime GetCurrentDateTime()
 		{
 			return DateTime.Now;
 		}
@@ -46,7 +46,7 @@ namespace tollCalculator.Services
 		//	return rushHour;
 		//}
 
-		public bool isHoliday(DateTime date, List<DateTime> holidayList)
+		public bool IsHoliday(DateTime date, List<DateTime> holidayList)
 		{
 			foreach (var holiday in holidayList)
 			{
@@ -59,7 +59,7 @@ namespace tollCalculator.Services
 			return false;
 		}
 
-		public bool isWeekEnd(DateTime date)
+		public bool IsWeekend(DateTime date)
 		{
 			string weekDay = date.DayOfWeek.ToString();
 
@@ -70,12 +70,13 @@ namespace tollCalculator.Services
 				return false;
 		}
 
-		public bool isRushHour(DateTime date)
+		public bool IsRushHour(DateTime now)
 		{
-			if ((date.TimeOfDay >= new TimeSpan(6, 30, 0) &&
-				date.TimeOfDay <= new TimeSpan(8, 30, 0)) ||
-				(date.TimeOfDay >= new TimeSpan(15, 30, 0) &&
-				date.TimeOfDay <= new TimeSpan(17, 30, 0)))
+			//Rush hour between 7:00 - 7:59 and 15:30 - 16:59
+			if ((now.TimeOfDay >= new TimeSpan(7, 0, 0) &&
+				now.TimeOfDay <= new TimeSpan(7, 59, 59)) ||
+				(now.TimeOfDay >= new TimeSpan(15, 30, 0) &&
+				now.TimeOfDay <= new TimeSpan(16, 59, 59)))
 			{
 				return true;
 			}
@@ -85,23 +86,21 @@ namespace tollCalculator.Services
 			}
 		}
 
-		//public bool IsWithinTheHour(Vehicle vehicle)
-		//{
-		//	try
-		//	{
-		//		DateTime? tempTotalFee = _dbContext.ActiveFeeDatas
-		//		.Where(a => a.ActiveFeeDataID == vehicle.ActiveFeeDataID)
-		//		.Select(a => a.TotalFee)
-		//		.FirstOrDefault();
+		public bool IsDuringNoTollHours(DateTime now)
+		{
+			//Within the interval 00:00 - 05:59:59
+			TimeSpan morningStart = new TimeSpan(0, 0, 0);
+			TimeSpan morningEnd = new TimeSpan(5, 59, 59);
 
-		//		return true;
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		return false;
-		//	}
+			//Within the interval 18:30 - 23:59:59
+			TimeSpan eveningStart = new TimeSpan(18, 30, 0);
+			TimeSpan eveningEnd = new TimeSpan(23, 59, 59);
 
-		//}
+			TimeSpan currentTime = now.TimeOfDay;
+
+			return (currentTime >= morningStart && currentTime <= morningEnd) ||
+				   (currentTime >= eveningStart && currentTime <= eveningEnd);
+		}
 
 	}
 }

@@ -12,8 +12,6 @@ internal class Program
 {
 	private static void Main(string[] args)
 	{
-
-
 		var host = Host.CreateDefaultBuilder(args)
 			.ConfigureServices((context, services) =>
 			{
@@ -47,49 +45,49 @@ internal class Program
 			bool isHoliday = false;
 			bool isWeekEnd = false;
 			bool isRushour = false;
-			//DateTime? startCheckin = null;
 
 			while (true)
 			{
-				
-				now = timeServices.getCurrentDateTime();
+				//now = timeServices.GetCurrentDateTime();
+				//now = new DateTime(2025, 9, 22, 7, 32, 0); //testing rush hour
+				//now = new DateTime(2025, 12, 24, 17, 35, 0); //testing within an hour later
+				//now = new DateTime(2025, 10, 3, 07, 45, 0);
+				//now = new DateTime(2025, 10, 3, 08, 16, 0);
+				//now = new DateTime(2025, 10, 3, 09, 00, 0);
+				now = new DateTime(2025, 10, 4, 08, 15, 0);
+				//now = new DateTime(2025, 10, 3, 10, 10, 0);
+
 				List<DateTime> holidayDates = holidayService.ReadCsv(filePath);
-				isWeekEnd = timeServices.isWeekEnd(now);
-				isHoliday = timeServices.isHoliday(now, holidayDates);
-				isRushour = timeServices.isRushHour(now);
-				var result = vehicleServices.isVehicleRetrieved();
+				isWeekEnd = timeServices.IsWeekend(now);
+				isHoliday = timeServices.IsHoliday(now, holidayDates);
+				isRushour = timeServices.IsRushHour(now);
+
+				var result = vehicleServices.IsVehicleRetrieved();
 				if (result.success)
 				{
 					//temp variables
 					//----------------
-					DateTime? startCheckIn = null;
-					DateTime? currentCheckIn = null; ;
-					decimal totalFee = 0;
 					FeeDataReceipt tempFeeReceipt = new FeeDataReceipt();
 					ActiveFeeData tempActiveFeeData = new ActiveFeeData();
+					ActiveFeeData activeFeeDataRecord = new ActiveFeeData();
 					//----------------------------------------
 
-					bool taxExempt = vehicleServices.isTaxExempt(result.vehicle);
+					bool taxExempt = vehicleServices.IsTaxExempt(result.vehicle);
+					bool noTollHours = timeServices.IsDuringNoTollHours(now);
 					bool openRecord = activeFeeDataServices.VehicleHasOpenRecord(result.vehicle);
 					bool? success = activeFeeDataServices.CreateNewRecord(result.vehicle, openRecord);
 					if (success == false)
 						continue;
 
-					bool sameDay = activeFeeDataServices.IsWithinSameDay(result.vehicle, now);
-					activeFeeDataServices.SettingTimeVariables(sameDay, now, startCheckIn, currentCheckIn, totalFee);
+					activeFeeDataRecord = activeFeeDataServices.ActiveFeeRecord(result.vehicle);
 
+					bool sameDay = activeFeeDataServices.IsWithinSameDay(now, activeFeeDataRecord);
 					bool isHolidayOrTaxExempt = activeFeeDataServices.IsHolidayOrTollExempt(isHoliday, taxExempt);
-					activeFeeDataServices.ActionBranchTollOrNot(isHolidayOrTaxExempt, result.vehicle, tempFeeReceipt, now, tempActiveFeeData);
+					activeFeeDataServices.ActionBranchTollOrNot(isHolidayOrTaxExempt, noTollHours, result.vehicle, tempFeeReceipt, now, tempActiveFeeData, isRushour, sameDay, activeFeeDataRecord);
 
+					Console.WriteLine("End of loop");
 				}
-
 			}
-
-		
-
-			
 		}
-		// Kör metoden för att läsa CSV
-		
 	}
 }

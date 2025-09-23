@@ -19,23 +19,33 @@ namespace tollCalculator.Services
 		{
 			_dbContext = dbContext;
 		}
-		public string inputLicensePlate()
+		public string InputLicensePlate()
 		{
 			try
 			{
-				return Console.ReadLine();
-			}
-			catch 
-			{
+				string input = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+				// Allows for Swedish license plates, both regular and personalized
+				//https://rkrattsdb.gov.se/SFSdoc/17/170098.PDF?utm_source
+				//https://www.transportstyrelsen.se/sv/vagtrafik/fordon/aga-kopa-eller-salja-fordon/registreringsskyltar/personlig-skylt
+				if (System.Text.RegularExpressions.Regex.IsMatch(input, @"^[A-ZÅÄÖ0-9 ]{1,7}$"))
+				{
+					return input;
+				}
+
+				Console.WriteLine("Invalid licence plate");
 				return "";
 			}
-			
-			
+			catch (Exception ex) 
+			{
+				Console.WriteLine($"Error reading input value: {ex.Message}");
+				return "";
+			}
 		}
 
-		public Vehicle? getVehicle()
+		public Vehicle? GetVehicle()
 		{
-			string currentVehicle = inputLicensePlate();
+			string currentVehicle = InputLicensePlate();
 
 			if (string.IsNullOrEmpty(currentVehicle))
 			{
@@ -49,15 +59,19 @@ namespace tollCalculator.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Vehicle not found: {ex.Message}");
+				Console.WriteLine($"Vehicle not found: {ex.Message}");
 				return (null);
 			}
 
 		}
 
-		public (bool success, Vehicle? vehicle) isVehicleRetrieved()
+		/// <summary>
+		/// Whether the vehicle was successfully retreived from the database or not
+		/// </summary>
+		/// <returns>Bool and vehicle object</returns>
+		public (bool success, Vehicle? vehicle) IsVehicleRetrieved()
 		{
-			Vehicle? vehicle = getVehicle();
+			Vehicle? vehicle = GetVehicle();
 
 			if (vehicle == null)
 			{
@@ -69,25 +83,22 @@ namespace tollCalculator.Services
 			}
 		}
 
-		public bool isTaxExempt(Vehicle vehicle)
+		public bool IsTaxExempt(Vehicle vehicle)
 		{
 			try
 			{
-				return _dbContext.Vehicles
-			.Where(v => v.VehicleID == vehicle.VehicleID)
-			.Select(v => v.VehicleType.TollExempt.IsExempt)
-			.FirstOrDefault();
+				var isTaxExempt = _dbContext.Vehicles
+					.Include(v => v.VehicleType)
+					.ThenInclude(t => t.TollExempt)
+					.FirstOrDefault(v => v.VehicleID == vehicle.VehicleID);
 
+				return isTaxExempt?.VehicleType?.TollExempt?.IsExempt ?? false;
 			}
-			catch
+			catch (Exception ex)
 			{
-				//will return tax-free if faulty database
-				return true;
+				Console.WriteLine($"Error retrieving tax exemption: {ex.Message}");
+				return false;
 			}
 		}
-	
-		
-
-		
 	}
 }

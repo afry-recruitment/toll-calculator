@@ -9,9 +9,11 @@ namespace tollCalculator.Services
 {
 	public class HolidayServices
 	{
-		private readonly ApplicationDbContext _dbContext;
-		
-
+		/// <summary>
+		/// Reads csv file folder, which non-IT administration could easily update if needed
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns>List of DateTime objects</returns>
 		public List<DateTime> ReadCsv (string filePath)
 		{
 			if (!File.Exists(filePath))
