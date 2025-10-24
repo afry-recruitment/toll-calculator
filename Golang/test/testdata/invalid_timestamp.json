@@ -1,0 +1,10 @@
+[
+  {
+    "vehicle": "Car",
+    "timestamps": [
+      "2013-13-058;0:00Z"
+    ],
+    "expected": 0,
+    "expect_error": true
+  }
+]

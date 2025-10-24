@@ -1,0 +1,8 @@
+[
+   {
+        "vehicle": "Spaceship",
+        "timestamps": ["2013-03-05T08:00:00Z"],
+        "expected": 0,
+        "expect_error": true
+   }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T05:59:59Z"],
+    "expected": 0
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T06:00:00Z"],
+    "expected": 8
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T06:29:59Z"],
+    "expected": 8
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T06:30:00Z"],
+    "expected": 13
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T07:59:59Z"],
+    "expected": 18
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T08:00:00Z"],
+    "expected": 13
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T08:29:59Z"],
+    "expected": 13
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T08:30:00Z"],
+    "expected": 8
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T15:29:59Z"],
+    "expected": 13
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T15:30:00Z"],
+    "expected": 18
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T17:59:59Z"],
+    "expected": 13
+  },
+  {
+    "vehicle": "Car",
+    "timestamps": ["2013-05-07T18:00:00Z"],
+    "expected": 8
+  }
+]
