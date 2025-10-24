@@ -1,0 +1,27 @@
+[
+    {
+      "vehicle": "Car",
+      "timestamps": ["2013-01-01T08:00:00Z"], 
+      "expected": 0
+    },
+    {
+      "vehicle": "Car",
+      "timestamps": ["2013-03-30T09:00:00Z"],
+      "expected": 0
+    },
+    {
+      "vehicle": "Car",
+      "timestamps": ["2013-05-01T06:30:00Z"], 
+      "expected": 0
+    },
+    {
+      "vehicle": "Car",
+      "timestamps": ["2013-12-25T10:00:00Z"], 
+      "expected": 0
+    },
+    {
+      "vehicle": "Car",
+      "timestamps": ["2013-12-29T14:00:00Z"], 
+      "expected": 0
+    }
+]

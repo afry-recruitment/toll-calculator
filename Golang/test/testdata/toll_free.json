@@ -1,0 +1,32 @@
+[
+    {
+        "vehicle": "Motorbike",
+        "timestamps": ["2013-10-28T06:15:00Z"],
+        "expected": 0
+    },
+    {
+        "vehicle": "Tractor",
+        "timestamps": ["2013-10-28T07:30:00Z"],
+        "expected": 0
+    },
+    {
+        "vehicle": "Emergency",
+        "timestamps": ["2013-10-28T10:00:00Z"],
+        "expected": 0
+    },
+    {
+        "vehicle": "Foreign",
+        "timestamps": ["2013-10-28T12:00:00Z"],
+        "expected": 0
+    },
+    {
+        "vehicle": "Diplomat",
+        "timestamps": ["2013-10-28T15:00:00Z"],
+        "expected": 0
+    },
+    {
+        "vehicle": "Military",
+        "timestamps": ["2013-10-28T18:00:00Z"],
+        "expected": 0
+    }
+]
