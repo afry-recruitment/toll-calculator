@@ -6,9 +6,9 @@ I have got the assignment to have a look at a code and make any modifications or
 
 The solution has been developed in IntelliJ with Java 25 by Laszlo Karsai.
 
-## Implemented changes
+## Implemented modifications
 
-Let me summarize what changes I have managed to do to the original code.
+Let me summarize what modifications I have managed to do to the original code.
 
 ### 1. Package structure
 
@@ -26,3 +26,18 @@ Why do we need a build system?
 - To start an application
 - To build tha application for deployment
 - etc
+
+## Modification suggestions
+
+Let me summarize the modifications I would like to suggest.
+
+### Holidays
+
+I would suggest not to have the holiday as a strong requirement.
+
+Reason: it would take a lot of time (basically forever) to collect all the holidays from all years. 
+The holiday dates can differ between countries as well.
+
+I think we would need to maintain a static date list of holidays in each year to be able to support this requirement.
+
+I will keep the year 2013 holidays in the code so that I could write tests for this scenario as well.
