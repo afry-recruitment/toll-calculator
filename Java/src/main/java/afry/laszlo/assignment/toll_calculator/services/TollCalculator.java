@@ -1,4 +1,6 @@
-package afry.laszlo.assignment.toll_calculator;
+package afry.laszlo.assignment.toll_calculator.services;
+
+import afry.laszlo.assignment.toll_calculator.models.Vehicle;
 
 import java.util.*;
 import java.util.concurrent.*;

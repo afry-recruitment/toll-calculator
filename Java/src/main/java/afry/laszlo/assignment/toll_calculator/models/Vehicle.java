@@ -1,4 +1,4 @@
-package afry.laszlo.assignment.toll_calculator;
+package afry.laszlo.assignment.toll_calculator.models;
 
 public interface Vehicle {
 
