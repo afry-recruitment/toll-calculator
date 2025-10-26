@@ -1,3 +1,4 @@
+package afry.laszlo.assignment.toll_calculator;
 
 import java.util.*;
 import java.util.concurrent.*;
