@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.assignment.toll_calculator.services.TollCalculator.DIFFERENT_DAYS_ERROR_MESSAGE;
+import static com.assignment.toll_calculator.services.TollCalculator.INPUT_ERROR_MESSAGE;
 import static com.assignment.toll_calculator.utils.DateUtils.composeDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,7 +16,39 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TollCalculatorTest {
 
     @Test
-    public void givenCarVehicleAndNoDates_whenCalculation_thenSuccess() {
+    public void givenNoVehicleAndDates_whenCalculation_thenFailure() {
+        // given
+        Vehicle vehicle = null;
+        List<Date> dates = List.of(composeDate(3, 1));
+
+        // when
+        Exception exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new TollCalculator().getTollFee(vehicle, dates)
+        );
+
+        // then
+        assertEquals(INPUT_ERROR_MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    public void givenCarVehicleAndNoDates_whenCalculation_thenFailure() {
+        // given
+        Vehicle vehicle = Vehicle.CAR;
+        List<Date> dates = null;
+
+        // when
+        Exception exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new TollCalculator().getTollFee(vehicle, dates)
+        );
+
+        // then
+        assertEquals(INPUT_ERROR_MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    public void givenCarVehicleAndEmptyDates_whenCalculation_thenSuccess() {
         // given
         Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = Collections.emptyList();
@@ -39,7 +73,7 @@ public class TollCalculatorTest {
         );
 
         // then
-        assertEquals("Cannot identify tolls for different days at the same time!", exception.getMessage());
+        assertEquals(DIFFERENT_DAYS_ERROR_MESSAGE, exception.getMessage());
     }
 
     @Test

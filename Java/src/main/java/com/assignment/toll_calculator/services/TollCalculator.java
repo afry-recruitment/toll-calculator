@@ -8,6 +8,11 @@ import java.util.concurrent.*;
 
 public class TollCalculator {
 
+    public static final String INPUT_ERROR_MESSAGE =
+            "Cannot identify toll for null vehicle or dates!";
+    public static final String DIFFERENT_DAYS_ERROR_MESSAGE =
+            "Cannot identify tolls for dates from different days at the same time!";
+
     /**
      * Calculate the total toll fee for one day
      *
@@ -17,7 +22,7 @@ public class TollCalculator {
      */
     public int getTollFee(Vehicle vehicle, List<Date> dates) {
         if (vehicle == null || dates == null) {
-            throw new IllegalArgumentException("Cannot identify toll for null vehicle or dates!");
+            throw new IllegalArgumentException(INPUT_ERROR_MESSAGE);
         }
 
         if (dates.isEmpty()) {
@@ -31,7 +36,7 @@ public class TollCalculator {
                         !date.toInstant().truncatedTo(ChronoUnit.DAYS)
                                 .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS)))
         ) {
-            throw new IllegalArgumentException("Cannot identify tolls for different days at the same time!");
+            throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
 
         if (isTollFreeDate(intervalStart) || vehicle.isTollFree()) return 0;
