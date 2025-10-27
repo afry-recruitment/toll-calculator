@@ -1,4 +1,4 @@
-package com.assignment.toll_calculator.utils;
+package com.assignment.toll_calculator.helpers;
 
 import java.util.Calendar;
 import java.util.Date;

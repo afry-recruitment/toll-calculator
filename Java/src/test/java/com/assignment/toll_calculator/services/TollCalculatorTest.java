@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.assignment.toll_calculator.services.TollCalculator.*;
-import static com.assignment.toll_calculator.utils.TestUtils.composeDate;
+import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
