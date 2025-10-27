@@ -30,7 +30,7 @@ public class TollCalculatorTest {
     }
 
     @Test
-    public void givenCarVehicleAnSameDays_whenCalculation_thenSuccess() {
+    public void givenCarVehicleAndSameDays_whenCalculation_thenSuccess() {
         // given
         Vehicle vehicle = new Car();
         List<Date> dates = List.of(
