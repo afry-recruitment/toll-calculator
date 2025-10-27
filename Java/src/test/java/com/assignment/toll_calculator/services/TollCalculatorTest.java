@@ -35,7 +35,8 @@ public class TollCalculatorTest {
         Vehicle vehicle = new Car();
         List<Date> dates = List.of(
                 composeDate(3, 1, 8, 30),
-                composeDate(3, 1, 16, 30));
+                composeDate(3, 1, 16, 30)
+        );
 
         // when
         int tollFee = new TollCalculator().getTollFee(vehicle, dates);
