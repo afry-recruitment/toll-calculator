@@ -34,7 +34,7 @@ public class TollCalculator {
             throw new IllegalArgumentException("Cannot identify tolls for different days at the same time!");
         }
 
-        if (isTollFreeDate(intervalStart) || isTollFreeVehicle(vehicle)) return 0;
+        if (isTollFreeDate(intervalStart) || vehicle.isTollFree()) return 0;
 
         int totalFee = 0;
         for (Date date : dates) {
@@ -84,17 +84,6 @@ public class TollCalculator {
         return false;
     }
 
-    private boolean isTollFreeVehicle(Vehicle vehicle) {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.getType();
-        return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-                vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-                vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-                vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-                vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-                vehicleType.equals(TollFreeVehicles.MILITARY.getType());
-    }
-
     private int getTollFee(final Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
@@ -113,21 +102,4 @@ public class TollCalculator {
         else return 0;
     }
 
-    private enum TollFreeVehicles {
-        MOTORBIKE("Motorbike"),
-        TRACTOR("Tractor"),
-        EMERGENCY("Emergency"),
-        DIPLOMAT("Diplomat"),
-        FOREIGN("Foreign"),
-        MILITARY("Military");
-        private final String type;
-
-        TollFreeVehicles(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-    }
 }

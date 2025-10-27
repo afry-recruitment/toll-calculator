@@ -1,6 +1,5 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.models.Car;
 import com.assignment.toll_calculator.models.Vehicle;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ public class TollCalculatorTest {
     @Test
     public void givenCarVehicleAndNoDates_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = new Car();
+        Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = Collections.emptyList();
 
         // when
@@ -30,7 +29,7 @@ public class TollCalculatorTest {
     @Test
     public void givenCarVehicleAndDifferentDays_whenCalculation_thenFailure() {
         // given
-        Vehicle vehicle = new Car();
+        Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(composeDate(3, 1), composeDate(3, 2));
 
         // when
@@ -46,7 +45,7 @@ public class TollCalculatorTest {
     @Test
     public void givenCarVehicleAndSameDays_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = new Car();
+        Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(
                 composeDate(3, 1, 8, 30),
                 composeDate(3, 1, 16, 30)
