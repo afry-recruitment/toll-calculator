@@ -53,10 +53,10 @@ public class TollCalculatorTest {
         List<Date> dates = Collections.emptyList();
 
         // when
-        int tollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
 
         // then
-        assertEquals(0, tollFee);
+        assertEquals(0, actualTollFee);
     }
 
     @Test
@@ -85,10 +85,10 @@ public class TollCalculatorTest {
         );
 
         // when
-        int tollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
 
         // then
-        assertEquals(0, tollFee);
+        assertEquals(0, actualTollFee);
     }
 
 }
