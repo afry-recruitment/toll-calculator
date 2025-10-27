@@ -32,15 +32,11 @@ public class DateUtilsTest {
         String source = "20251027";
 
         // when
-        Exception exception = assertThrows(
-                RuntimeException.class,
-                () -> DateUtils.convert(source)
-        );
+        Exception exception = assertThrows(RuntimeException.class, () -> DateUtils.convert(source));
 
         // then
         assertEquals(
-                String.format("java.text.ParseException: Unparseable date: \"%s\"", source),
-                exception.getMessage()
+                String.format("java.text.ParseException: Unparseable date: \"%s\"", source), exception.getMessage()
         );
     }
 

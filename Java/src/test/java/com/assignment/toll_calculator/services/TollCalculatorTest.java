@@ -22,8 +22,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
         );
 
         // then
@@ -38,8 +37,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
         );
 
         // then
@@ -67,8 +65,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
         );
 
         // then
