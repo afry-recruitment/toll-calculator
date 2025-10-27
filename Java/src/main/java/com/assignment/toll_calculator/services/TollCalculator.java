@@ -23,16 +23,10 @@ public class TollCalculator {
      * @return - the total toll fee for that day
      */
     public int getTollFee(Vehicle vehicle, List<Date> dates) {
-        if (vehicle == null) {
-            throw new IllegalArgumentException(INVALID_VEHICLE_ERROR_MESSAGE);
-        }
-        if (dates == null) {
-            throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
-        }
+        if (vehicle == null) throw new IllegalArgumentException(INVALID_VEHICLE_ERROR_MESSAGE);
+        if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
 
-        if (dates.isEmpty()) {
-            return 0;
-        }
+        if (dates.isEmpty()) return 0;
 
         Date intervalStart = dates.getFirst();
 
