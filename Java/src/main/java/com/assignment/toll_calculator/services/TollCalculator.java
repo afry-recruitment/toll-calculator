@@ -1,7 +1,9 @@
 package com.assignment.toll_calculator.services;
 
+import com.assignment.toll_calculator.errors.InvalidInputException;
 import com.assignment.toll_calculator.models.Vehicle;
 
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -14,8 +16,24 @@ public class TollCalculator {
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-    public int getTollFee(Vehicle vehicle, Date... dates) {
-        Date intervalStart = dates[0];
+    public int getTollFee(Vehicle vehicle, List<Date> dates) {
+        if (vehicle == null || dates == null) {
+            throw new IllegalArgumentException("Cannot identify toll for null vehicle or dates!");
+        }
+
+        if (dates.isEmpty()) {
+            return 0;
+        }
+
+        Date intervalStart = dates.getFirst();
+
+        if (dates.stream()
+                .anyMatch(date ->
+                        !date.toInstant().truncatedTo(ChronoUnit.DAYS)
+                                .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS)))
+        ) {
+            throw new InvalidInputException("Cannot identify tolls for different days at the same time!");
+        }
 
         if (isTollFreeDate(intervalStart) || isTollFreeVehicle(vehicle)) return 0;
 
