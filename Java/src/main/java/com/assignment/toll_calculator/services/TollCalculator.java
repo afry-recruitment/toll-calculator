@@ -1,10 +1,14 @@
 package com.assignment.toll_calculator.services;
 
 import com.assignment.toll_calculator.models.Vehicle;
+import com.assignment.toll_calculator.utils.DateUtils;
+import com.assignment.toll_calculator.utils.FileUtils;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
+
+import static com.assignment.toll_calculator.utils.FileUtils.HOLIDAYS_FILE_PATH;
 
 public class TollCalculator {
 
@@ -30,11 +34,7 @@ public class TollCalculator {
 
         Date intervalStart = dates.getFirst();
 
-        boolean isDifferentDays = dates.stream()
-                .anyMatch(date ->
-                        !date.toInstant().truncatedTo(ChronoUnit.DAYS)
-                                .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS))
-                );
+        boolean isDifferentDays = dates.stream().anyMatch(date -> !isSameDay(date, intervalStart));
         if (isDifferentDays) {
             throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
@@ -65,29 +65,24 @@ public class TollCalculator {
 
     }
 
+    private boolean isSameDay(Date dateOne, Date dateTwo) {
+        return dateOne.toInstant().truncatedTo(ChronoUnit.DAYS)
+                .equals(dateTwo.toInstant().truncatedTo(ChronoUnit.DAYS));
+    }
+
     private Boolean isTollFreeDate(Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
-        if (year == 2013) {
-            if (month == Calendar.JANUARY && day == 1 ||
-                    month == Calendar.MARCH && (day == 28 || day == 29) ||
-                    month == Calendar.APRIL && (day == 1 || day == 30) ||
-                    month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-                    month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-                    month == Calendar.JULY ||
-                    month == Calendar.NOVEMBER && day == 1 ||
-                    month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-                return true;
-            }
-        }
-        return false;
+        List<Date> holidays = FileUtils.loadAsList(HOLIDAYS_FILE_PATH)
+                .stream()
+                .map(DateUtils::convert)
+                .toList();
+
+        return holidays.stream().anyMatch(holiday -> isSameDay(holiday, date));
     }
 
     private int getTollFee(Date date) {

@@ -88,6 +88,19 @@ public class TollCalculatorTest {
         int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
 
         // then
+        assertEquals(26, actualTollFee);
+    }
+
+    @Test
+    public void givenCarVehicleAndHoliday_whenCalculation_thenSuccess() {
+        // given
+        Vehicle vehicle = Vehicle.CAR;
+        List<Date> dates = List.of(composeDate(0, 1));
+
+        // when
+        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+
+        // then
         assertEquals(0, actualTollFee);
     }
 

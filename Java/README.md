@@ -53,6 +53,17 @@ My reasons for choosing the enum model over interface:
 - No logic or complex functions are needed inside the model, only the flag if the vehicle is toll-free or not.
 - Bonus: it is so much simpler and nicer to define one file than one interface and all the classes.
 
+### 4. Holidays
+
+As written below in the modification suggestions, it would be time-consuming to collect all holidays.
+I kept some examples of holiday dates from the year 2013 as it was initiated in the original code.
+
+I have done two changes to the original list of holidays:
+- I have fixed the list of holidays from the year 2013 as the original code examples were not all correct.
+- I have added the holiday dates as file so that it could be easier to work with them eg adding other years as well.
+
+I used [this](https://www.timeanddate.com/holidays/sweden/2013?hol=1) to list the Swedish public holidays in year 2013.
+
 ## Modification suggestions
 
 Let me summarize the modifications I would like to suggest.
