@@ -1,6 +1,5 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.errors.InvalidInputException;
 import com.assignment.toll_calculator.models.Car;
 import com.assignment.toll_calculator.models.Vehicle;
 import org.junit.jupiter.api.Test;
@@ -22,12 +21,27 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                InvalidInputException.class,
+                IllegalArgumentException.class,
                 () -> new TollCalculator().getTollFee(vehicle, dates)
         );
 
         // then
         assertEquals("Cannot identify tolls for different days at the same time!", exception.getMessage());
+    }
+
+    @Test
+    public void givenCarVehicleAnSameDays_whenCalculation_thenSuccess() {
+        // given
+        Vehicle vehicle = new Car();
+        List<Date> dates = List.of(
+                composeDate(3, 1, 8, 30),
+                composeDate(3, 1, 16, 30));
+
+        // when
+        int tollFee = new TollCalculator().getTollFee(vehicle, dates);
+
+        // then
+        assertEquals(0, tollFee);
     }
 
 }
