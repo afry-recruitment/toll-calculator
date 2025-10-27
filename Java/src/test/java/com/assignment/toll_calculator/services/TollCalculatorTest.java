@@ -7,8 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.assignment.toll_calculator.services.TollCalculator.DIFFERENT_DAYS_ERROR_MESSAGE;
-import static com.assignment.toll_calculator.services.TollCalculator.INPUT_ERROR_MESSAGE;
+import static com.assignment.toll_calculator.services.TollCalculator.*;
 import static com.assignment.toll_calculator.utils.DateUtils.composeDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,7 +27,7 @@ public class TollCalculatorTest {
         );
 
         // then
-        assertEquals(INPUT_ERROR_MESSAGE, exception.getMessage());
+        assertEquals(INVALID_VEHICLE_ERROR_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class TollCalculatorTest {
         );
 
         // then
-        assertEquals(INPUT_ERROR_MESSAGE, exception.getMessage());
+        assertEquals(INVALID_DATES_ERROR_MESSAGE, exception.getMessage());
     }
 
     @Test
