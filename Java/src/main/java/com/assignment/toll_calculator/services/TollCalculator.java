@@ -1,6 +1,5 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.errors.InvalidInputException;
 import com.assignment.toll_calculator.models.Vehicle;
 
 import java.time.temporal.ChronoUnit;
@@ -32,7 +31,7 @@ public class TollCalculator {
                         !date.toInstant().truncatedTo(ChronoUnit.DAYS)
                                 .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS)))
         ) {
-            throw new InvalidInputException("Cannot identify tolls for different days at the same time!");
+            throw new IllegalArgumentException("Cannot identify tolls for different days at the same time!");
         }
 
         if (isTollFreeDate(intervalStart) || isTollFreeVehicle(vehicle)) return 0;
