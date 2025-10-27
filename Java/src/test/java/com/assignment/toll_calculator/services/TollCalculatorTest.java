@@ -4,6 +4,7 @@ import com.assignment.toll_calculator.models.Car;
 import com.assignment.toll_calculator.models.Vehicle;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TollCalculatorTest {
+
+    @Test
+    public void givenCarVehicleAndNoDates_whenCalculation_thenSuccess() {
+        // given
+        Vehicle vehicle = new Car();
+        List<Date> dates = Collections.emptyList();
+
+        // when
+        int tollFee = new TollCalculator().getTollFee(vehicle, dates);
+
+        // then
+        assertEquals(0, tollFee);
+    }
 
     @Test
     public void givenCarVehicleAndDifferentDays_whenCalculation_thenFailure() {
