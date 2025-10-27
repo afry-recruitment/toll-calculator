@@ -31,11 +31,12 @@ public class TollCalculator {
 
         Date intervalStart = dates.getFirst();
 
-        if (dates.stream()
+        boolean isDifferentDays = dates.stream()
                 .anyMatch(date ->
                         !date.toInstant().truncatedTo(ChronoUnit.DAYS)
-                                .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS)))
-        ) {
+                                .equals(intervalStart.toInstant().truncatedTo(ChronoUnit.DAYS))
+                );
+        if (isDifferentDays) {
             throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
 
