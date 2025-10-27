@@ -16,6 +16,12 @@ public class FileUtils {
 
     public static final String HOLIDAYS_FILE_PATH = "src/main/resources/holidays.json";
 
+    /**
+     * Load a list from file
+     *
+     * @param path - the location of the file
+     * @return - the list of items from the file
+     */
     public static List<String> loadAsList(String path) {
         String data;
 

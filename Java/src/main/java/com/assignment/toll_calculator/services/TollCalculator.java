@@ -20,7 +20,7 @@ public class TollCalculator {
             "Cannot identify tolls for dates from different days at the same time!";
 
     /**
-     * Calculate the total toll fee for one day
+     * Calculate the total toll fee for all dates on one day
      *
      * @param vehicle - the vehicle
      * @param dates   - date and time of all passes on one day
@@ -65,11 +65,24 @@ public class TollCalculator {
 
     }
 
+    /**
+     * Check if two dates are from the same day or not
+     *
+     * @param dateOne - one of the dates
+     * @param dateTwo - the other date
+     * @return - true if the two dates are from the same day, otherwise false
+     */
     private boolean isSameDay(Date dateOne, Date dateTwo) {
         return dateOne.toInstant().truncatedTo(ChronoUnit.DAYS)
                 .equals(dateTwo.toInstant().truncatedTo(ChronoUnit.DAYS));
     }
 
+    /**
+     * Check if a date is toll-free or not
+     *
+     * @param date - the date
+     * @return - true if the date is toll-free, otherwise false
+     */
     private Boolean isTollFreeDate(Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
@@ -85,6 +98,12 @@ public class TollCalculator {
         return holidays.stream().anyMatch(holiday -> isSameDay(holiday, date));
     }
 
+    /**
+     * Calculate the toll fee for one date
+     *
+     * @param date - the date
+     * @return - the toll fee for that date
+     */
     private int getTollFee(Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
