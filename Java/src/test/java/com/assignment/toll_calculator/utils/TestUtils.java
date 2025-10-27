@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DateUtils {
+public class TestUtils {
 
     public static Date composeDate(int month, int day, int hour, int minute) {
         Calendar calendar = GregorianCalendar.getInstance();
