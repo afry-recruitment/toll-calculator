@@ -96,7 +96,7 @@ public class TollCalculator {
         return false;
     }
 
-    private int getTollFee(final Date date) {
+    private int getTollFee(Date date) {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
