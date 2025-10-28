@@ -3,6 +3,9 @@ package com.assignment.toll_calculator.models;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * This is the enum for the different vehicle types.
+ */
 @AllArgsConstructor
 public enum Vehicle {
 

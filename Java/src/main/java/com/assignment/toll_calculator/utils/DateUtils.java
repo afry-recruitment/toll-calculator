@@ -7,6 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class contains all the date related functions supporting the solution.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
 

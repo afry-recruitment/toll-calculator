@@ -8,6 +8,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * This class is responsible for calculating the toll fee.
+ */
 public class TollService {
 
     public static final String INVALID_VEHICLE_ERROR_MESSAGE =

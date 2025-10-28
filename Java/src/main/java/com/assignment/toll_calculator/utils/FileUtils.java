@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * This class contains all the file related functions supporting the solution.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
