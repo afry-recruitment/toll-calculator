@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.assignment.toll_calculator.utils.FileUtils.HOLIDAYS_FILE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileUtilsTest {
@@ -12,7 +11,7 @@ public class FileUtilsTest {
     @Test
     public void givenExistingPath_whenLoading_thenSuccess() {
         // when
-        List<String> holidays = FileUtils.loadAsList(HOLIDAYS_FILE_PATH);
+        List<String> holidays = FileUtils.loadAsList(FileUtils.HOLIDAYS_FILE_PATH);
 
         // then
         assertNotNull(holidays);

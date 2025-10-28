@@ -8,8 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static com.assignment.toll_calculator.utils.FileUtils.HOLIDAYS_FILE_PATH;
-
 public class TollService {
 
     public static final String INVALID_VEHICLE_ERROR_MESSAGE =
@@ -114,7 +112,7 @@ public class TollService {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
-        List<Date> holidays = FileUtils.loadAsList(HOLIDAYS_FILE_PATH)
+        List<Date> holidays = FileUtils.loadAsList(FileUtils.HOLIDAYS_FILE_PATH)
                 .stream()
                 .map(DateUtils::convert)
                 .toList();
