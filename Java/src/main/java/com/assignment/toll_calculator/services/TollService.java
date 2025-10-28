@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 
 import static com.assignment.toll_calculator.utils.FileUtils.HOLIDAYS_FILE_PATH;
 
-public class TollCalculator {
+public class TollService {
 
     public static final String INVALID_VEHICLE_ERROR_MESSAGE =
             "Cannot identify toll for null vehicle!";

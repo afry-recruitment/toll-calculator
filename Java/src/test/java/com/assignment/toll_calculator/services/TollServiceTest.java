@@ -8,12 +8,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.assignment.toll_calculator.services.TollCalculator.*;
+import static com.assignment.toll_calculator.services.TollService.*;
 import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TollCalculatorTest {
+public class TollServiceTest {
 
     @Test
     public void givenNoVehicleAndValidDates_whenCalculation_thenFailure() {
@@ -23,7 +23,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
         );
 
         // then
@@ -38,7 +38,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
         );
 
         // then
@@ -52,7 +52,7 @@ public class TollCalculatorTest {
         List<Date> dates = Collections.emptyList();
 
         // when
-        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().getTollFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -66,7 +66,7 @@ public class TollCalculatorTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollCalculator().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
         );
 
         // then
@@ -83,7 +83,7 @@ public class TollCalculatorTest {
         );
 
         // when
-        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().getTollFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -99,7 +99,7 @@ public class TollCalculatorTest {
         );
 
         // when
-        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().getTollFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -112,7 +112,7 @@ public class TollCalculatorTest {
         List<Date> dates = List.of(composeDate(Calendar.JANUARY, 1));
 
         // when
-        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().getTollFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
