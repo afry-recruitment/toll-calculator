@@ -70,9 +70,9 @@ This is a parameterized test with two different minutes of the hours between 8 a
 The original logic for hours 9, 10, 11, 12, 13 and 14 with minutes between 0 and 29 would give back 0 SEK toll fee.
 And one minute later from the 30th minute of the same hour, it would give back 8 SEK.
 I do not think the design was meant to leave 30 mins of free periods in the middle of the day.
-So, I think the minutes between 0 and 29 should give back 8 SEK as well.
+So, I think the minutes between 0 and 29 should give back 8 SEK as well for these hours.
 
-So, I have added test case `givenCarVehicleAndParameterizedDates_whenCalculation_thenSuccess` to verify my change.
+So, I have added test case `givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
 
 ## Modification suggestions
 

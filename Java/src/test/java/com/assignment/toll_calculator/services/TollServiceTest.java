@@ -141,7 +141,7 @@ public class TollServiceTest {
                     "2013-09-02T19:29:00,0",  "2013-09-02T19:30:00,0",
             }
     )
-    public void givenCarVehicleAndParameterizedDates_whenCalculation_thenSuccess(String date, String expectedTollFee) {
+    public void givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess(String date, String expectedTollFee) {
         // given
         Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN));
