@@ -3,6 +3,7 @@ package com.assignment.toll_calculator.services;
 import com.assignment.toll_calculator.models.Vehicle;
 import org.junit.jupiter.api.Test;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -15,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TollCalculatorTest {
 
     @Test
-    public void givenNoVehicleAndDates_whenCalculation_thenFailure() {
+    public void givenNoVehicleAndValidDates_whenCalculation_thenFailure() {
         // given
         Vehicle vehicle = null;
-        List<Date> dates = List.of(composeDate(3, 1));
+        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 1));
 
         // when
         Exception exception = assertThrows(
@@ -58,10 +59,10 @@ public class TollCalculatorTest {
     }
 
     @Test
-    public void givenCarVehicleAndDifferentDays_whenCalculation_thenFailure() {
+    public void givenCarVehicleAndDifferentDayDates_whenCalculation_thenFailure() {
         // given
         Vehicle vehicle = Vehicle.CAR;
-        List<Date> dates = List.of(composeDate(3, 1), composeDate(3, 2));
+        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 1), composeDate(Calendar.SEPTEMBER, 2));
 
         // when
         Exception exception = assertThrows(
@@ -73,26 +74,42 @@ public class TollCalculatorTest {
     }
 
     @Test
-    public void givenCarVehicleAndSameDays_whenCalculation_thenSuccess() {
+    public void givenCarVehicleAndSameDayDates_whenCalculation_thenSuccess() {
         // given
         Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(
-                composeDate(3, 1, 8, 30),
-                composeDate(3, 1, 16, 30)
+                composeDate(Calendar.SEPTEMBER, 1, 8, 30),
+                composeDate(Calendar.SEPTEMBER, 1, 16, 30)
         );
 
         // when
         int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
 
         // then
-        assertEquals(26, actualTollFee);
+        assertEquals(0, actualTollFee);
+    }
+
+    @Test
+    public void givenMotorbikeVehicleAndSameDayDates_whenCalculation_thenSuccess() {
+        // given
+        Vehicle vehicle = Vehicle.MOTORBIKE;
+        List<Date> dates = List.of(
+                composeDate(Calendar.SEPTEMBER, 1, 8, 30),
+                composeDate(Calendar.SEPTEMBER, 1, 16, 30)
+        );
+
+        // when
+        int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
+
+        // then
+        assertEquals(0, actualTollFee);
     }
 
     @Test
     public void givenCarVehicleAndHoliday_whenCalculation_thenSuccess() {
         // given
         Vehicle vehicle = Vehicle.CAR;
-        List<Date> dates = List.of(composeDate(0, 1));
+        List<Date> dates = List.of(composeDate(Calendar.JANUARY, 1));
 
         // when
         int actualTollFee = new TollCalculator().getTollFee(vehicle, dates);
