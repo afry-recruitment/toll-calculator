@@ -1,7 +1,10 @@
 package com.assignment.toll_calculator.services;
 
 import com.assignment.toll_calculator.models.Vehicle;
+import com.assignment.toll_calculator.utils.DateUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -116,6 +119,30 @@ public class TollServiceTest {
 
         // then
         assertEquals(0, actualTollFee);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "2013-09-02T08:29:00,13", "2013-09-02T08:30:00,8",
+                    "2013-09-02T09:29:00,8", "2013-09-02T09:30:00,8",
+                    "2013-09-02T10:29:00,8", "2013-09-02T10:30:00,8",
+                    "2013-09-02T11:29:00,8", "2013-09-02T11:30:00,8",
+                    "2013-09-02T12:29:00,8", "2013-09-02T12:30:00,8",
+                    "2013-09-02T13:29:00,8", "2013-09-02T13:30:00,8",
+                    "2013-09-02T14:29:00,8", "2013-09-02T14:30:00,8",
+            }
+    )
+    public void givenCarVehicleAndParameterizedDates_whenCalculation_thenSuccess(String date, String expectedTollFee) {
+        // given
+        Vehicle vehicle = Vehicle.CAR;
+        List<Date> dates = List.of(DateUtils.convert(date));
+
+        // when
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+
+        // then
+        assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);
     }
 
 }

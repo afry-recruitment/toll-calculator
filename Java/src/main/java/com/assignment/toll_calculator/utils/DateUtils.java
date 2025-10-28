@@ -10,7 +10,8 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
 
-    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * Convert the text based date
@@ -19,7 +20,9 @@ public class DateUtils {
      * @return - the converted date
      */
     public static Date convert(String source) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                source.matches(".+T.+") ? DATE_TIME_PATTERN : DATE_PATTERN
+        );
         try {
             return simpleDateFormat.parse(source);
         } catch (ParseException e) {
