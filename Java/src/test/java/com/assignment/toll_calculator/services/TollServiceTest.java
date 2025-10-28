@@ -136,7 +136,7 @@ public class TollServiceTest {
     public void givenCarVehicleAndParameterizedDates_whenCalculation_thenSuccess(String date, String expectedTollFee) {
         // given
         Vehicle vehicle = Vehicle.CAR;
-        List<Date> dates = List.of(DateUtils.convert(date));
+        List<Date> dates = List.of(DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN));
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicle, dates);
