@@ -4,7 +4,6 @@ import com.assignment.toll_calculator.models.Vehicle;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
 
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -20,6 +19,8 @@ public class TollService {
     public static final String DIFFERENT_DAYS_ERROR_MESSAGE =
             "Cannot identify tolls for dates from different days at the same time!";
 
+    private static final Integer MAX_TOTAL_FEE = 60;
+
     /**
      * Calculate the total toll fee for all dates on one day
      *
@@ -33,37 +34,54 @@ public class TollService {
 
         if (dates.isEmpty()) return 0;
 
+        dates = new ArrayList<>(dates.stream().sorted().toList());
+
         Date intervalStart = dates.getFirst();
+
+        if (vehicle.isTollFree() || isTollFreeDate(intervalStart)) return 0;
+
+        if (dates.size() == 1) return calculateFee(intervalStart);
 
         boolean isDifferentDays = dates.stream().anyMatch(date -> !isSameDay(date, intervalStart));
         if (isDifferentDays) {
             throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
 
-        if (vehicle.isTollFree() || isTollFreeDate(intervalStart)) return 0;
+        return calculateFee(dates);
 
+    }
+
+    /**
+     * Calculate the toll fee for list of dates
+     *
+     * @param dates - the list of dates
+     * @return - the toll fee for that list of dates
+     */
+    private int calculateFee(List<Date> dates) {
         int totalFee = 0;
-        for (Date date : dates) {
-            int nextFee = calculateFee(date);
-            int tempFee = calculateFee(intervalStart);
+
+        for (int dateIndex = 0; dateIndex < dates.size(); dateIndex++) {
+            Date actualDate = dates.get(dateIndex);
+            int actualFee = calculateFee(actualDate);
+
+            Date previousDate = dateIndex == 0 ? actualDate : dates.get(dateIndex - 1);
+            int previousFee = calculateFee(previousDate);
 
             TimeUnit timeUnit = TimeUnit.MINUTES;
-            long diffInMillies = date.getTime() - intervalStart.getTime();
-            long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            long diffInMillis = actualDate.getTime() - previousDate.getTime();
+            long minutes = timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
 
             if (minutes <= 60) {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                if (totalFee > 0) totalFee -= previousFee;
+                totalFee += Math.max(actualFee, previousFee);
             } else {
-                totalFee += nextFee;
+                totalFee += actualFee;
             }
+
+            if (totalFee >= MAX_TOTAL_FEE) return MAX_TOTAL_FEE;
         }
 
-        if (totalFee > 60) totalFee = 60;
-
         return totalFee;
-
     }
 
     /**

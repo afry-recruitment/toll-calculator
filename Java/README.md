@@ -66,13 +66,20 @@ I used [this](https://www.timeanddate.com/holidays/sweden/2013?hol=1) to list th
 
 ### 5. Logic for one date toll fee calculation
 
-This is a parameterized test with two different minutes of the hours between 8 and 14.
 The original logic for hours 9, 10, 11, 12, 13 and 14 with minutes between 0 and 29 would give back 0 SEK toll fee.
 And one minute later from the 30th minute of the same hour, it would give back 8 SEK.
 I do not think the design was meant to leave 30 mins of free periods in the middle of the day.
 So, I think the minutes between 0 and 29 should give back 8 SEK as well for these hours.
 
-So, I have added test case `givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
+I have added test case `givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
+
+### 6. Logic for total toll fee calculation
+
+I have found some issues with the total fee calculation:
+- The dates should be sorted to make sure the list is always handled the same way.
+- For the one-hour window, it is better to compare the actual one with the previous instead of the starting one.
+
+I have added test case `givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
 
 ## Modification suggestions
 

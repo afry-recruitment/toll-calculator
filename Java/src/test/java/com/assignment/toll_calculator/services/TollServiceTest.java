@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.assignment.toll_calculator.services.TollService.*;
 import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
@@ -141,10 +138,35 @@ public class TollServiceTest {
                     "2013-09-02T19:29:00,0",  "2013-09-02T19:30:00,0",
             }
     )
-    public void givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess(String date, String expectedTollFee) {
+    public void givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
         // given
         Vehicle vehicle = Vehicle.CAR;
-        List<Date> dates = List.of(DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN));
+        List<Date> dates = List.of(DateUtils.convert(source, DateUtils.DATE_TIME_PATTERN));
+
+        // when
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+
+        // then
+        assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "2013-09-02T06:30:00,2013-09-02T06:31:00,2013-09-02T06:32:00;13",
+                    "2013-09-02T15:00:00,2013-09-02T16:00:00;18",
+                    "2013-09-02T15:30:00,2013-09-02T17:40:00,2013-09-02T18:20:00;31",
+                    "2013-09-02T17:40:00,2013-09-02T18:20:00,2013-09-02T15:30:00;31",
+            },
+            delimiterString = ";"
+    )
+    public void givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
+        // given
+        Vehicle vehicle = Vehicle.CAR;
+        List<Date> dates = new ArrayList<>(Arrays.asList(source.split(",")))
+                .stream()
+                .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
+                .toList();
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicle, dates);
