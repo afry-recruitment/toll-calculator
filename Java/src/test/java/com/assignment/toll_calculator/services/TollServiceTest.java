@@ -78,15 +78,20 @@ public class TollServiceTest {
         // given
         Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(
+                composeDate(Calendar.SEPTEMBER, 2, 7, 30),
                 composeDate(Calendar.SEPTEMBER, 2, 8, 30),
-                composeDate(Calendar.SEPTEMBER, 2, 16, 30)
+                composeDate(Calendar.SEPTEMBER, 2, 10, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 12, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 14, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 16, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 18, 29)
         );
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
-        assertEquals(26, actualTollFee);
+        assertEquals(60, actualTollFee);
     }
 
     @Test
@@ -94,8 +99,13 @@ public class TollServiceTest {
         // given
         Vehicle vehicle = Vehicle.MOTORBIKE;
         List<Date> dates = List.of(
+                composeDate(Calendar.SEPTEMBER, 2, 7, 30),
                 composeDate(Calendar.SEPTEMBER, 2, 8, 30),
-                composeDate(Calendar.SEPTEMBER, 2, 16, 30)
+                composeDate(Calendar.SEPTEMBER, 2, 10, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 12, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 14, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 16, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 18, 29)
         );
 
         // when
