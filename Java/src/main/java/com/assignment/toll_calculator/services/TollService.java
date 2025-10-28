@@ -98,8 +98,15 @@ public class TollService {
      * @return - true if the two dates are from the same day, otherwise false
      */
     private boolean isSameDay(Date dateOne, Date dateTwo) {
-        return dateOne.toInstant().truncatedTo(ChronoUnit.DAYS)
-                .equals(dateTwo.toInstant().truncatedTo(ChronoUnit.DAYS));
+        Calendar calendarOne = Calendar.getInstance();
+        calendarOne.setTime(dateOne);
+
+        Calendar calendarTwo = Calendar.getInstance();
+        calendarTwo.setTime(dateTwo);
+
+        return calendarOne.get(Calendar.YEAR) == calendarTwo.get(Calendar.YEAR)
+                && calendarOne.get(Calendar.MONTH) == calendarTwo.get(Calendar.MONTH)
+                && calendarOne.get(Calendar.DAY_OF_MONTH) == calendarTwo.get(Calendar.DAY_OF_MONTH);
     }
 
     /**

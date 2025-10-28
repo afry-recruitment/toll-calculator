@@ -13,7 +13,7 @@ public class TestUtils {
     }
 
     public static Date composeDate(int month, int day) {
-        return composeDate(month, day, 0, 0);
+        return composeDate(month, day, 9, 0);
     }
 
 }
