@@ -39,7 +39,7 @@ public class TollCalculator {
             throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
 
-        if (isTollFreeDate(intervalStart) || vehicle.isTollFree()) return 0;
+        if (vehicle.isTollFree() || isTollFreeDate(intervalStart)) return 0;
 
         int totalFee = 0;
         for (Date date : dates) {
