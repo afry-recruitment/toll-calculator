@@ -19,7 +19,7 @@ public class TollServiceTest {
     public void givenNoVehicleAndValidDates_whenCalculation_thenFailure() {
         // given
         Vehicle vehicle = null;
-        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 1));
+        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 2));
 
         // when
         Exception exception = assertThrows(
@@ -62,7 +62,7 @@ public class TollServiceTest {
     public void givenCarVehicleAndDifferentDayDates_whenCalculation_thenFailure() {
         // given
         Vehicle vehicle = Vehicle.CAR;
-        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 1), composeDate(Calendar.SEPTEMBER, 2));
+        List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 2), composeDate(Calendar.SEPTEMBER, 3));
 
         // when
         Exception exception = assertThrows(
@@ -78,15 +78,15 @@ public class TollServiceTest {
         // given
         Vehicle vehicle = Vehicle.CAR;
         List<Date> dates = List.of(
-                composeDate(Calendar.SEPTEMBER, 1, 8, 30),
-                composeDate(Calendar.SEPTEMBER, 1, 16, 30)
+                composeDate(Calendar.SEPTEMBER, 2, 8, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 16, 30)
         );
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
-        assertEquals(0, actualTollFee);
+        assertEquals(26, actualTollFee);
     }
 
     @Test
@@ -94,8 +94,8 @@ public class TollServiceTest {
         // given
         Vehicle vehicle = Vehicle.MOTORBIKE;
         List<Date> dates = List.of(
-                composeDate(Calendar.SEPTEMBER, 1, 8, 30),
-                composeDate(Calendar.SEPTEMBER, 1, 16, 30)
+                composeDate(Calendar.SEPTEMBER, 2, 8, 30),
+                composeDate(Calendar.SEPTEMBER, 2, 16, 30)
         );
 
         // when
