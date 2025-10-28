@@ -26,7 +26,7 @@ public class TollService {
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-    public int getTollFee(Vehicle vehicle, List<Date> dates) {
+    public int calculateFee(Vehicle vehicle, List<Date> dates) {
         if (vehicle == null) throw new IllegalArgumentException(INVALID_VEHICLE_ERROR_MESSAGE);
         if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
 
@@ -43,8 +43,8 @@ public class TollService {
 
         int totalFee = 0;
         for (Date date : dates) {
-            int nextFee = getTollFee(date);
-            int tempFee = getTollFee(intervalStart);
+            int nextFee = calculateFee(date);
+            int tempFee = calculateFee(intervalStart);
 
             TimeUnit timeUnit = TimeUnit.MINUTES;
             long diffInMillies = date.getTime() - intervalStart.getTime();
@@ -63,6 +63,30 @@ public class TollService {
 
         return totalFee;
 
+    }
+
+    /**
+     * Calculate the toll fee for one date
+     *
+     * @param date - the date
+     * @return - the toll fee for that date
+     */
+    private int calculateFee(Date date) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
+        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
+        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
+        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
+        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
+        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
+        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
+        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
+        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
+        else return 0;
     }
 
     /**
@@ -96,30 +120,6 @@ public class TollService {
                 .toList();
 
         return holidays.stream().anyMatch(holiday -> isSameDay(holiday, date));
-    }
-
-    /**
-     * Calculate the toll fee for one date
-     *
-     * @param date - the date
-     * @return - the toll fee for that date
-     */
-    private int getTollFee(Date date) {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTime(date);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
     }
 
 }

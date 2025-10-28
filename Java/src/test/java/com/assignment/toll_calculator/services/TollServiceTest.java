@@ -23,7 +23,7 @@ public class TollServiceTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
         );
 
         // then
@@ -38,7 +38,7 @@ public class TollServiceTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
         );
 
         // then
@@ -52,7 +52,7 @@ public class TollServiceTest {
         List<Date> dates = Collections.emptyList();
 
         // when
-        int actualTollFee = new TollService().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -66,7 +66,7 @@ public class TollServiceTest {
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().getTollFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
         );
 
         // then
@@ -83,7 +83,7 @@ public class TollServiceTest {
         );
 
         // when
-        int actualTollFee = new TollService().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -99,7 +99,7 @@ public class TollServiceTest {
         );
 
         // when
-        int actualTollFee = new TollService().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -112,7 +112,7 @@ public class TollServiceTest {
         List<Date> dates = List.of(composeDate(Calendar.JANUARY, 1));
 
         // when
-        int actualTollFee = new TollService().getTollFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicle, dates);
 
         // then
         assertEquals(0, actualTollFee);
