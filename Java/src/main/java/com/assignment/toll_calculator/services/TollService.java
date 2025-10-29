@@ -59,27 +59,26 @@ public class TollService {
      */
     private int calculateFee(List<Date> dates) {
         int totalFee = 0;
+        Date referenceDate = dates.getFirst();
+        int referenceFee = calculateFee(referenceDate);
 
-        for (int dateIndex = 0; dateIndex < dates.size(); dateIndex++) {
-            Date actualDate = dates.get(dateIndex);
-            int actualFee = calculateFee(actualDate);
+        for (int dateIndex = 1; dateIndex < dates.size(); dateIndex++) {
+            Date currentDate = dates.get(dateIndex);
+            int currentFee = calculateFee(currentDate);
 
-            if (dateIndex == 0) {
-                totalFee += actualFee;
-                continue;
-            }
-
-            Date previousDate = dates.get(dateIndex - 1);
-            int previousFee = calculateFee(previousDate);
-
-            long diffInMillis = actualDate.getTime() - previousDate.getTime();
+            long diffInMillis = currentDate.getTime() - referenceDate.getTime();
             double minutes = (double) diffInMillis / 1000 / 60;
 
             if (minutes <= 60D) {
-                if (totalFee > 0) totalFee -= previousFee;
-                totalFee += Math.max(actualFee, previousFee);
+                referenceFee = Math.max(referenceFee, currentFee);
             } else {
-                totalFee += actualFee;
+                totalFee += referenceFee;
+                referenceFee = currentFee;
+                referenceDate = currentDate;
+            }
+
+            if (dateIndex == dates.size() - 1) {
+                totalFee += referenceFee;
             }
 
             if (totalFee >= MAX_TOTAL_FEE) return MAX_TOTAL_FEE;
