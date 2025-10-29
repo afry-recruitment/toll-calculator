@@ -77,6 +77,8 @@ I have added test case `givenCarVehicleAndEachHourDates_whenCalculation_thenSucc
 
 I have found some issues with the total fee calculation:
 - The dates should be sorted to make sure the list is always handled the same way.
+- For the one-hour window, it is not enough to decide based on the whole minutes difference, even millis should count.
+  -> For example, 15:00:00 and 16:00:01 would be one-hour period according to the original code but it exceeds it.
 - For the one-hour window, it is better to compare the actual one with the previous instead of the starting one.
 
 I have added test case `givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.

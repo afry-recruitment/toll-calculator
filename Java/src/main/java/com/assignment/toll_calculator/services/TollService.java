@@ -64,14 +64,18 @@ public class TollService {
             Date actualDate = dates.get(dateIndex);
             int actualFee = calculateFee(actualDate);
 
-            Date previousDate = dateIndex == 0 ? actualDate : dates.get(dateIndex - 1);
+            if (dateIndex == 0) {
+                totalFee += actualFee;
+                continue;
+            }
+
+            Date previousDate = dates.get(dateIndex - 1);
             int previousFee = calculateFee(previousDate);
 
-            TimeUnit timeUnit = TimeUnit.MINUTES;
             long diffInMillis = actualDate.getTime() - previousDate.getTime();
-            long minutes = timeUnit.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            double minutes = (double) diffInMillis / 1000 / 60;
 
-            if (minutes <= 60) {
+            if (minutes <= 60D) {
                 if (totalFee > 0) totalFee -= previousFee;
                 totalFee += Math.max(actualFee, previousFee);
             } else {
