@@ -14,11 +14,11 @@ import java.util.*;
 public class TollService {
 
     public static final String INVALID_VEHICLE_TYPE_ERROR_MESSAGE =
-            "Cannot identify toll for null vehicle type!";
+            "Cannot identify toll fee for null vehicle type!";
     public static final String INVALID_DATES_ERROR_MESSAGE =
-            "Cannot identify toll for null dates!";
+            "Cannot identify toll fee for null dates!";
     public static final String DIFFERENT_DAYS_ERROR_MESSAGE =
-            "Cannot identify tolls for dates from different days at the same time!";
+            "Cannot identify toll fee for dates from different days at the same time!";
 
     private static final Integer MAX_TOTAL_FEE = 60;
 
