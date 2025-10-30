@@ -212,7 +212,10 @@ public class TollServiceTest {
 
     @ParameterizedTest
     @CsvFileSource(
-            resources = "car_2013-06-03_test_scenarios.csv",
+            resources = {
+                    "car_2013-06-03_test_scenarios.csv",
+                    "car_2013-06-08_test_scenarios.csv"
+            },
             numLinesToSkip = 1,
             delimiterString = "|"
     )
