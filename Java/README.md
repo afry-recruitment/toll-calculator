@@ -107,6 +107,8 @@ The test case has some columns:
 - t11 -> A flag indicating whether a date with time after 18:30 should be applied.
 - expectedTollFee -> The expected total fee for that day with the applied times.
 
+Hint: only `car_2013-06-03_test_scenarios.csv` contains expectedTollFee other than 0 as it is for the car on normal day!
+
 ## Modification suggestions
 
 Let me summarize the modifications I would like to suggest.
