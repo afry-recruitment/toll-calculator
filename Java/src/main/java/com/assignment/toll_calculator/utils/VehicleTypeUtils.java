@@ -5,11 +5,16 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 /**
- * This class contains all the vehicle type related functions supporting the solution.
+ * This class contains all the vehicle type related functions.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VehicleTypeUtils {
 
+    /**
+     * Parse the vehicle type from source
+     * @param type - the source of the parsing
+     * @return - the parsed vehicle type
+     */
     public static VehicleType parse(String type) {
         for (VehicleType vehicleType : VehicleType.values()) {
             if (vehicleType.getType().equalsIgnoreCase(type)) {
