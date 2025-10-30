@@ -37,20 +37,20 @@ I saw that the original code had the followings:
 
 I decided to refactor this modelling of the vehicles.
 
-I chose to implement an enum called `Vehicle` containing the type value and a flag if the vehicle is toll-free or not.
+I chose to implement an enum called `VehicleType` containing the type and a flag if it is toll-free or not.
 
 I thought about two other similar ways:
 1. Keeping the `Vehicle` interface and continue to implement all the other different vehicle type based on eg `Car`
    -> I would have added a `public boolean isTollFree();` function to the interface.
 2. Keeping the `Vehicle` interface and implementing in only two classes `TollFreeVehicle` and `TollVehicle`
    -> I would have defined the interface as the option above.
-   -> The model is only used to decide if a vehicle is toll-free or not.
+   -> The model is only used to decide if a vehicle type is toll-free or not.
    -> The type (if it is a car or motorbike) does not really matter unless we want to use these values as input.
    -> However, I concluded it might be important in a later stage to use the specific type.
 
 My reasons for choosing the enum model over interface:
 - The specific vehicle type list does not change, it is constant list that we do not edit dynamically.
-- No logic or complex functions are needed inside the model, only the flag if the vehicle is toll-free or not.
+- No logic or complex functions are needed inside the model, only the flag if the vehicle type is toll-free or not.
 - Bonus: it is so much simpler and nicer to define one file than one interface and all the classes.
 
 ### 4. Holidays
@@ -71,7 +71,7 @@ And one minute later from the 30th minute of the same hour, it would give back 8
 I do not think the design was meant to leave 30 mins of free periods in the middle of the day.
 So, I think from 08:30 to 14:59, the fee should be the same (8 SEK).
 
-I have added test case `givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
+I have added test case `givenCarVehicleTypeAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
 
 ### 6. Logic for total toll fee calculation
 
@@ -82,15 +82,15 @@ I have found some issues with the total fee calculation:
 - For the one-hour window, we should not always take the first date to calculate the 60 minutes period
   -> We should use a changing reference date instead.
 
-I have added test case `givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
+I have added test case `givenCarVehicleTypeAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
 
 ### 7. Parameterized tests for with different time periods, vehicles and days
 
 I have created a test case to run multiple tests trying to cover most of the different scenarios.
-The name of test case is `givenVehicleAndDates_whenCalculationWithDifferentTimePeriodsAndVehiclesAndDays_thenSuccess`.
+Its name is `givenDifferentTimePeriodsAndVehicleTypesAndDates_whenCalculationWith_thenSuccess`.
 
 The test case has some columns:
-- vehicle -> The vehicle which is used for the tests. 
+- vehicleType -> The vehicleType which is used for the tests. 
   -> Applied values: car (toll paying) and motorbike (toll-free)
 - day -> The day for which the tests are executed. 
   -> Applied values: 2013-06-03 (normal day), 2013-06-06 (holiday), 2013-06-08 (Saturday), 2013-06-09 (Sunday)

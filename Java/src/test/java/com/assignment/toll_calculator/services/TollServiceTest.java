@@ -1,6 +1,6 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.models.Vehicle;
+import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,29 +17,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TollServiceTest {
 
     @Test
-    public void givenNoVehicleAndValidDates_whenCalculation_thenFailure() {
+    public void givenNoVehicleTypeAndValidDates_whenCalculation_thenFailure() {
         // given
-        Vehicle vehicle = null;
+        VehicleType vehicleType = null;
         List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 2));
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicleType, dates)
         );
 
         // then
-        assertEquals(INVALID_VEHICLE_ERROR_MESSAGE, exception.getMessage());
+        assertEquals(INVALID_VEHICLE_TYPE_ERROR_MESSAGE, exception.getMessage());
     }
 
     @Test
-    public void givenCarVehicleAndNoDates_whenCalculation_thenFailure() {
+    public void givenCarVehicleTypeAndNoDates_whenCalculation_thenFailure() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = null;
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicleType, dates)
         );
 
         // then
@@ -47,27 +47,27 @@ public class TollServiceTest {
     }
 
     @Test
-    public void givenCarVehicleAndEmptyDates_whenCalculation_thenSuccess() {
+    public void givenCarVehicleTypeAndEmptyDates_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = Collections.emptyList();
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(0, actualTollFee);
     }
 
     @Test
-    public void givenCarVehicleAndDifferentDayDates_whenCalculation_thenFailure() {
+    public void givenCarVehicleTypeAndDifferentDayDates_whenCalculation_thenFailure() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = List.of(composeDate(Calendar.SEPTEMBER, 2), composeDate(Calendar.SEPTEMBER, 3));
 
         // when
         Exception exception = assertThrows(
-                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicle, dates)
+                IllegalArgumentException.class, () -> new TollService().calculateFee(vehicleType, dates)
         );
 
         // then
@@ -75,25 +75,25 @@ public class TollServiceTest {
     }
 
     @Test
-    public void givenCarVehicleAndSameDayDates_whenCalculation_thenSuccess() {
+    public void givenCarVehicleTypeAndSameDayDates_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = List.of(
                 composeDate(Calendar.SEPTEMBER, 2, 7, 30),
                 composeDate(Calendar.SEPTEMBER, 2, 8, 30)
         );
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(18, actualTollFee);
     }
 
     @Test
-    public void givenCarVehicleAnValidDates_whenCalculationAndDailyTotalFeeReached_thenSuccess() {
+    public void givenCarVehicleTypeAndValidDates_whenCalculationAndDailyTotalFeeReached_thenSuccess() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = List.of(
                 composeDate(Calendar.SEPTEMBER, 2, 7, 30),
                 composeDate(Calendar.SEPTEMBER, 2, 8, 30),
@@ -105,16 +105,16 @@ public class TollServiceTest {
         );
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(60, actualTollFee);
     }
 
     @Test
-    public void givenMotorbikeVehicleAndValidDates_whenCalculation_thenSuccess() {
+    public void givenMotorbikeVehicleTypeAndValidDates_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = Vehicle.MOTORBIKE;
+        VehicleType vehicleType = VehicleType.MOTORBIKE;
         List<Date> dates = List.of(
                 composeDate(Calendar.SEPTEMBER, 2, 7, 30),
                 composeDate(Calendar.SEPTEMBER, 2, 8, 30),
@@ -126,20 +126,20 @@ public class TollServiceTest {
         );
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(0, actualTollFee);
     }
 
     @Test
-    public void givenCarVehicleAndHoliday_whenCalculation_thenSuccess() {
+    public void givenCarVehicleTypeAndHoliday_whenCalculation_thenSuccess() {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = List.of(composeDate(Calendar.JANUARY, 1));
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(0, actualTollFee);
@@ -165,13 +165,13 @@ public class TollServiceTest {
                     "2013-09-02T19:29:00,0",  "2013-09-02T19:30:00,0",
             }
     )
-    public void givenCarVehicleAndEachHourDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
+    public void givenCarVehicleTypeAndEachHourDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = List.of(DateUtils.convert(source, DateUtils.DATE_TIME_PATTERN));
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);
@@ -195,19 +195,22 @@ public class TollServiceTest {
             },
             delimiterString = ";"
     )
-    public void givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
+    public void givenCarVehicleTypeAndHourPeriodDates_whenCalculation_thenSuccess(
+            String source, String expectedTollFee) {
+
         // given
-        Vehicle vehicle = Vehicle.CAR;
+        VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = new ArrayList<>(Arrays.asList(source.split(",")))
                 .stream()
                 .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
                 .toList();
 
         // when
-        int actualTollFee = new TollService().calculateFee(vehicle, dates);
+        int actualTollFee = new TollService().calculateFee(vehicleType, dates);
 
         // then
         assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);
+
     }
 
     @ParameterizedTest
@@ -226,14 +229,14 @@ public class TollServiceTest {
             delimiterString = "|"
     )
     // For details about the meaning of t1...t11 variables, please read Java/README.md.
-    public void givenVehicleAndDates_whenCalculationWithDifferentTimePeriodsAndVehiclesAndDays_thenSuccess(
-            String vehicle, String day,
+    public void givenDifferentTimePeriodsAndVehicleTypesAndDates_whenCalculationWith_thenSuccess(
+            String vehicleType, String day,
             String t1, String t2, String t3, String t4, String t5,
             String t6,String t7, String t8, String t9, String t10, String t11,
             String expectedTollFee) {
 
         // given
-        Vehicle parsedVehicle = Vehicle.parse(vehicle);
+        VehicleType parsedVehicleType = VehicleType.parse(vehicleType);
 
         List<Date> dates = new ArrayList<>();
         if (Boolean.parseBoolean(t1)) dates.add(composeDate(day, 4, 30));
@@ -249,7 +252,7 @@ public class TollServiceTest {
         if (Boolean.parseBoolean(t11)) dates.add(composeDate(day, 19, 30));
 
         // when
-        int actualTollFee = new TollService().calculateFee(parsedVehicle, dates);
+        int actualTollFee = new TollService().calculateFee(parsedVehicleType, dates);
 
         // then
         assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);

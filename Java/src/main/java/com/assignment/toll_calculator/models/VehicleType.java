@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum Vehicle {
+public enum VehicleType {
 
     CAR("Car", false),
     MOTORBIKE("Motorbike"),
@@ -21,18 +21,18 @@ public enum Vehicle {
     private final String type;
     private final boolean tollFree;
 
-    Vehicle(String type) {
+    VehicleType(String type) {
         this(type, true);
     }
 
-    public static Vehicle parse(String type) {
-        for (Vehicle vehicle: values()) {
-            if (vehicle.getType().equalsIgnoreCase(type)) {
-                return vehicle;
+    public static VehicleType parse(String type) {
+        for (VehicleType vehicleType : values()) {
+            if (vehicleType.getType().equalsIgnoreCase(type)) {
+                return vehicleType;
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot match vehicle with type %s", type));
+        throw new IllegalArgumentException(String.format("Cannot parse vehicle type based on %s", type));
     }
 
 }

@@ -1,19 +1,18 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.models.Vehicle;
+import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * This class is responsible for calculating the toll fee.
  */
 public class TollService {
 
-    public static final String INVALID_VEHICLE_ERROR_MESSAGE =
-            "Cannot identify toll for null vehicle!";
+    public static final String INVALID_VEHICLE_TYPE_ERROR_MESSAGE =
+            "Cannot identify toll for null vehicle type!";
     public static final String INVALID_DATES_ERROR_MESSAGE =
             "Cannot identify toll for null dates!";
     public static final String DIFFERENT_DAYS_ERROR_MESSAGE =
@@ -24,12 +23,12 @@ public class TollService {
     /**
      * Calculate the total toll fee for all dates on one day
      *
-     * @param vehicle - the vehicle
+     * @param vehicleType - the vehicle type
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-    public int calculateFee(Vehicle vehicle, List<Date> dates) {
-        if (vehicle == null) throw new IllegalArgumentException(INVALID_VEHICLE_ERROR_MESSAGE);
+    public int calculateFee(VehicleType vehicleType, List<Date> dates) {
+        if (vehicleType == null) throw new IllegalArgumentException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
         if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
 
         if (dates.isEmpty()) return 0;
@@ -38,7 +37,7 @@ public class TollService {
 
         Date intervalStart = dates.getFirst();
 
-        if (vehicle.isTollFree() || isTollFreeDate(intervalStart)) return 0;
+        if (vehicleType.isTollFree() || isTollFreeDate(intervalStart)) return 0;
 
         if (dates.size() == 1) return calculateFee(intervalStart);
 
