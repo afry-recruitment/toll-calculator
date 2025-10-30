@@ -2,6 +2,7 @@ package com.assignment.toll_calculator.services;
 
 import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
+import com.assignment.toll_calculator.utils.VehicleTypeUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -236,7 +237,7 @@ public class TollServiceTest {
             String expectedTollFee) {
 
         // given
-        VehicleType parsedVehicleType = VehicleType.parse(vehicleType);
+        VehicleType parsedVehicleType = VehicleTypeUtils.parse(vehicleType);
 
         List<Date> dates = new ArrayList<>();
         if (Boolean.parseBoolean(t1)) dates.add(composeDate(day, 4, 30));

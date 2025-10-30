@@ -25,14 +25,4 @@ public enum VehicleType {
         this(type, true);
     }
 
-    public static VehicleType parse(String type) {
-        for (VehicleType vehicleType : values()) {
-            if (vehicleType.getType().equalsIgnoreCase(type)) {
-                return vehicleType;
-            }
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot parse vehicle type based on %s", type));
-    }
-
 }
