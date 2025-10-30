@@ -24,4 +24,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Run tests and build
-        run: cd Java && ./gradlew clean build
+        run: cd Java && chmod +x gradlew && ./gradlew clean build
