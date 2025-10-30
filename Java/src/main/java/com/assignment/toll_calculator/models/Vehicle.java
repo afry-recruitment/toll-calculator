@@ -27,7 +27,7 @@ public enum Vehicle {
 
     public static Vehicle parse(String type) {
         for (Vehicle vehicle: values()) {
-            if (vehicle.getType().equals(type)) {
+            if (vehicle.getType().equalsIgnoreCase(type)) {
                 return vehicle;
             }
         }
