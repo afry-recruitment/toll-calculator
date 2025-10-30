@@ -8,6 +8,9 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * This class contains all test cases of DateUtils.
+ */
 public class DateUtilsTest {
 
     @Test

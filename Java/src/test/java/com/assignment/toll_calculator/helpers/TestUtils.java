@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * This class contains all supporting functions for the test cases.
+ */
 public class TestUtils {
 
     public static Date composeDate(int month, int day, int hour, int minute) {

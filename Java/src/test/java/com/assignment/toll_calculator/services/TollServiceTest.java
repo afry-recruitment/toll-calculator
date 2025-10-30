@@ -15,6 +15,9 @@ import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * This class contains all test cases of TollService.
+ */
 public class TollServiceTest {
 
     @Test

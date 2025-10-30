@@ -6,6 +6,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains all test cases of FileUtils.
+ */
 public class FileUtilsTest {
 
     @Test
