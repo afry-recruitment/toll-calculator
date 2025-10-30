@@ -1,0 +1,27 @@
+name: Toll Calculator Pipeline
+
+on:
+  push:
+    branches: [ "master", "features/assignment" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Run tests and build
+        run: cd Java && ./gradlew clean build
