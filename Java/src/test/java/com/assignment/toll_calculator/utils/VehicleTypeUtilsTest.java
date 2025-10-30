@@ -2,6 +2,8 @@ package com.assignment.toll_calculator.utils;
 
 import com.assignment.toll_calculator.models.VehicleType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,16 +13,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class VehicleTypeUtilsTest {
 
-    @Test
-    public void givenValidType_whenParsing_thenSuccess() {
+    @ParameterizedTest
+    @EnumSource(VehicleType.class)
+    public void givenValidType_whenParsing_thenSuccess(VehicleType expectedVehicleType) {
         // given
-        String type = VehicleType.EMERGENCY.getType();
+        String type = expectedVehicleType.getType();
 
         // when
-        VehicleType parsedVehicleType = VehicleTypeUtils.parse(type);
+        VehicleType actualVehicleType = VehicleTypeUtils.parse(type);
 
         // then
-        assertEquals(VehicleType.EMERGENCY, parsedVehicleType);
+        assertEquals(expectedVehicleType, actualVehicleType);
     }
 
     @Test
