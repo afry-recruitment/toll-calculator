@@ -7,6 +7,7 @@ import lombok.Getter;
  * This is the enum for the different vehicle types.
  */
 @AllArgsConstructor
+@Getter
 public enum Vehicle {
 
     CAR("Car", false),
@@ -18,12 +19,20 @@ public enum Vehicle {
     MILITARY("Military");
 
     private final String type;
-
-    @Getter
     private final boolean tollFree;
 
     Vehicle(String type) {
         this(type, true);
+    }
+
+    public static Vehicle parse(String type) {
+        for (Vehicle vehicle: values()) {
+            if (vehicle.getType().equals(type)) {
+                return vehicle;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot match vehicle with type %s", type));
     }
 
 }
