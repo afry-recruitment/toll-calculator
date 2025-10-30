@@ -4,6 +4,7 @@ import com.assignment.toll_calculator.models.Vehicle;
 import com.assignment.toll_calculator.utils.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.*;
@@ -204,6 +205,42 @@ public class TollServiceTest {
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicle, dates);
+
+        // then
+        assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(
+            resources = "car_2013-06-03_test_scenarios.csv",
+            numLinesToSkip = 1,
+            delimiterString = "|"
+    )
+    // For details about the meaning of t1...t11 variables, please read Java/README.md.
+    public void givenVehicleAndDates_whenCalculationWithDifferentTimePeriodsAndVehiclesAndDays_thenSuccess(
+            String vehicle, String day,
+            String t1, String t2, String t3, String t4, String t5,
+            String t6,String t7, String t8, String t9, String t10, String t11,
+            String expectedTollFee) {
+
+        // given
+        Vehicle parsedVehicle = Vehicle.parse(vehicle);
+
+        List<Date> dates = new ArrayList<>();
+        if (Boolean.parseBoolean(t1)) dates.add(composeDate(day, 4, 30));
+        if (Boolean.parseBoolean(t2)) dates.add(composeDate(day, 6, 0));
+        if (Boolean.parseBoolean(t3)) dates.add(composeDate(day, 6, 30));
+        if (Boolean.parseBoolean(t4)) dates.add(composeDate(day, 7, 31));
+        if (Boolean.parseBoolean(t5)) dates.add(composeDate(day, 8, 29));
+        if (Boolean.parseBoolean(t6)) dates.add(composeDate(day, 9, 30));
+        if (Boolean.parseBoolean(t7)) dates.add(composeDate(day, 15, 29));
+        if (Boolean.parseBoolean(t8)) dates.add(composeDate(day, 16, 30));
+        if (Boolean.parseBoolean(t9)) dates.add(composeDate(day, 17, 31));
+        if (Boolean.parseBoolean(t10)) dates.add(composeDate(day, 18, 29));
+        if (Boolean.parseBoolean(t11)) dates.add(composeDate(day, 19, 30));
+
+        // when
+        int actualTollFee = new TollService().calculateFee(parsedVehicle, dates);
 
         // then
         assertEquals(Integer.parseInt(expectedTollFee), actualTollFee);

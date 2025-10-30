@@ -84,6 +84,29 @@ I have found some issues with the total fee calculation:
 
 I have added test case `givenCarVehicleAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
 
+### 7. Parameterized tests for with different time periods, vehicles and days
+
+I have created a test case to run multiple tests trying to cover most of the different scenarios.
+The name of test case is `givenVehicleAndDates_whenCalculationWithDifferentTimePeriodsAndVehiclesAndDays_thenSuccess`.
+
+The test case has some columns:
+- vehicle -> The vehicle which is used for the tests. 
+  -> Applied values: car (toll paying) and motorbike (toll-free)
+- day -> The day for which the tests are executed. 
+  -> Applied values: 2013-06-03 (normal day), 2013-06-06 (holiday), 2013-06-08 (Saturday), 2013-06-09 (Sunday)
+- t1 -> A flag indicating whether a date with time before 06:00 should be applied.
+- t2 -> A flag indicating whether a date with time between 06:00 and 06:29 should be applied.
+- t3 -> A flag indicating whether a date with time between 06:30 and 06:59 should be applied.
+- t4 -> A flag indicating whether a date with time between 07:00 and 07:59 should be applied.
+- t5 -> A flag indicating whether a date with time between 08:00 and 08:29 should be applied.
+- t6 -> A flag indicating whether a date with time between 08:30 and 14:59 should be applied.
+- t7 -> A flag indicating whether a date with time between 15:00 and 15:29 should be applied.
+- t8 -> A flag indicating whether a date with time between 15:30 and 16:59 should be applied.
+- t9 -> A flag indicating whether a date with time between 17:00 and 17:59 should be applied.
+- t10 -> A flag indicating whether a date with time between 18:00 and 18:29 should be applied.
+- t11 -> A flag indicating whether a date with time after 18:30 should be applied.
+- expectedTollFee -> The expected total fee for that day with the applied times.
+
 ## Modification suggestions
 
 Let me summarize the modifications I would like to suggest.
