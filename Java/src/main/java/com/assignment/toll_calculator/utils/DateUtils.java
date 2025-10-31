@@ -7,14 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.assignment.toll_calculator.utils.ConstantUtils.DATE_PATTERN;
+
 /**
  * This class contains all the date related functions supporting the solution.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
-
-    public static final String DATE_PATTERN = "yyyy-MM-dd";
-    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * Convert the text based date

@@ -17,8 +17,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtils {
 
-    public static final String HOLIDAYS_FILE_PATH = "src/main/resources/holidays.json";
-
     /**
      * Load a list from file
      *

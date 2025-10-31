@@ -19,19 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.assignment.toll_calculator.utils.ConstantUtils.*;
+
 /**
  * This is the rest controller class where the application endpoints regarding the toll fee calculation are defined.
  */
 @RestController
 @Validated
 public class TollController {
-
-    public static final String FEE_URL = "/fee";
-
-    public static final String VEHICLE_TYPE_REQUEST_PARAM = "vehicle_type";
-    public static final String DATES_REQUEST_PARAM = "dates";
-
-    public static final String DATES_REQUEST_PARAM_VALUE_DELIMITER = ",";
 
     private final TollService tollService;
 
@@ -42,9 +37,9 @@ public class TollController {
 
 	@GetMapping(value = FEE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TollResponse> calculateFee(
-            @NotEmpty(message = "The vehicle type is required!")
+            @NotEmpty(message = INVALID_VEHICLE_TYPE_ERROR_MESSAGE)
             @RequestParam(value = VEHICLE_TYPE_REQUEST_PARAM) String vehicleType,
-            @NotEmpty(message = "At least one date is required!")
+            @NotEmpty(message = INVALID_DATES_ERROR_MESSAGE)
             @RequestParam(value = DATES_REQUEST_PARAM) String dates) {
 
         VehicleType parsedVehicleType;
@@ -60,7 +55,7 @@ public class TollController {
                                 parsedVehicleType,
                                 new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
                                         .stream()
-                                        .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
+                                        .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))
                                         .toList()
                         )
                 ),

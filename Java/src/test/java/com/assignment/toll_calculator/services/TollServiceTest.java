@@ -10,8 +10,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.*;
 
-import static com.assignment.toll_calculator.services.TollService.*;
 import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
+import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -172,7 +172,7 @@ public class TollServiceTest {
     public void givenCarVehicleTypeAndEachHourDates_whenCalculation_thenSuccess(String source, String expectedTollFee) {
         // given
         VehicleType vehicleType = VehicleType.CAR;
-        List<Date> dates = List.of(DateUtils.convert(source, DateUtils.DATE_TIME_PATTERN));
+        List<Date> dates = List.of(DateUtils.convert(source, DATE_TIME_PATTERN));
 
         // when
         int actualTollFee = new TollService().calculateFee(vehicleType, dates);
@@ -206,7 +206,7 @@ public class TollServiceTest {
         VehicleType vehicleType = VehicleType.CAR;
         List<Date> dates = new ArrayList<>(Arrays.asList(source.split(",")))
                 .stream()
-                .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
+                .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))
                 .toList();
 
         // when

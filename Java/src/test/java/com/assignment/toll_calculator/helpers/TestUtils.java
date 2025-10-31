@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.assignment.toll_calculator.utils.ConstantUtils.DATE_TIME_PATTERN;
+
 /**
  * This class contains all supporting functions for the test cases.
  */
@@ -62,7 +64,7 @@ public class TestUtils {
      * @return - the formatted date
      */
     public static String format(Date date) {
-        return new SimpleDateFormat(DateUtils.DATE_TIME_PATTERN).format(date);
+        return new SimpleDateFormat(DATE_TIME_PATTERN).format(date);
     }
 
 }

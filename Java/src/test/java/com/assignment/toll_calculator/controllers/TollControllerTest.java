@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.assignment.toll_calculator.controllers.TollController.*;
 import static com.assignment.toll_calculator.helpers.TestUtils.composeDate;
+import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

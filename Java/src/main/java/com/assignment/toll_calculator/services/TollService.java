@@ -1,29 +1,19 @@
 package com.assignment.toll_calculator.services;
 
-import com.assignment.toll_calculator.models.TollResponse;
 import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.assignment.toll_calculator.utils.ConstantUtils.*;
+
 /**
  * This class is responsible for calculating the toll fee.
  */
-@NoArgsConstructor
 @Service
 public class TollService {
-
-    public static final String INVALID_VEHICLE_TYPE_ERROR_MESSAGE =
-            "Cannot identify toll fee for null vehicle type!";
-    public static final String INVALID_DATES_ERROR_MESSAGE =
-            "Cannot identify toll fee for null dates!";
-    public static final String DIFFERENT_DAYS_ERROR_MESSAGE =
-            "Cannot identify toll fee for dates from different days at the same time!";
-
-    private static final Integer MAX_TOTAL_FEE = 60;
 
     /**
      * Calculate the total toll fee response for all dates on one day
@@ -32,7 +22,7 @@ public class TollService {
      * @param dates   - date and time of all passes on one day
      * @return - the total toll response for that day
      */
-    public int calculateFee(VehicleType vehicleType, List<Date> dates) {
+    public Integer calculateFee(VehicleType vehicleType, List<Date> dates) {
         if (vehicleType == null) throw new IllegalArgumentException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
         if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
 
@@ -147,7 +137,7 @@ public class TollService {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
 
-        List<Date> holidays = FileUtils.loadAsList(FileUtils.HOLIDAYS_FILE_PATH)
+        List<Date> holidays = FileUtils.loadAsList(HOLIDAYS_FILE_PATH)
                 .stream()
                 .map(DateUtils::convert)
                 .toList();
