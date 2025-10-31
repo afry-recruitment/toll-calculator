@@ -43,12 +43,14 @@ public class TollController {
             @RequestParam(value = DATES_REQUEST_PARAM) String dates) {
 
 		return new ResponseEntity<>(
-                tollService.calculateFee(
-                        VehicleTypeUtils.parse(vehicleType),
-                        new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
-                                .stream()
-                                .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
-                                .toList()
+                new TollResponse(
+                        tollService.calculateFee(
+                                VehicleTypeUtils.parse(vehicleType),
+                                new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
+                                        .stream()
+                                        .map(date -> DateUtils.convert(date, DateUtils.DATE_TIME_PATTERN))
+                                        .toList()
+                        )
                 ),
                 HttpStatus.OK
         );
