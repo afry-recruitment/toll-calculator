@@ -219,21 +219,12 @@ public class TollServiceTest {
 
     @ParameterizedTest
     @CsvFileSource(
-            resources = {
-                    "car_2013-06-03_test_scenarios.csv",
-                    "car_2013-06-06_test_scenarios.csv",
-                    "car_2013-06-08_test_scenarios.csv",
-                    "car_2013-06-09_test_scenarios.csv",
-                    "motorbike_2013-06-03_test_scenarios.csv",
-                    "motorbike_2013-06-06_test_scenarios.csv",
-                    "motorbike_2013-06-08_test_scenarios.csv",
-                    "motorbike_2013-06-09_test_scenarios.csv"
-            },
-            numLinesToSkip = 1,
-            delimiterString = "|"
+            resources = "different_vehicle_types_days_time_periods_scenarios.csv",
+            delimiterString = "|",
+            numLinesToSkip = 1
     )
     // For details about the meaning of t1...t11 variables, please read Java/README.md.
-    public void givenDifferentTimePeriodsAndVehicleTypesAndDates_whenCalculationWith_thenSuccess(
+    public void givenDifferentVehicleTypesAndDaysAndTimePeriods_whenCalculation_thenSuccess(
             String vehicleType, String day,
             String t1, String t2, String t3, String t4, String t5,
             String t6,String t7, String t8, String t9, String t10, String t11,

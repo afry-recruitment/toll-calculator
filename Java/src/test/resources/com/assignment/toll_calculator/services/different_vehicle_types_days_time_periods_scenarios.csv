@@ -2047,3 +2047,10 @@ car         | 2013-06-03 | false | false | true  | true  | true  | true  | true 
 car         | 2013-06-03 | true  | false | true  | true  | true  | true  | true  | true  | true  | true  | true  | 60
 car         | 2013-06-03 | false | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 60
 car         | 2013-06-03 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 60
+car         | 2013-06-06 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+car         | 2013-06-08 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+car         | 2013-06-09 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+motorbike   | 2013-06-03 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+motorbike   | 2013-06-06 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+motorbike   | 2013-06-08 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0
+motorbike   | 2013-06-09 | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | true  | 0

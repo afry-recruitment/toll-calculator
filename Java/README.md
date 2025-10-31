@@ -84,10 +84,10 @@ I have found some issues with the total fee calculation:
 
 I have added test case `givenCarVehicleTypeAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
 
-### 7. Parameterized tests for with different time periods, vehicles and days
+### 7. Parameterized tests for with different vehicle types, days and time periods
 
 I have created a test case to run multiple tests trying to cover most of the different scenarios.
-Its name is `givenDifferentTimePeriodsAndVehicleTypesAndDates_whenCalculationWith_thenSuccess`.
+Its name is `givenDifferentVehicleTypesAndDaysAndTimePeriods_whenCalculation_thenSuccess`.
 
 The test case has some columns:
 - vehicleType -> The vehicleType which is used for the tests. 
@@ -106,8 +106,6 @@ The test case has some columns:
 - t10 -> A flag indicating whether a date with time between 18:00 and 18:29 should be applied.
 - t11 -> A flag indicating whether a date with time after 18:30 should be applied.
 - expectedTollFee -> The expected total fee for that day with the applied times.
-
-Hint: only `car_2013-06-03_test_scenarios.csv` contains expectedTollFee other than 0 as it is for the car on normal day!
 
 ## Modification suggestions
 
