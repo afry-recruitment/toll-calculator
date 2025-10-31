@@ -1,9 +1,11 @@
 package com.assignment.toll_calculator.services;
 
+import com.assignment.toll_calculator.models.TollResponse;
 import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -11,6 +13,7 @@ import java.util.*;
  * This class is responsible for calculating the toll fee.
  */
 @NoArgsConstructor
+@Service
 public class TollService {
 
     public static final String INVALID_VEHICLE_TYPE_ERROR_MESSAGE =
@@ -23,32 +26,32 @@ public class TollService {
     private static final Integer MAX_TOTAL_FEE = 60;
 
     /**
-     * Calculate the total toll fee for all dates on one day
+     * Calculate the total toll fee response for all dates on one day
      *
      * @param vehicleType - the vehicle type
      * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
+     * @return - the total toll response for that day
      */
-    public int calculateFee(VehicleType vehicleType, List<Date> dates) {
+    public TollResponse calculateFee(VehicleType vehicleType, List<Date> dates) {
         if (vehicleType == null) throw new IllegalArgumentException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
         if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
 
-        if (dates.isEmpty()) return 0;
+        if (dates.isEmpty()) return new TollResponse();
 
         dates = new ArrayList<>(dates.stream().sorted().toList());
 
         Date intervalStart = dates.getFirst();
 
-        if (vehicleType.isTollFree() || isTollFreeDate(intervalStart)) return 0;
+        if (vehicleType.isTollFree() || isTollFreeDate(intervalStart)) return new TollResponse();
 
-        if (dates.size() == 1) return calculateFee(intervalStart);
+        if (dates.size() == 1) return new TollResponse(calculateFee(intervalStart));
 
         boolean isDifferentDays = dates.stream().anyMatch(date -> !isSameDay(date, intervalStart));
         if (isDifferentDays) {
             throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
         }
 
-        return calculateFee(dates);
+        return new TollResponse(calculateFee(dates));
 
     }
 
