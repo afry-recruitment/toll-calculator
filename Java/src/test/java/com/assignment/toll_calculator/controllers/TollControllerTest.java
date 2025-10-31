@@ -80,7 +80,11 @@ public class TollControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         jsonPath("$.message")
-                                .value("calculateFee.vehicleType: The vehicle type is required!")
+                                .value(
+                                        String.format(
+                                                "calculateFee.vehicleType: %s", INVALID_VEHICLE_TYPE_ERROR_MESSAGE
+                                        )
+                                )
                 );
     }
 
@@ -155,7 +159,7 @@ public class TollControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(
                         jsonPath("$.message")
-                                .value("calculateFee.dates: At least one date is required!")
+                                .value(String.format("calculateFee.dates: %s", INVALID_DATES_ERROR_MESSAGE))
                 );
     }
 
