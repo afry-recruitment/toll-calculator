@@ -1,20 +1,45 @@
-# Assignment
+# 1. Summary
 
-I have got the assignment to have a look at a code and make any modifications or suggestions for modifications.
+Let me summarize my achievements and how you try them out.
+During my development, I used JDK version 25.
+For the commands below enter the `Java` folder of the repo. 
 
-# Solution Description
+## 1.1. Build system
 
-The solution has been developed in IntelliJ with Java 25 by Laszlo Karsai.
+I have added Gradle 9.1.0 as build system. 
+You can use the Gradle wrapper in the repo to try it out:
+```shell
+./gradlew -version
+```
 
-## Implemented modifications
+## 1.2. Tests and Build
+
+I have added tests meaning to go through as many scenarios as possible to make sure the algorithm works correctly.
+
+You can run the test cases with the following command:
+```shell
+./gradlew clean test
+```
+
+You can run the test cases and build the project with the following command:
+```shell
+./gradlew clean build
+```
+
+You can build the project without running the test cases with the following command:
+```shell
+./gradlew clean build -x test
+```
+
+# 2. Implemented modifications
 
 Let me summarize what modifications I have managed to do to the original code.
 
-### 1. Package structure
+## 2.1. Package structure
 
 A simple folder structure has been created, and I have moved the pre-existing Java files to different packages.
 
-### 2. Build system
+## 2.2. Build system
 
 I have chosen Gradle as build system because it is flexible and easy to start with and understand.
 
@@ -27,7 +52,7 @@ Why do we need a build system?
 - To build tha application for deployment
 - etc
 
-### 3. Refactored Vehicle model
+## 2.3. Refactored Vehicle model
 
 I saw that the original code had the followings:
 - an enum called `TollFreeVehicles`
@@ -53,7 +78,7 @@ My reasons for choosing the enum model over interface:
 - No logic or complex functions are needed inside the model, only the flag if the vehicle type is toll-free or not.
 - Bonus: it is so much simpler and nicer to define one file than one interface and all the classes.
 
-### 4. Holidays
+## 2.4. Holidays
 
 As written below in the modification suggestions, it would be time-consuming to collect all holidays.
 I kept some examples of holiday dates from the year 2013 as it was initiated in the original code.
@@ -64,7 +89,7 @@ I have done two changes to the original list of holidays:
 
 I used [this](https://www.timeanddate.com/holidays/sweden/2013?hol=1) to list the Swedish public holidays in year 2013.
 
-### 5. Logic for one date toll fee calculation
+## 2.5. Logic for one date toll fee calculation
 
 The original logic for hours 9, 10, 11, 12, 13 and 14 with minutes between 0 and 29 would give back 0 SEK toll fee.
 And one minute later from the 30th minute of the same hour, it would give back 8 SEK.
@@ -73,7 +98,7 @@ So, I think from 08:30 to 14:59, the fee should be the same (8 SEK).
 
 I have added test case `givenCarVehicleTypeAndEachHourDates_whenCalculation_thenSuccess` to verify my change.
 
-### 6. Logic for total toll fee calculation
+## 2.6. Logic for total toll fee calculation
 
 I have found some issues with the total fee calculation:
 - The dates should be sorted to make sure the list is always handled the same way.
@@ -84,7 +109,7 @@ I have found some issues with the total fee calculation:
 
 I have added test case `givenCarVehicleTypeAndHourPeriodDates_whenCalculation_thenSuccess` to verify my change.
 
-### 7. Parameterized tests for with different vehicle types, days and time periods
+## 2.7. Parameterized tests for with different vehicle types, days and time periods
 
 I have created a test case to run multiple tests trying to cover most of the different scenarios.
 Its name is `givenDifferentVehicleTypesAndDaysAndTimePeriods_whenCalculation_thenSuccess`.
@@ -107,11 +132,11 @@ The test case has some columns:
 - t11 -> A flag indicating whether a date with time after 18:30 should be applied.
 - expectedTollFee -> The expected total fee for that day with the applied times.
 
-## Modification suggestions
+# 3. Modification suggestions
 
 Let me summarize the modifications I would like to suggest.
 
-### Holidays
+## 3.1. Holidays
 
 I would suggest not to have the holiday as a strong requirement.
 
