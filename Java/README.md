@@ -2,7 +2,7 @@
 
 Let me summarize my achievements and how you can try them out.
 During my development, I used JDK version 25.
-For the commands below enter the `Java` folder of the repo. 
+For the commands below, please enter the `Java` folder of the repo. 
 
 ## 1.1. Build system
 
