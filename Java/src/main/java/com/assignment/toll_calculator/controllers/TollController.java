@@ -1,8 +1,6 @@
 package com.assignment.toll_calculator.controllers;
 
-import com.assignment.toll_calculator.errors.ApiException;
 import com.assignment.toll_calculator.models.TollResponse;
-import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.services.TollService;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.VehicleTypeUtils;
@@ -42,17 +40,10 @@ public class TollController {
             @NotEmpty(message = INVALID_DATES_ERROR_MESSAGE)
             @RequestParam(value = DATES_REQUEST_PARAM) String dates) {
 
-        VehicleType parsedVehicleType;
-        try {
-            parsedVehicleType = VehicleTypeUtils.parse(vehicleType);
-        } catch (IllegalArgumentException exception) {
-            throw new ApiException(exception, HttpStatus.BAD_REQUEST);
-        }
-
 		return new ResponseEntity<>(
                 new TollResponse(
                         tollService.calculateFee(
-                                parsedVehicleType,
+                                VehicleTypeUtils.parse(vehicleType),
                                 new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
                                         .stream()
                                         .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))

@@ -1,8 +1,10 @@
 package com.assignment.toll_calculator.services;
 
+import com.assignment.toll_calculator.errors.ApiException;
 import com.assignment.toll_calculator.models.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,8 +25,8 @@ public class TollService {
      * @return - the total toll response for that day
      */
     public Integer calculateFee(VehicleType vehicleType, List<Date> dates) {
-        if (vehicleType == null) throw new IllegalArgumentException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
-        if (dates == null) throw new IllegalArgumentException(INVALID_DATES_ERROR_MESSAGE);
+        if (vehicleType == null) throw new ApiException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
+        if (dates == null) throw new ApiException(INVALID_DATES_ERROR_MESSAGE);
 
         if (dates.isEmpty()) return 0;
 
@@ -38,7 +40,7 @@ public class TollService {
 
         boolean isDifferentDays = dates.stream().anyMatch(date -> !isSameDay(date, intervalStart));
         if (isDifferentDays) {
-            throw new IllegalArgumentException(DIFFERENT_DAYS_ERROR_MESSAGE);
+            throw new ApiException(DIFFERENT_DAYS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
         return calculateFee(dates);

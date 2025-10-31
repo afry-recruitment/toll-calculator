@@ -12,9 +12,13 @@ public class ApiException extends RuntimeException {
 
     private final HttpStatus status;
 
-    public ApiException(Throwable throwable, HttpStatus status) {
-        super(throwable.getMessage(), throwable);
+    public ApiException(String message, HttpStatus status) {
+        super(message);
         this.status = status;
+    }
+
+    public ApiException(String message) {
+        this(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -1,8 +1,10 @@
 package com.assignment.toll_calculator.utils;
 
+import com.assignment.toll_calculator.errors.ApiException;
 import com.assignment.toll_calculator.models.VehicleType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 /**
  * This class contains all the vehicle type related functions.
@@ -22,7 +24,7 @@ public class VehicleTypeUtils {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot parse vehicle type based on %s", type));
+        throw new ApiException(String.format("Cannot parse vehicle type based on %s", type), HttpStatus.BAD_REQUEST);
     }
 
 }
