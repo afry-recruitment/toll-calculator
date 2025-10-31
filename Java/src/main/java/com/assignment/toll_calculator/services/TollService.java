@@ -1,7 +1,7 @@
 package com.assignment.toll_calculator.services;
 
 import com.assignment.toll_calculator.errors.ApiException;
-import com.assignment.toll_calculator.models.VehicleType;
+import com.assignment.toll_calculator.models.internal.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
 import org.springframework.http.HttpStatus;

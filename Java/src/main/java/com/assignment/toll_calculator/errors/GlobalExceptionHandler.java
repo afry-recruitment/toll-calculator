@@ -1,6 +1,6 @@
 package com.assignment.toll_calculator.errors;
 
-import com.assignment.toll_calculator.models.ErrorResponse;
+import com.assignment.toll_calculator.models.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

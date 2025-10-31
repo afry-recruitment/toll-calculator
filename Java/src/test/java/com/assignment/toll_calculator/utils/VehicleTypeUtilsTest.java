@@ -1,6 +1,6 @@
 package com.assignment.toll_calculator.utils;
 
-import com.assignment.toll_calculator.models.VehicleType;
+import com.assignment.toll_calculator.models.internal.VehicleType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

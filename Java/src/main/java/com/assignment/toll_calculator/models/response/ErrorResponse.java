@@ -1,4 +1,4 @@
-package com.assignment.toll_calculator.models;
+package com.assignment.toll_calculator.models.response;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;

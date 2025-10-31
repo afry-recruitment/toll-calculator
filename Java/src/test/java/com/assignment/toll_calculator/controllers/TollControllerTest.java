@@ -1,7 +1,7 @@
 package com.assignment.toll_calculator.controllers;
 
 import com.assignment.toll_calculator.helpers.TestUtils;
-import com.assignment.toll_calculator.models.VehicleType;
+import com.assignment.toll_calculator.models.internal.VehicleType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

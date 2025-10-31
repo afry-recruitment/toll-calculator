@@ -1,4 +1,4 @@
-package com.assignment.toll_calculator.models;
+package com.assignment.toll_calculator.models.internal;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

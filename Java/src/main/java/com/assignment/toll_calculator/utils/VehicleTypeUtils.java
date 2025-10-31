@@ -1,7 +1,7 @@
 package com.assignment.toll_calculator.utils;
 
 import com.assignment.toll_calculator.errors.ApiException;
-import com.assignment.toll_calculator.models.VehicleType;
+import com.assignment.toll_calculator.models.internal.VehicleType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.assignment.toll_calculator.controllers;
 
-import com.assignment.toll_calculator.models.TollResponse;
+import com.assignment.toll_calculator.models.response.TollResponse;
 import com.assignment.toll_calculator.services.TollService;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.VehicleTypeUtils;
