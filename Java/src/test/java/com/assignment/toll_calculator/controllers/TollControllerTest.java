@@ -163,4 +163,48 @@ public class TollControllerTest {
                 );
     }
 
+    @Test
+    public void givenCarVehicleTypeAndValidDate_whenRequest_thenFailure() throws Exception {
+        // given
+        String vehicleType = VehicleType.CAR.getType();
+        String dates = String.join(
+                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                Stream.of(composeDate(Calendar.SEPTEMBER, 2, 7, 30)).map(TestUtils::format).toList()
+        );
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get(FEE_URL)
+                        .param(VEHICLE_TYPE_REQUEST_PARAM, vehicleType)
+                        .param(DATES_REQUEST_PARAM, dates)
+        );
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fee").value(18));
+    }
+
+    @Test
+    public void givenMotorbikeVehicleTypeAndValidDate_whenRequest_thenFailure() throws Exception {
+        // given
+        String vehicleType = VehicleType.MOTORBIKE.getType();
+        String dates = String.join(
+                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                Stream.of(composeDate(Calendar.SEPTEMBER, 2, 7, 30)).map(TestUtils::format).toList()
+        );
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                get(FEE_URL)
+                        .param(VEHICLE_TYPE_REQUEST_PARAM, vehicleType)
+                        .param(DATES_REQUEST_PARAM, dates)
+        );
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.fee").value(0));
+    }
+
 }
