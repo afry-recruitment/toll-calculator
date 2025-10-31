@@ -26,6 +26,6 @@ public class ConstantUtils {
     public static final String DATE_PATTERN = "yyyy-MM-dd";
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
-    public static final String HOLIDAYS_FILE_PATH = "src/main/resources/holidays.json";
+    public static final String HOLIDAYS_FILE_PATH = "src/main/resources/data/holidays.json";
 
 }
