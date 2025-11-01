@@ -34,5 +34,7 @@ jobs:
           cache-dependency-path: ./Java/Frontend/package-lock.json
           node-version: 22.x
           cache: 'npm'
+      - run: cd Java/Frontend
+      - run: npm install
       - name: Run Frontend tests
-        run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean test
+        run: chmod +x gradlew && ./gradlew clean test
