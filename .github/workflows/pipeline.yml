@@ -26,15 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    strategy:
-      matrix:
-        node-version: [ 22.x ]
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: Java/React/package-lock.json
+          node-version: 22.x
           cache: 'npm'
       - name: Run Frontend tests
         run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean test
