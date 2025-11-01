@@ -73,17 +73,17 @@ I have managed to set up a frontend application as well that communicates with t
 
 For the commands below, please enter the `React` folder of the repo.
 
-Please, note that you need to run the Spring Boot application above to have successful interaction.
-
-To run the frontend application (it will be started on port 3000):
+To run the frontend application:
 ```shell
 ./gradlew clean start
 ```
+It will be available on port 3000, and it expects the Spring Boot application running on port 8080.
 
 To run the frontend application tests:
 ```shell
 ./gradlew clean test
 ```
+For the tests, the API calls are mocked so the Spring Boot application is not needed to run!
 
 # 2. Implemented modifications
 
