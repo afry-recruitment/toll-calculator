@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  check:
 
     runs-on: ubuntu-latest
     permissions:
@@ -23,5 +23,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Run tests and build
-        run: cd Java && chmod +x gradlew && ./gradlew clean build
+      - name: Run Java tests
+        run: cd Java && chmod +x gradlew && ./gradlew clean test
+
+      - name: Run React tests
+        run: cd React && chmod +x gradlew && ./gradlew clean test
