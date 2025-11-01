@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ConstantUtils {
 
     public static final String FEE_URL = "/fee";
+    public static final String VEHICLE_TYPES_URL = "/vehicle-types";
     public static final String INFO_URL = "/info";
 
     public static final String VEHICLE_TYPE_REQUEST_PARAM = "vehicle_type";
