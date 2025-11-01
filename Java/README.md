@@ -37,6 +37,11 @@ I have turned the project into a Spring Boot application that can be started by 
 ```shell
 ./gradlew bootRun
 ```
+By default, the application has DEBUG logging enabled for the `com.assignment.toll_calculator` package.
+If you want to run it with INFO logging, use this command:
+```shell
+./gradlew bootRun --args='--LOG_LEVEL=INFO'
+```
 
 Once it is started, it is available on port 8080.
 There are two endpoints: one for basic info and the other one is for calculating the total fee based on parameters.
