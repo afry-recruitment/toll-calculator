@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TollResponse {
+public class TollFeeResponse {
 
-    private Integer totalFee;
+    private Integer total;
 
 }

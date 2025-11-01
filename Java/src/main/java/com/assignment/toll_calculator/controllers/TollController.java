@@ -1,7 +1,7 @@
 package com.assignment.toll_calculator.controllers;
 
 import com.assignment.toll_calculator.models.response.ErrorResponse;
-import com.assignment.toll_calculator.models.response.TollResponse;
+import com.assignment.toll_calculator.models.response.TollFeeResponse;
 import com.assignment.toll_calculator.services.TollService;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.VehicleTypeUtils;
@@ -50,7 +50,7 @@ public class TollController {
             responseCode = "200",
             description = "Calculated total fee",
             content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TollResponse.class)
+                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TollFeeResponse.class)
             )
     )
     @ApiResponse(
@@ -68,7 +68,7 @@ public class TollController {
             )
     )
 	@GetMapping(value = FEE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TollResponse> calculateFee(
+	public ResponseEntity<TollFeeResponse> calculateFee(
             @NotEmpty(message = INVALID_VEHICLE_TYPE_ERROR_MESSAGE)
             @RequestParam(value = VEHICLE_TYPE_REQUEST_PARAM) String vehicleType,
             @NotEmpty(message = INVALID_DATES_ERROR_MESSAGE)
@@ -76,7 +76,7 @@ public class TollController {
 
         log.debug("Received GET {} request with vehicle type {} and dates {}", FEE_URL, vehicleType, dates);
 
-        TollResponse tollResponse = new TollResponse(
+        TollFeeResponse tollFeeResponse = new TollFeeResponse(
                 tollService.calculateFee(
                         VehicleTypeUtils.parse(vehicleType),
                         new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
@@ -88,7 +88,7 @@ public class TollController {
 
         log.debug("Finished GET {} request with vehicle type {} and dates {}", FEE_URL, vehicleType, dates);
 
-        return new ResponseEntity<>(tollResponse, HttpStatus.OK);
+        return new ResponseEntity<>(tollFeeResponse, HttpStatus.OK);
 
 	}
 
