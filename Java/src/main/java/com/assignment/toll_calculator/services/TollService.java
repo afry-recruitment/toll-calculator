@@ -71,6 +71,10 @@ public class TollService {
         Date referenceDate = dates.getFirst();
         int referenceFee = calculateFee(referenceDate);
 
+        if (dates.size() == 1) {
+            return referenceFee;
+        }
+
         for (int dateIndex = 1; dateIndex < dates.size(); dateIndex++) {
             Date currentDate = dates.get(dateIndex);
             int currentFee = calculateFee(currentDate);
