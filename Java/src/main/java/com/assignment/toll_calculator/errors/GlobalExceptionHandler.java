@@ -2,6 +2,7 @@ package com.assignment.toll_calculator.errors;
 
 import com.assignment.toll_calculator.models.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -15,6 +16,7 @@ import java.time.Instant;
  * This class is for handling the global exceptions and convert them to error response
  */
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
@@ -39,6 +41,13 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> composeResponse(Throwable throwable, HttpStatus status) {
         Throwable cause = throwable.getCause();
+        String message = throwable.getMessage();
+
+        if (HttpStatus.Series.SERVER_ERROR.equals(status.series())) {
+            log.error(message, throwable);
+        } else {
+            log.info(message, throwable);
+        }
 
         return new ResponseEntity<>(
                 ErrorResponse.builder()
@@ -46,7 +55,7 @@ public class GlobalExceptionHandler {
                         .status(status)
                         .statusCode(status.value())
                         .type(throwable.getClass().getName())
-                        .message(throwable.getMessage())
+                        .message(message)
                         .cause(cause != null ? cause.getMessage() : null)
                         .build(),
                 status
