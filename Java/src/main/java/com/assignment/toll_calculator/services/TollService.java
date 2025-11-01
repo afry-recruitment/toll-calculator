@@ -4,6 +4,7 @@ import com.assignment.toll_calculator.errors.ApiException;
 import com.assignment.toll_calculator.models.internal.VehicleType;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.FileUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
  * This class is responsible for calculating the toll fee.
  */
 @Service
+@Slf4j
 public class TollService {
 
     /**
@@ -28,23 +30,34 @@ public class TollService {
         if (vehicleType == null) throw new ApiException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
         if (dates == null) throw new ApiException(INVALID_DATES_ERROR_MESSAGE);
 
-        if (dates.isEmpty()) return 0;
+        if (dates.isEmpty()) {
+            log.warn("The dates are empty!");
+            return 0;
+        }
 
         dates = new ArrayList<>(dates.stream().sorted().toList());
 
         Date intervalStart = dates.getFirst();
 
-        if (vehicleType.isTollFree() || isTollFreeDate(intervalStart)) return 0;
-
-        if (dates.size() == 1) return calculateFee(intervalStart);
+        if (vehicleType.isTollFree()) {
+            log.debug("The vehicle type {} is toll free!", vehicleType);
+            return 0;
+        }
+        if (isTollFreeDate(intervalStart)) {
+            log.debug("The date {} is toll free!", intervalStart);
+            return 0;
+        }
 
         boolean isDifferentDays = dates.stream().anyMatch(date -> !isSameDay(date, intervalStart));
         if (isDifferentDays) {
             throw new ApiException(DIFFERENT_DAYS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
-        return calculateFee(dates);
+        int totalFee = calculateFee(dates);
 
+        log.debug("Calculated total fee {} for vehicle type {} and dates {}", totalFee, vehicleType, dates);
+
+        return totalFee;
     }
 
     /**

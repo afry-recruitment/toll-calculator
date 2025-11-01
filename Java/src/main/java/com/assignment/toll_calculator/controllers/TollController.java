@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,7 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 @Tag(name = "calculation", description = "All endpoints related to calculating the total fee")
 @RestController
 @Validated
+@Slf4j
 public class TollController {
 
     private final TollService tollService;
@@ -72,18 +74,21 @@ public class TollController {
             @NotEmpty(message = INVALID_DATES_ERROR_MESSAGE)
             @RequestParam(value = DATES_REQUEST_PARAM) String dates) {
 
-		return new ResponseEntity<>(
-                new TollResponse(
-                        tollService.calculateFee(
-                                VehicleTypeUtils.parse(vehicleType),
-                                new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
-                                        .stream()
-                                        .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))
-                                        .toList()
-                        )
-                ),
-                HttpStatus.OK
+        log.debug("Received GET {} request with vehicle type {} and dates {}", FEE_URL, vehicleType, dates);
+
+        TollResponse tollResponse = new TollResponse(
+                tollService.calculateFee(
+                        VehicleTypeUtils.parse(vehicleType),
+                        new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
+                                .stream()
+                                .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))
+                                .toList()
+                )
         );
+
+        log.debug("Finished GET {} request with vehicle type {} and dates {}", FEE_URL, vehicleType, dates);
+
+        return new ResponseEntity<>(tollResponse, HttpStatus.OK);
 
 	}
 

@@ -3,3 +3,7 @@ spring.application.name: Toll Fee Calculator
 springdoc:
   api-docs.path: /api-docs
   swagger-ui.tagsSorter: alpha
+
+logging.level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.assignment.toll_calculator: ${LOG_LEVEL:DEBUG}
