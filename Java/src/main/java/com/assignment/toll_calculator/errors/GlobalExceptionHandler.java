@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MissingServletRequestParameterException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> handleBadRequestException(Exception exception) {
         return composeResponse(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(Exception exception) {
+        return composeResponse(exception, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<ErrorResponse> composeResponse(Throwable throwable, HttpStatus status) {
