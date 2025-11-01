@@ -31,6 +31,29 @@ You can build the project without running the test cases with the following comm
 ./gradlew clean build -x test
 ```
 
+## 1.3. Spring Boot run
+
+I have turned the project into a Spring Boot application that can be started by the following command:
+```shell
+./gradlew bootRun
+```
+
+Once it is started, it is available on port 8080.
+There are two endpoints: one for basic info and the other one is for calculating the total fee based on parameters.
+
+To call the `/info` endpoint:
+```shell
+curl -XGET "http://localhost:8080/info"
+```
+
+To call the `/fee` endpoint with example request parameters:
+```shell
+curl -XGET "http://localhost:8080/fee?vehicle_type=car&dates=2013-06-03T11:00:00"
+```
+
+You can also have a look at the Swagger page at `http://localhost:8080/swagger-ui/index.html`.
+What is more, you can read more about the different endpoint options and execute them.
+
 # 2. Implemented modifications
 
 Let me summarize what modifications I have managed to do to the original code.
@@ -131,6 +154,20 @@ The test case has some columns:
 - t10 -> A flag indicating whether a date with time between 18:00 and 18:29 should be applied.
 - t11 -> A flag indicating whether a date with time after 18:30 should be applied.
 - expectedTollFee -> The expected total fee for that day with the applied times.
+
+## 2.8. Spring Boot
+
+I have managed to turn project into a REST application.
+This can be called by users with different input to do the calculation.
+
+For this change, I needed to perform the following changes:
+- Serialization config has been added so that the JSON response fields are shown with snake case instead of camel case.
+- Error handling has been updated and ApiException has been created.
+- Global exception handling has been introduced to support the different error handling corner cases.
+
+I have created two endpoints:
+- /fee -> to calculate the total based on the request parameters
+- /info -> to give back basic info about the application
 
 # 3. Modification suggestions
 

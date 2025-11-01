@@ -1,1 +1,3 @@
 spring.application.name: Toll Fee Calculator
+
+springdoc.api-docs.path: /api-docs

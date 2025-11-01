@@ -14,12 +14,20 @@ bootJar {
     setMainClass("com.assignment.toll_calculator.Application")
 }
 
+bootRun {
+    setMainClass("com.assignment.toll_calculator.Application")
+}
+
 dependencies {
-    implementation("tools.jackson.core:jackson-databind:3.0.1")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
-    implementation("commons-io:commons-io:2.20.0")
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation("tools.jackson.core:jackson-databind:3.0.1")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
+
+    implementation("commons-io:commons-io:2.20.0")
+
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation platform('org.junit:junit-bom:5.10.0')
