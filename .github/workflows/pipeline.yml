@@ -26,12 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    defaults:
+      run:
+        working-directory: ./Java/React/
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          cache-dependency-path: Java/React/package-lock.json
+          cache-dependency-path: ./Java/React/package-lock.json
           node-version: 22.x
           cache: 'npm'
       - name: Run Frontend tests
