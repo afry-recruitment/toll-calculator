@@ -1,4 +1,4 @@
-# 1. Summary
+# 1. Summary and Usage
 
 Let me summarize my achievements and how you can try them out.
 During my development, I used JDK version 25.
