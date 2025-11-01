@@ -20,11 +20,11 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 public class TollService {
 
     /**
-     * Calculate the total toll fee response for all dates on one day
+     * Calculate the total toll fee for all dates on one day
      *
      * @param vehicleType - the vehicle type
      * @param dates   - date and time of all passes on one day
-     * @return - the total toll response for that day
+     * @return - the total toll fee for that day
      */
     public Integer calculateFee(VehicleType vehicleType, List<Date> dates) {
         if (vehicleType == null) throw new ApiException(INVALID_VEHICLE_TYPE_ERROR_MESSAGE);
