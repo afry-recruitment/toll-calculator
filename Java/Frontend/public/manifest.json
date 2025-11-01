@@ -1,0 +1,15 @@
+{
+  "short_name": "Toll Fee App",
+  "name": "Toll Fee Calculator React App",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

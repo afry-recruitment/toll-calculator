@@ -2,7 +2,7 @@
 
 Let me summarize my achievements and how you can try them out.
 During my development, I used JDK version 25.
-For the commands below, please enter the `Java` folder of the repo. 
+For the commands below, please enter the `Java` or `React` folder of the repo. 
 
 ## 1.1. Build system
 
@@ -33,7 +33,11 @@ You can build the project without running the test cases with the following comm
 
 ## 1.3. Spring Boot
 
-I have turned the project into a Spring Boot application that can be started by the following command:
+I have turned the project into a Spring Boot application.
+
+For the commands below, please enter the `Java` folder of the repo. 
+
+It can be started by the following command:
 ```shell
 ./gradlew bootRun
 ```
@@ -62,6 +66,24 @@ curl -XGET "http://localhost:8080/actuator/health"
 
 You can also have a look at the Swagger page at `http://localhost:8080/swagger-ui/index.html`.
 What is more, you can read about the different endpoint options and execute them in this page.
+
+## 1.4. React
+
+I have managed to set up a frontend application as well that communicates with the API endpoints.
+
+For the commands below, please enter the `React` folder of the repo.
+
+Please, note that you need to run the Spring Boot application above to have successful interaction.
+
+To run the frontend application (it will be started on port 3000):
+```shell
+./gradlew clean start
+```
+
+To run the frontend application tests:
+```shell
+./gradlew clean test
+```
 
 # 2. Implemented modifications
 
@@ -179,6 +201,14 @@ There are some endpoints:
 - `/fee` -> for calculating the total fee
 - `/actutator` -> for getting the available actuators list (only health is enabled)
 - `/actuator/health` -> for getting to know if the application health is indicated as up or down
+
+## 2.9. React
+
+I have managed to set up a React app as well that interacts with the Spring Boot application.
+
+This frontend app has some basic CSS configuration to help the user understanding.
+
+It also contains test utilizing the React Testing Library.
 
 # 3. Modification suggestions
 

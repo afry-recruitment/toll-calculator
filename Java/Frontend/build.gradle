@@ -1,0 +1,23 @@
+plugins {
+    id("com.github.node-gradle.node") version "7.1.0"
+}
+
+apply plugin: 'base'
+
+tasks.register("bundle", NpmTask) {
+    inputs.dir(new File('src'))
+    outputs.dir(new File('dist'))
+    args = ['run', 'build']
+}
+
+tasks.register("start", NpmTask) {
+    args = ['start']
+}
+
+tasks.register("test", NpmTask) {
+    environment = [ CI: 'true' ]
+    args = ['test']
+}
+
+bundle.dependsOn(yarn)
+assemble.dependsOn(bundle)
