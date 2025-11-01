@@ -31,7 +31,7 @@ You can build the project without running the test cases with the following comm
 ./gradlew clean build -x test
 ```
 
-## 1.3. Spring Boot run
+## 1.3. Spring Boot
 
 I have turned the project into a Spring Boot application that can be started by the following command:
 ```shell
@@ -44,7 +44,6 @@ If you want to run it with INFO logging, use this command:
 ```
 
 Once it is started, it is available on port 8080.
-There are two endpoints: one for basic info and the other one is for calculating the total fee based on parameters.
 
 To call the `/info` endpoint:
 ```shell
@@ -54,6 +53,11 @@ curl -XGET "http://localhost:8080/info"
 To call the `/fee` endpoint with example request parameters:
 ```shell
 curl -XGET "http://localhost:8080/fee?vehicle_type=car&dates=2013-06-03T11:00:00"
+```
+
+To call the `/actuator/health` endpoint:
+```shell
+curl -XGET "http://localhost:8080/actuator/health"
 ```
 
 You can also have a look at the Swagger page at `http://localhost:8080/swagger-ui/index.html`.
@@ -170,9 +174,11 @@ For this change, I needed to perform the following changes:
 - Error handling has been updated and ApiException has been created.
 - Global exception handling has been introduced to support the different error handling corner cases.
 
-I have created two endpoints:
-- /fee -> to calculate the total fee based on the request parameters
-- /info -> to give back basic info about the application
+There are some endpoints:
+- `/info` -> for basic info about the application
+- `/fee` -> for calculating the total fee
+- `/actutator` -> for getting the available actuators list (only health is enabled)
+- `/actuator/health` -> for getting to know if the application health is indicated as up or down
 
 # 3. Modification suggestions
 

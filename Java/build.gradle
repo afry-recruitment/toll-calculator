@@ -21,6 +21,7 @@ bootRun {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation("tools.jackson.core:jackson-databind:3.0.1")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
