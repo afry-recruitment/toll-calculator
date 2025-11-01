@@ -7,12 +7,10 @@ on:
     branches: [ "master" ]
 
 jobs:
-  check:
-
+  backend:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -22,9 +20,21 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-
-      - name: Run Backend tests
-        run: cd Java && chmod +x gradlew && ./gradlew clean test && cd ..
-
+      - name: Run tests
+        run: cd Java && chmod +x gradlew && ./gradlew clean test
+  frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        node-version: [ 22.x ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - name: Run Frontend tests
-        run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean test && cd ..
+        run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean test
