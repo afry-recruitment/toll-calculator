@@ -1,9 +1,15 @@
 package com.assignment.toll_calculator.controllers;
 
+import com.assignment.toll_calculator.models.response.ErrorResponse;
 import com.assignment.toll_calculator.models.response.TollResponse;
 import com.assignment.toll_calculator.services.TollService;
 import com.assignment.toll_calculator.utils.DateUtils;
 import com.assignment.toll_calculator.utils.VehicleTypeUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +28,7 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 /**
  * This is the rest controller class where the application endpoints regarding the toll fee calculation are defined.
  */
+@Tag(name = "calculation", description = "All endpoints related to calculating the total fee")
 @RestController
 @Validated
 public class TollController {
@@ -33,6 +40,31 @@ public class TollController {
         this.tollService = tollService;
     }
 
+    @Operation(
+            summary = "Get total fee",
+            description = "By this endpoint, you can calculate the total fee based on the different parameters."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Calculated total fee",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TollResponse.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Bad request occurred",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "Internal server error occurred",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class)
+            )
+    )
 	@GetMapping(value = FEE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TollResponse> calculateFee(
             @NotEmpty(message = INVALID_VEHICLE_TYPE_ERROR_MESSAGE)

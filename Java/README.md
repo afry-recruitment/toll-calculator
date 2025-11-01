@@ -52,7 +52,7 @@ curl -XGET "http://localhost:8080/fee?vehicle_type=car&dates=2013-06-03T11:00:00
 ```
 
 You can also have a look at the Swagger page at `http://localhost:8080/swagger-ui/index.html`.
-What is more, you can read more about the different endpoint options and execute them.
+What is more, you can read about the different endpoint options and execute them in this page.
 
 # 2. Implemented modifications
 
@@ -166,7 +166,7 @@ For this change, I needed to perform the following changes:
 - Global exception handling has been introduced to support the different error handling corner cases.
 
 I have created two endpoints:
-- /fee -> to calculate the total based on the request parameters
+- /fee -> to calculate the total fee based on the request parameters
 - /info -> to give back basic info about the application
 
 # 3. Modification suggestions
