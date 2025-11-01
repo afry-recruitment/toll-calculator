@@ -78,9 +78,11 @@ I thought about two other similar ways:
    -> However, I concluded it might be important in a later stage to use the specific type.
 
 My reasons for choosing the enum model over interface:
-- The specific vehicle type list does not change, it is constant list that we do not edit dynamically.
-- No logic or complex functions are needed inside the model, only the flag if the vehicle type is toll-free or not.
-- Bonus: it is so much simpler and nicer to define one file than one interface and all the classes.
+1. The specific vehicle type list does not need to change, it is constant list for now that we do not edit dynamically.
+2. No logic or complex functions are needed inside the model, only the flag if the vehicle type is toll-free or not.
+3. Bonus: it is so much simpler and nicer to define one file than one interface and all the classes.
+If 1. or 2. would be different then I would have chosen the interface implementation.
+Or even better: a database where an administrator could dynamically insert the different vehicle types and vehicles.
 
 ## 2.4. Holidays <a id="2.4"/>
 
