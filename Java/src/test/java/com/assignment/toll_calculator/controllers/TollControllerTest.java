@@ -182,7 +182,7 @@ public class TollControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fee").value(18));
+                .andExpect(jsonPath("$.total_fee").value(18));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class TollControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fee").value(0));
+                .andExpect(jsonPath("$.total_fee").value(0));
     }
 
 }

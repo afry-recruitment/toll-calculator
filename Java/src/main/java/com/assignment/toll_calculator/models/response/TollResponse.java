@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 public class TollResponse {
 
-    private Integer fee;
+    private Integer totalFee;
 
 }
