@@ -19,7 +19,7 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 /**
  * This is the rest controller class where the endpoints giving info about the application.
  */
-@Tag(name = "application", description = "All endpoints related to the application itself")
+@Tag(name = "Application", description = "Basic application info")
 @RestController
 @Slf4j
 public class InfoController {

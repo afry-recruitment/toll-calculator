@@ -29,7 +29,7 @@ import static com.assignment.toll_calculator.utils.ConstantUtils.*;
 /**
  * This is the rest controller class where the application endpoints regarding the toll fee calculation are defined.
  */
-@Tag(name = "calculation", description = "All endpoints related to calculating the total fee")
+@Tag(name = "Toll", description = "Toll operations")
 @RestController
 @Validated
 @Slf4j
