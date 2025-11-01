@@ -3,10 +3,10 @@ package com.assignment.toll_calculator.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -27,8 +27,8 @@ public class FileUtils {
         String data;
 
         try {
-            FileInputStream fis = new FileInputStream(path);
-            data = IOUtils.toString(fis, StandardCharsets.UTF_8);
+            ClassPathResource resource = new ClassPathResource(path);
+            data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
