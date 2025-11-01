@@ -4,10 +4,6 @@ plugins {
 
 apply plugin: 'base'
 
-npmSetup {
-    setDownload(true)
-}
-
 tasks.register("bundle", NpmTask) {
     inputs.dir(new File('src'))
     outputs.dir(new File('dist'))
