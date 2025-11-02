@@ -1,6 +1,7 @@
-import { CloseOutlined } from '@mui/icons-material';
-import { CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+import { AddCircleRounded, CloseOutlined, DeleteOutlined } from '@mui/icons-material';
+import { CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar, Tooltip } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { fetchVehicleTypes } from '../../utilities/api';
 
@@ -9,7 +10,7 @@ function AppContent() {
     const [availableVehicleTypes, setAvailableVehicleTypes] = useState([]);
     const [selectedVehicleType, setSelectedVehicleType] = useState('');
     const [day, setDay] = useState(null);
-    const [times, setTimes] = useState([]);
+    const [selectedTimes, setSelectedTimes] = useState([dayjs('2022-04-17T15:30')]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -18,7 +19,6 @@ function AppContent() {
             .then((response) => {
                 setAvailableVehicleTypes(response.data);
                 setLoadingVehicleTypes(false);
-                setError('itt')
             })
             .catch((err) => {
                 setError('Cannot load vehicle types due to: ' + err.message);
@@ -26,15 +26,22 @@ function AppContent() {
             });
     }, []);
 
-    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'day', day);
+    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'day', day, 'selectedTimes', selectedTimes);
 
     const onVehicleTypeSelected = (event) => {
         setSelectedVehicleType(event.target.value);
     }
 
-    const onAddTime = (selectedTime) => {
-        console.log('itt', selectedTime)
-        //setTimes(selectedTime);
+    const onTimeChanged = (selectedTime, changeIndex) => {
+        setSelectedTimes(selectedTimes.map((time, timeIndex) => timeIndex === changeIndex ? selectedTime : time));
+    }
+
+    const onAddTime = () => {
+        setSelectedTimes([...selectedTimes, null]);
+    }
+
+    const onRemoveTime = (removeIndex) => {
+        setSelectedTimes(selectedTimes.filter((time, timeIndex) => timeIndex !== removeIndex));
     }
 
     return (
@@ -63,30 +70,56 @@ function AppContent() {
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}>
-                    <FormControl style={{ minWidth: '250px' }}>
-                        <InputLabel id='vehicle-type-selection-label'>Vehicle Type Selection</InputLabel>
-                        <Select
-                            labelId='vehicle-type-selection-label'
-                            id='vehicle-type-selection-select'
-                            value={selectedVehicleType}
-                            label='Vehicle Type Selection'
-                            onChange={onVehicleTypeSelected}
-                            autoWidth
-                        >
-                            <MenuItem value=''><em>None</em></MenuItem>
-                            {availableVehicleTypes?.map(vehicleType => <MenuItem value={vehicleType}>{vehicleType}</MenuItem>)}
-                        </Select>
-                    </FormControl>
-                    <DatePicker
-                        label='Day Selection'
-                        value={day}
-                        onChange={(selectedDay) => setDay(selectedDay)}
-                    />
-                    <div>
-                        <TimePicker
-                            label='Time Selection'
-                            onChange={onAddTime}
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 0px', borderRight: '1px solid lightgrey' }}>
+                        <FormControl style={{ minWidth: '250px' }}>
+                            <InputLabel id='vehicle-type-selection-label'>Vehicle Type Selection</InputLabel>
+                            <Select
+                                labelId='vehicle-type-selection-label'
+                                id='vehicle-type-selection-select'
+                                value={selectedVehicleType}
+                                label='Vehicle Type Selection'
+                                onChange={onVehicleTypeSelected}
+                                autoWidth
+                            >
+                                <MenuItem value=''><em>None</em></MenuItem>
+                                {availableVehicleTypes?.map(vehicleType => <MenuItem value={vehicleType}>{vehicleType}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 0px', borderLeft: '1px solid lightgrey' }}>
+                        <DatePicker
+                            label='Day Selection'
+                            value={day}
+                            onChange={(selectedDay) => setDay(selectedDay)}
                         />
+                    </div>
+                </div>
+                <div style={{ paddingTop: '20px', borderTop: '2px solid lightgrey' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div style={{ flex: 1 }}>Pick one or more times</div>
+                        <Tooltip title={'Add one more time'}>
+                            <IconButton onClick={onAddTime}>
+                                <AddCircleRounded />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
+                        {selectedTimes.map((time, timeIndex) => 
+                            <div key={timeIndex} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '20px' }}>
+                                <TimePicker
+                                    label='Time Selection'
+                                    value={time}
+                                    onChange={(selectedTime) => onTimeChanged(selectedTime, timeIndex)}
+                                />
+                                {selectedTimes.length != 1 &&
+                                    <Tooltip title={'Remove this time'}>
+                                        <IconButton onClick={() => onRemoveTime(timeIndex)}>
+                                            <DeleteOutlined />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
