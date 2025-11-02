@@ -31,22 +31,27 @@ function AppContent() {
 
     const onVehicleTypeSelected = (event) => {
         setSelectedVehicleType(event.target.value);
+        setTotalFee(null);
     }
 
     const onDayChanged = (selectedDay) => {
         setSelectedDay(selectedDay);
+        setTotalFee(null);
     }
 
     const onTimeChanged = (selectedTime, changeIndex) => {
         setSelectedTimes(selectedTimes.map((time, timeIndex) => timeIndex === changeIndex ? selectedTime : time));
+        setTotalFee(null);
     }
 
     const onTimeAdded = () => {
         setSelectedTimes([...selectedTimes, null]);
+        setTotalFee(null);
     }
 
     const onTimeRemoved = (removeIndex) => {
         setSelectedTimes(selectedTimes.filter((time, timeIndex) => timeIndex !== removeIndex));
+        setTotalFee(null);
     }
 
     const isTotalFeeCalculationDisabled = () => {
