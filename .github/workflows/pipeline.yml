@@ -59,9 +59,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v1
-        with:
-          version: latest
+        run: sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
       - name: Build Backend
         run: cd Java && chmod +x gradlew && ./gradlew clean build
       - name: Install Frontend npm dependencies
