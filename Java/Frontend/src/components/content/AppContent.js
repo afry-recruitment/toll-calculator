@@ -49,6 +49,15 @@ function AppContent() {
         setSelectedTimes(selectedTimes.filter((time, timeIndex) => timeIndex !== removeIndex));
     }
 
+    const isTotalFeeCalculationDisabled = () => {
+        return selectedVehicleType == null 
+            || selectedDay == null 
+            || selectedTimes == null 
+            || selectedTimes.length === 0 || selectedTimes.filter(time => time === null).length > 0;
+    }
+
+    const totalFeeCalculationDisabled = isTotalFeeCalculationDisabled();
+
     return (
         <div style={{ margin: '20px' }}>
             <div
@@ -134,7 +143,14 @@ function AppContent() {
                 </div>
             </div>
             <div style={{margin: '20px 0px', textAlign: 'center'}}>
-                <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained">Calculate Total Fee</Button>
+                {totalFeeCalculationDisabled &&
+                    <Tooltip title={"Calculation is disabled until you select a vehicle type, a day and at least one time!"}>
+                        <Button style={{ minWidth: '300px', pointerEvents: 'auto' }} variant="contained" disabled={true}>Calculate Total Fee</Button>
+                    </Tooltip>
+                }
+                {!totalFeeCalculationDisabled &&
+                    <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained">Calculate Total Fee</Button>
+                }
             </div>
             {totalFee &&
                 <div style={{margin: '20px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
