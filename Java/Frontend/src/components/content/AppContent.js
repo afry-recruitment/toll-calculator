@@ -22,7 +22,11 @@ function AppContent() {
                 setLoadingVehicleTypes(false);
             })
             .catch((err) => {
-                setError('Cannot load vehicle types due to: ' + err.message);
+                setError(
+                    'Cannot load vehicle types due to: ' + 
+                    err.message + 
+                    '. Are you sure that the backend application is running on port 8080?'
+                );
                 setLoadingVehicleTypes(false);
             });
     }, []);
@@ -53,10 +57,10 @@ function AppContent() {
     }
 
     const isTotalFeeCalculationDisabled = () => {
-        return selectedVehicleType == null || selectedVehicleType === ''
-            || selectedDay == null 
-            || selectedTimes == null 
-            || selectedTimes.length === 0 || selectedTimes.filter(time => time === null).length > 0;
+        return selectedVehicleType == null || selectedVehicleType === '' || 
+            selectedDay == null || 
+            selectedTimes == null || 
+            selectedTimes.length === 0 || selectedTimes.filter(time => time === null).length > 0;
     }
 
     const totalFeeCalculationDisabled = isTotalFeeCalculationDisabled();
