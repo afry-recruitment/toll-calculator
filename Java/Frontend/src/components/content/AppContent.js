@@ -88,7 +88,6 @@ function AppContent() {
                                     onChange={onVehicleTypeSelected}
                                     autoWidth
                                 >
-                                    <MenuItem value=''><em>None</em></MenuItem>
                                     {availableVehicleTypes?.map(vehicleType => <MenuItem value={vehicleType}>{vehicleType}</MenuItem>)}
                                 </Select>
                             </FormControl>
