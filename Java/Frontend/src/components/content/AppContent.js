@@ -1,5 +1,5 @@
 import { AddCircleRounded, CloseOutlined, DeleteOutlined } from '@mui/icons-material';
-import { CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar, Tooltip } from '@mui/material';
+import { Button, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar, Tooltip } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ function AppContent() {
     const [availableVehicleTypes, setAvailableVehicleTypes] = useState([]);
     const [selectedVehicleType, setSelectedVehicleType] = useState('');
     const [day, setDay] = useState(null);
-    const [selectedTimes, setSelectedTimes] = useState([dayjs('2022-04-17T15:30')]);
+    const [selectedTimes, setSelectedTimes] = useState([null]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -51,7 +51,7 @@ function AppContent() {
                     textAlign: 'center', fontSize: '80px',
                     backgroundColor: 'orangered',
                     borderRadius: '40px', color: 'white',
-                    margin: '10px 0px'
+                    margin: '20px 0px'
                 }}
             >
                 Toll Fee Calculator
@@ -66,7 +66,7 @@ function AppContent() {
                 style={{
                     backgroundColor: 'lightgoldenrodyellow',
                     borderRadius: '40px',
-                    margin: '10px 0px', padding: '20px'
+                    margin: '20px 0px', padding: '20px'
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}>
@@ -128,6 +128,9 @@ function AppContent() {
                         )}
                     </div>
                 </div>
+            </div>
+            <div style={{margin: '20px 0px', textAlign: 'center'}}>
+                <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained">Calculate Total Fee</Button>
             </div>
             {error && 
                 <Snackbar
