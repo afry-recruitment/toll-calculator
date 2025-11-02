@@ -17,7 +17,9 @@
 &emsp;[2.13. Docker and E2E tests](#2.13)<br>
 [3. Modification suggestions](#3)<br>
 &emsp;[3.1. Holidays](#3.1)<br>
-&emsp;[3.2. More React tests](#3.2)<br>
+&emsp;[3.2. More React and Playwright tests](#3.2)<br>
+&emsp;[3.3. Security](#3.3)<br>
+&emsp;[3.4. Database](#3.4)<br>
 
 # 1. Summary <a id="1"></a>
 
@@ -302,7 +304,25 @@ We can do it by either manual action or requesting an API.
 
 I will keep the year 2013 holidays in the code so that I could write tests for this scenario as well.
 
-## 3.2. More React tests <a id="3.2"/>
+## 3.2. More React and Playwright tests <a id="3.2"/>
 
-It is always good to have more and more tests. I added a couple of tests with React Testing Library.
-I did not have enough time to add more because I wanted to focus on automated testing as well.
+It is always good to have as many tests as possible to cover the corner cases of an application. 
+
+I have added some tests with React Testing Library. I have done the same with Playwright.
+
+Unfortunately, I didn't have enough time to add more tests because I focused on having e2e verification in the pipeline.
+
+If I had had more time, I would have added the tests where the total toll fee gets calculated via user interaction.
+
+## 3.3. Security <a id="3.3"/>
+
+I think it is important to have security when it comes to an ideal design of a backend application.
+If I had had more time, I would have added a header based eg Bearer token authentication.
+
+## 3.4. Database <a id="3.4"/>
+
+I mentioned this when I wrote about the vehicle modelling that it could be nice with a database.
+There could be tables for vehicle types and vehicles as well with better vehicle identification eg license plate.
+This could be a base for a more dynamic solution:
+An administrator could insert all the vehicle types in that database, and then the users could add their own vehicles.
+And then they could get their total fee for a period in a more customized way.
