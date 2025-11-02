@@ -5,10 +5,6 @@ const api = axios.create({
     timeout: 1000,
 });
 
-export const fetchVehicleTypes = async () => {
-    const response = await api.get("/vehicle-types");
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-    return response.json();
+export const fetchVehicleTypes = () => {
+    return api.get("/vehicle-types");
 };
