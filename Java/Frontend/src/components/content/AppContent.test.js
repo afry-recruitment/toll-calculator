@@ -9,7 +9,7 @@ jest.mock('../../utilities/api');
 
 test('renders title', async () => {
   fetchVehicleTypes.mockResolvedValue(["car"]);
-  await act(async () =>{
+  await act(async () => {
     render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <AppContent />
