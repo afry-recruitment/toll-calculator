@@ -1,7 +1,7 @@
 import { CloseOutlined } from '@mui/icons-material';
 import { CircularProgress, IconButton, Snackbar } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
-import React, { useEffect, useState } from 'react';
+import React, { act, useEffect, useState } from 'react';
 import { fetchVehicleTypes } from '../../utilities/api';
 
 function AppContent() {
@@ -15,13 +15,17 @@ function AppContent() {
         setLoadingVehicleTypes(true);
         fetchVehicleTypes()
             .then((response) => {
-                setVehicleTypes(response.data);
-                setLoadingVehicleTypes(false);
-                setError("itt")
+                act(() => {
+                    setVehicleTypes(response.data);
+                    setLoadingVehicleTypes(false);
+                    setError("itt")
+                })
             })
             .catch((err) => {
-                setError("Cannot load vehicle types due to: " + err.message);
-                setLoadingVehicleTypes(false);
+                act(() => {
+                    setError("Cannot load vehicle types due to: " + err.message);
+                    setLoadingVehicleTypes(false);
+                })
             });
     }, []);
 
