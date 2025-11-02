@@ -50,7 +50,7 @@ function AppContent() {
     }
 
     const isTotalFeeCalculationDisabled = () => {
-        return selectedVehicleType == null 
+        return selectedVehicleType == null || selectedVehicleType === ''
             || selectedDay == null 
             || selectedTimes == null 
             || selectedTimes.length === 0 || selectedTimes.filter(time => time === null).length > 0;
