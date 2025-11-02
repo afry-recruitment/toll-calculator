@@ -33,6 +33,10 @@ function AppContent() {
         setSelectedVehicleType(event.target.value);
     }
 
+    const onDayChanged = (selectedDay) => {
+        setDay(selectedDay);
+    }
+
     const onTimeChanged = (selectedTime, changeIndex) => {
         setSelectedTimes(selectedTimes.map((time, timeIndex) => timeIndex === changeIndex ? selectedTime : time));
     }
@@ -96,7 +100,7 @@ function AppContent() {
                             <DatePicker
                                 label='Day Selection'
                                 value={day}
-                                onChange={(selectedDay) => setDay(selectedDay)}
+                                onChange={(selectedDay) => onDayChanged(selectedDay)}
                             />
                         </div>
                     </div>
