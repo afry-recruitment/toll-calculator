@@ -172,6 +172,12 @@ function AppContent() {
                     <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained" onClick={() => onFeeCalculationRequested()}>Calculate Total Fee</Button>
                 }
             </div>
+            {loadingTotalFee &&
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CircularProgress />
+                    <div style={{ marginLeft: '10px' }}>Please, wait until the total fee is calculated!</div>
+                </div>
+            }
             {totalFee != null &&
                 <div style={{margin: '20px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                     <div 
@@ -183,12 +189,6 @@ function AppContent() {
                         <div style={{ borderRight: '3px solid', borderRadius: '20px', padding: '20px', backgroundColor: 'white' }}>Total Fee</div>
                         <div style={{ flex: 1, textAlign: 'center', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>{totalFee}</div>
                     </div>
-                </div>
-            }
-            {loadingTotalFee &&
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <CircularProgress />
-                    <div style={{ marginLeft: '10px' }}>Please, wait until the total fee is calculated!</div>
                 </div>
             }
             {error != null && 
