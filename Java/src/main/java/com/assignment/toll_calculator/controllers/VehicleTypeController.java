@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.assignment.toll_calculator.utils.ConstantUtils.*;
@@ -41,7 +43,10 @@ public class VehicleTypeController {
     public ResponseEntity<List<String>> fetchVehicleTypes() {
         log.debug("Received GET {} request", VEHICLE_TYPES_URL);
 
-        List<String> vehicleTypes = Arrays.stream(VehicleType.values()).map(VehicleType::getType).toList();
+        List<String> vehicleTypes = new ArrayList<>(
+                Arrays.stream(VehicleType.values()).map(VehicleType::getType).toList()
+        );
+        vehicleTypes.sort(String::compareTo);
 
         log.debug("Finished GET {} request", VEHICLE_TYPES_URL);
 
