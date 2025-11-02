@@ -150,7 +150,7 @@ function AppContent() {
                                     value={time}
                                     onChange={(value) => onTimeChanged(value, timeIndex)}
                                 />
-                                {selectedTimes.length != 1 &&
+                                {selectedTimes.length !== 1 &&
                                     <Tooltip title={'Remove this time'}>
                                         <IconButton onClick={() => onTimeRemoved(timeIndex)}>
                                             <DeleteOutlined />
@@ -180,7 +180,7 @@ function AppContent() {
                     <div style={{ marginLeft: '10px' }}>Please, wait until the total fee is calculated!</div>
                 </div>
             }
-            {totalFee != null &&
+            {totalFee !== null &&
                 <div style={{margin: '20px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                     <div 
                         style={{ 
@@ -193,10 +193,10 @@ function AppContent() {
                     </div>
                 </div>
             }
-            {error != null && 
+            {error !== null && 
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                    open={error != null}
+                    open={error !== null}
                     message={error}
                     action={
                         <IconButton style={{ color: 'white'}} size='small' onClick={() => setError(null)}>
