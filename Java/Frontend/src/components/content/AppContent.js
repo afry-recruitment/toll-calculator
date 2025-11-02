@@ -163,7 +163,9 @@ function AppContent() {
             <div style={{margin: '20px 0px', textAlign: 'center'}}>
                 {totalFeeCalculationDisabled &&
                     <Tooltip title={"Calculation is disabled until you select a vehicle type, a day and at least one time!"}>
-                        <Button style={{ minWidth: '300px', pointerEvents: 'auto' }} variant="contained" disabled={true}>Calculate Total Fee</Button>
+                        <span>
+                            <Button style={{ minWidth: '300px' }} variant="contained" disabled={true}>Calculate Total Fee</Button>
+                        </span>
                     </Tooltip>
                 }
                 {!totalFeeCalculationDisabled &&
