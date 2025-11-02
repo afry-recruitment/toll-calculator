@@ -20,8 +20,8 @@
 
 # 1. Summary <a id="1"></a>
 
-This the Toll Fee Calculator application developed by Laszlo Karsai as an coding assignment.
-I have been provided a base code, and then I could modify it as how I see fit.
+This is the Toll Fee Calculator application developed by Laszlo Karsai as a coding assignment.
+I have been provided a base code, and then I could modify it as I saw fit.
 
 I have managed to fix some algorithmic mistakes and created a well-tested web application from it.
 I have also listed what possible future changes I would do it if I had more time.
