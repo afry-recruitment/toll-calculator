@@ -9,7 +9,7 @@
 &emsp;[2.5. Logic for one date toll fee calculation](#2.5)<br>
 &emsp;[2.6. Logic for total toll fee calculation](#2.6)<br>
 &emsp;[2.7. Tests and Build](#2.7)<br>
-&emsp;[2.8. Parameterized tests for with different vehicle types, days and time periods](#2.8)<br>
+&emsp;[2.8. Parameterized tests with different vehicle types, days and time periods](#2.8)<br>
 &emsp;[2.9. Spring Boot - Backend application](#2.9)<br>
 &emsp;[2.10. Logging](#2.10)<br>
 &emsp;[2.11. React - Frontend application](#2.11)<br>
@@ -23,14 +23,14 @@
 This is the Toll Fee Calculator application developed by Laszlo Karsai as a coding assignment.
 I have been provided a base code, and then I could modify it as I saw fit.
 
-I have managed to fix some algorithmic mistakes and created a well-tested web application from it.
-I have also listed what possible future changes I would do it if I had more time.
+I have fixed some algorithmic mistakes and created a well-tested web application from it.
+I have also listed what possible future changes I would do if I had more time.
 
 For more information about my changes and ideas, please read below.
 
 # 2. Implemented modifications <a id="2"/>
 
-Let me summarize what modifications I have managed to do to the original code and how you can try them out.
+Let me summarize what modifications I have done to the original code and how you can try them out.
 Please, note that these changes are in chronological order.
 During my development, I used JDK version 25.
 
@@ -48,7 +48,7 @@ Why do we need a build system?
 
 - To run test cases to check if the code works correctly
 - To start an application
-- To build tha application for deployment
+- To build the application for deployment
 - etc
 
 For the command below, please enter the `Java` or `Java/Frontend` folder of the repo.
@@ -138,7 +138,7 @@ You can build the project without running the test cases with the following comm
 ./gradlew clean build -x test
 ```
 
-## 2.8. Parameterized tests for with different vehicle types, days and time periods <a id="2.8"/>
+## 2.8. Parameterized tests with different vehicle types, days and time periods <a id="2.8"/>
 
 I have created a test case to run multiple tests trying to cover most of the different scenarios.
 Its name is `givenDifferentVehicleTypesAndDaysAndTimePeriods_whenCalculation_thenSuccess`.
@@ -163,7 +163,7 @@ The test case has some columns:
 
 ## 2.9. Spring Boot - Backend application <a id="2.9"/>
 
-I have managed to turn project into a Spring Boot application.
+I have turned project into a Spring Boot application.
 This can be called by users with different input to do the calculation.
 
 For this change, I needed to perform the following changes:
@@ -171,7 +171,7 @@ For this change, I needed to perform the following changes:
 - Error handling has been updated and ApiException has been created.
 - Global exception handling has been introduced to support the different error handling corner cases.
 
-There are some endpoints:
+Here are the endpoints of the application:
 - `/info` -> for basic info about the application
 - `/fee` -> for calculating the total fee
 - `/vehicle-types` -> for fetching the different vehicle types
@@ -208,7 +208,7 @@ curl -XGET "http://localhost:8080/actuator/health"
 ```
 
 You can also have a look at the Swagger page at `http://localhost:8080/swagger-ui/index.html`.
-What is more, you can read about the different endpoint options and execute them in this page.
+Moreover, you can read about the different endpoint options and execute them in this page.
 
 ## 2.10. Logging <a id="2.10"/>
 
@@ -225,9 +225,9 @@ If you want to run it with INFO logging, use this command:
 
 ## 2.11. React - Frontend application <a id="2.11"/>
 
-I have managed to set up a React app as well that interacts with the Spring Boot application.
+I have set up a React app as well that interacts with the Spring Boot application.
 
-This frontend app has some basic CSS configuration to help the user understanding.
+This frontend app has some CSS configuration to support user experience.
 
 It also contains tests utilizing the React Testing Library.
 
@@ -275,8 +275,9 @@ You can also run the tests in UI mode for debugging purposes:
 cd Java/e2e && npx playwright test --ui
 ```
 
-Please, note the `projects` setting in Java/e2e/playwright.config.js. That means which browsers the tests will be run.
-By default, there are 3: chromium, firefox and webkit. And if there are 3 test definitions, then there will be 9 tests.
+Please, note the `projects` setting in Java/e2e/playwright.config.js. That specifies which browsers are used to test.
+By default, there are 3: chromium, firefox and webkit. 
+For example, if there are 2 test definitions, then there will be 6 tests run.
 
 Playwright creates a report to you with details about the tests. This is available by `npx playwright show-report`.
 
@@ -286,12 +287,11 @@ Let me summarize the modifications I would like to suggest.
 
 ## 3.1. Holidays <a id="3.1"/>
 
-I would suggest not to have the holiday as a strong requirement.
-
-Reason: it would take a lot of time (basically forever) to collect all the holidays from all years. 
+It would take a lot of time (basically forever) to collect all the holidays from all years. 
 The holiday dates can differ between countries as well.
 
 I think we would need to maintain a static date list of holidays in each year to be able to support this requirement.
+We can do it by either manual action or requesting an API.
 
 I will keep the year 2013 holidays in the code so that I could write tests for this scenario as well.
 
