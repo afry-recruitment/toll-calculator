@@ -124,7 +124,7 @@ For the commands below, please enter the `Java` folder of the repo.
 
 You can run the test cases with the following command:
 ```shell
-./gradlew clean test
+./gradlew test
 ```
 
 You can run the test cases and build the project with the following command:
@@ -237,13 +237,13 @@ For the commands below, please enter the `Java/Frontend` folder of the repo.
 
 To run the frontend application:
 ```shell
-./gradlew clean start
+./gradlew start
 ```
 It will be available on port 3000, and it expects the Spring Boot application running on port 8080.
 
 To run the frontend application tests:
 ```shell
-./gradlew clean test
+./gradlew test
 ```
 For the tests, the API calls are mocked so the Spring Boot application is not needed to run!
 
