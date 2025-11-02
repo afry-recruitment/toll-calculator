@@ -265,4 +265,4 @@ I will keep the year 2013 holidays in the code so that I could write tests for t
 ## 3.2. More React tests <a id="3.2"/>
 
 It is always good to have more and more tests. I added a couple of tests with React Testing Library.
-I did not have to add more because I wanted to focus on automated testing as well.
+I did not have enough time to add more because I wanted to focus on automated testing as well.
