@@ -8,3 +8,7 @@ const api = axios.create({
 export const fetchVehicleTypes = () => {
     return api.get("/vehicle-types");
 };
+
+export const fetchTotalFee = (vehicleType, dates) => {
+    return api.get("/fee?vehicle_type=" + vehicleType + "&dates=" + dates);
+};

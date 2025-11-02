@@ -2,7 +2,7 @@ import { AddCircleRounded, CloseOutlined, DeleteOutlined } from '@mui/icons-mate
 import { Button, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar, Tooltip } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import React, { useEffect, useState } from 'react';
-import { fetchVehicleTypes } from '../../utilities/api';
+import { fetchTotalFee, fetchVehicleTypes } from '../../utilities/api';
 
 function AppContent() {
     const [loadingVehicleTypes, setLoadingVehicleTypes] = useState(false);
@@ -27,7 +27,7 @@ function AppContent() {
             });
     }, []);
 
-    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'selectedDay', selectedDay, 'selectedTimes', selectedTimes);
+    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'selectedDay', selectedDay?.format('YYYY-MM-DD'), 'selectedTimes', selectedTimes?.map(time => time?.format('HH:mm:ss')));
 
     const onVehicleTypeSelected = (event) => {
         setSelectedVehicleType(event.target.value);
@@ -57,6 +57,19 @@ function AppContent() {
     }
 
     const totalFeeCalculationDisabled = isTotalFeeCalculationDisabled();
+
+    const onFeeCalculationRequested = () => {
+        setLoadingTotalFee(true);
+        fetchTotalFee(selectedVehicleType, selectedTimes.map(time => selectedDay.format('YYYY-MM-DD') + "T" + time.format('HH:mm:ss')).join(','))
+            .then((response) => {
+                setTotalFee(response.data?.total);
+                setLoadingTotalFee(false);
+            })
+            .catch((err) => {
+                setError('Cannot calculate total fee due to: ' + err.message);
+                setLoadingTotalFee(false);
+            });
+    }
 
     return (
         <div style={{ margin: '20px' }}>
@@ -149,7 +162,7 @@ function AppContent() {
                     </Tooltip>
                 }
                 {!totalFeeCalculationDisabled &&
-                    <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained">Calculate Total Fee</Button>
+                    <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained" onClick={() => onFeeCalculationRequested()}>Calculate Total Fee</Button>
                 }
             </div>
             {totalFee &&
