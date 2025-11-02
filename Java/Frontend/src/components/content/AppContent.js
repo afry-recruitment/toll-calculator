@@ -27,8 +27,6 @@ function AppContent() {
             });
     }, []);
 
-    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'selectedDay', selectedDay?.format('YYYY-MM-DD'), 'selectedTimes', selectedTimes?.map(time => time?.format('HH:mm:ss')));
-
     const onVehicleTypeSelected = (event) => {
         setSelectedVehicleType(event.target.value);
         setTotalFee(null);
