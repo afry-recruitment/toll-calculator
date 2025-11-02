@@ -41,11 +41,11 @@ function AppContent() {
         setSelectedTimes(selectedTimes.map((time, timeIndex) => timeIndex === changeIndex ? selectedTime : time));
     }
 
-    const onAddTime = () => {
+    const onTimeAdded = () => {
         setSelectedTimes([...selectedTimes, null]);
     }
 
-    const onRemoveTime = (removeIndex) => {
+    const onTimeRemoved = (removeIndex) => {
         setSelectedTimes(selectedTimes.filter((time, timeIndex) => timeIndex !== removeIndex));
     }
 
@@ -117,7 +117,7 @@ function AppContent() {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ flex: 1 }}>Pick one or more times</div>
                         <Tooltip title={'Add one more time'}>
-                            <IconButton onClick={onAddTime}>
+                            <IconButton onClick={onTimeAdded}>
                                 <AddCircleRounded />
                             </IconButton>
                         </Tooltip>
@@ -132,7 +132,7 @@ function AppContent() {
                                 />
                                 {selectedTimes.length != 1 &&
                                     <Tooltip title={'Remove this time'}>
-                                        <IconButton onClick={() => onRemoveTime(timeIndex)}>
+                                        <IconButton onClick={() => onTimeRemoved(timeIndex)}>
                                             <DeleteOutlined />
                                         </IconButton>
                                     </Tooltip>
