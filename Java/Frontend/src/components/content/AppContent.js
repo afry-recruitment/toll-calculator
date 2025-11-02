@@ -1,7 +1,6 @@
 import { AddCircleRounded, CloseOutlined, DeleteOutlined } from '@mui/icons-material';
 import { Button, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, Snackbar, Tooltip } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { fetchVehicleTypes } from '../../utilities/api';
 
@@ -11,6 +10,8 @@ function AppContent() {
     const [selectedVehicleType, setSelectedVehicleType] = useState('');
     const [day, setDay] = useState(null);
     const [selectedTimes, setSelectedTimes] = useState([null]);
+    const [loadingTotalFee, setLoadingTotalFee] = useState(false);
+    const [totalFee, setTotalFee] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -132,6 +133,25 @@ function AppContent() {
             <div style={{margin: '20px 0px', textAlign: 'center'}}>
                 <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained">Calculate Total Fee</Button>
             </div>
+            {totalFee &&
+                <div style={{margin: '20px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <div 
+                        style={{ 
+                            minWidth: '300px', border: '3px solid', borderRadius: '20px', backgroundColor: 'black',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        }}
+                    >
+                        <div style={{ borderRight: '3px solid', borderRadius: '20px', padding: '20px', backgroundColor: 'white' }}>Total Fee</div>
+                        <div style={{ flex: 1, textAlign: 'center', fontSize: '20px', fontWeight: 'bold', color: 'white' }}>{totalFee}</div>
+                    </div>
+                </div>
+            }
+            {loadingTotalFee &&
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CircularProgress />
+                    <div style={{ marginLeft: '10px' }}>Please, wait until the total fee is calculated!</div>
+                </div>
+            }
             {error && 
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
