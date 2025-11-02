@@ -13,6 +13,7 @@
 &emsp;[2.9. Spring Boot - Backend application](#2.9)<br>
 &emsp;[2.10. Logging](#2.10)<br>
 &emsp;[2.11. React - Frontend application](#2.11)<br>
+&emsp;[2.12. Playwright - E2E testing](#2.12)<br>
 [3. Modification suggestions](#3)<br>
 &emsp;[3.1. Holidays](#3.1)<br>
 &emsp;[3.2. More React tests](#3.2)<br>
@@ -246,6 +247,38 @@ To run the frontend application tests:
 ./gradlew test
 ```
 For the tests, the API calls are mocked so the Spring Boot application is not needed to run!
+
+## 2.12. Playwright - E2E testing <a id="2.12"/>
+
+I have added some e2e tests highlighting the harmony of the key components of the whole project.
+These are: algorithm, backend and frontend.
+
+Please, note that in order to run the e2e tests, both the Spring Boot and the React applications should be running.
+
+To run the Spring Boot app on localhost:8080:
+```shell
+cd Java && ./gradlew bootRun
+```
+
+To run the React app on localhost:3000:
+```shell
+cd Java/Frontend && ./gradlew start
+```
+
+Then we can run the e2e tests:
+```shell
+cd Java/e2e && npx playwright test
+```
+
+You can also run the tests in UI mode for debugging purposes: 
+```shell
+cd Java/e2e && npx playwright test --ui
+```
+
+Please, note the `projects` setting in Java/e2e/playwright.config.js. That means which browsers the tests will be run.
+By default, there are 3: chromium, firefox and webkit. And if there are 3 test definitions, then there will be 9 tests.
+
+Playwright creates a report to you with details about the tests. This is available by `npx playwright show-report`.
 
 # 3. Modification suggestions <a id="3"/>
 
