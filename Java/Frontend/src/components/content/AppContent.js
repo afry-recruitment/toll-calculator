@@ -8,7 +8,7 @@ function AppContent() {
     const [loadingVehicleTypes, setLoadingVehicleTypes] = useState(false);
     const [availableVehicleTypes, setAvailableVehicleTypes] = useState([]);
     const [selectedVehicleType, setSelectedVehicleType] = useState('');
-    const [day, setDay] = useState(null);
+    const [selectedDay, setSelectedDay] = useState(null);
     const [selectedTimes, setSelectedTimes] = useState([null]);
     const [loadingTotalFee, setLoadingTotalFee] = useState(false);
     const [totalFee, setTotalFee] = useState(null);
@@ -27,14 +27,14 @@ function AppContent() {
             });
     }, []);
 
-    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'day', day, 'selectedTimes', selectedTimes);
+    console.log('available vehicle types', availableVehicleTypes, 'selectedVehicleType', selectedVehicleType, 'selectedDay', selectedDay, 'selectedTimes', selectedTimes);
 
     const onVehicleTypeSelected = (event) => {
         setSelectedVehicleType(event.target.value);
     }
 
     const onDayChanged = (selectedDay) => {
-        setDay(selectedDay);
+        setSelectedDay(selectedDay);
     }
 
     const onTimeChanged = (selectedTime, changeIndex) => {
@@ -99,8 +99,8 @@ function AppContent() {
                         <div style={{  display: 'flex', justifyContent: 'center', padding: '20px 0px' }}>
                             <DatePicker
                                 label='Day Selection'
-                                value={day}
-                                onChange={(selectedDay) => onDayChanged(selectedDay)}
+                                value={selectedDay}
+                                onChange={(value) => onDayChanged(value)}
                             />
                         </div>
                     </div>
@@ -120,7 +120,7 @@ function AppContent() {
                                 <TimePicker
                                     label='Time Selection'
                                     value={time}
-                                    onChange={(selectedTime) => onTimeChanged(selectedTime, timeIndex)}
+                                    onChange={(value) => onTimeChanged(value, timeIndex)}
                                 />
                                 {selectedTimes.length != 1 &&
                                     <Tooltip title={'Remove this time'}>
