@@ -43,7 +43,7 @@ public class VehicleTypeController {
 
         List<String> vehicleTypes = Arrays.stream(VehicleType.values()).map(VehicleType::getType).toList();
 
-        log.debug("Finished GET {} request", FEE_URL);
+        log.debug("Finished GET {} request", VEHICLE_TYPES_URL);
 
         return new ResponseEntity<>(vehicleTypes, HttpStatus.OK);
     }
