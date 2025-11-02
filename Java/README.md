@@ -14,6 +14,7 @@
 &emsp;[2.10. Logging](#2.10)<br>
 &emsp;[2.11. React - Frontend application](#2.11)<br>
 &emsp;[2.12. Playwright - E2E testing](#2.12)<br>
+&emsp;[2.13. Docker and E2E tests](#2.13)<br>
 [3. Modification suggestions](#3)<br>
 &emsp;[3.1. Holidays](#3.1)<br>
 &emsp;[3.2. More React tests](#3.2)<br>
@@ -280,6 +281,12 @@ By default, there are 3: chromium, firefox and webkit.
 For example, if there are 2 test definitions, then there will be 6 tests run.
 
 Playwright creates a report to you with details about the tests. This is available by `npx playwright show-report`.
+
+## 2.13. Docker and E2E tests <a id="2.13"/>
+
+I have added the applications to a docker-compose file so that I could add the e2e tests to the pipeline.
+
+For more details about the different docker container configurations, have a look at `Java/docker` folder.
 
 # 3. Modification suggestions <a id="3"/>
 

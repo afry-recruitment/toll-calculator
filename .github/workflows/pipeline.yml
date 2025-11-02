@@ -38,3 +38,45 @@ jobs:
         run: cd Java/Frontend && npm install
       - name: Run Frontend tests
         run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean test
+  e2e:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: ./Java/Frontend/package-lock.json
+          node-version: 22.x
+          cache: 'npm'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Set up Docker Compose
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
+      - name: Build Backend
+        run: cd Java && chmod +x gradlew && ./gradlew clean build
+      - name: Install Frontend npm dependencies
+        run: cd Java/Frontend && npm install
+      - name: Build Frontend
+        run: cd Java/Frontend && chmod +x gradlew && ./gradlew clean build
+      - name: Build and Run Docker containers
+        run: cd Java/docker && docker-compose up -d --build --wait
+      - name: Install e2e dependencies
+        run: cd Java/e2e && npm ci && npx playwright install --with-deps
+      - name: Run e2e tests
+        run: cd Java/e2e && npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile_backend
+    ports:
+      - 8080:8080
+    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/info" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+  frontend:
+    build:
+      context: ../Frontend
+      dockerfile: ../docker/Dockerfile_frontend
+    ports:
+      - 3000:3000
+    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
