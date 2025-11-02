@@ -19,5 +19,5 @@ tasks.register("test", NpmTask) {
     args = ['test']
 }
 
-bundle.dependsOn(yarn)
+bundle.dependsOn(npmSetup)
 assemble.dependsOn(bundle)
