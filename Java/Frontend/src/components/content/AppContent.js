@@ -165,7 +165,7 @@ function AppContent() {
                     <Button style={{ minWidth: '300px', color: 'black', backgroundColor: 'lightgreen' }} variant="contained" onClick={() => onFeeCalculationRequested()}>Calculate Total Fee</Button>
                 }
             </div>
-            {totalFee &&
+            {totalFee != null &&
                 <div style={{margin: '20px 0px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                     <div 
                         style={{ 
@@ -184,7 +184,7 @@ function AppContent() {
                     <div style={{ marginLeft: '10px' }}>Please, wait until the total fee is calculated!</div>
                 </div>
             }
-            {error && 
+            {error != null && 
                 <Snackbar
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     open={error != null}
