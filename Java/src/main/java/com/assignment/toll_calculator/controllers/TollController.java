@@ -80,7 +80,7 @@ public class TollController {
         TollFeeResponse tollFeeResponse = new TollFeeResponse(
                 tollService.calculateFee(
                         VehicleTypeUtils.parse(vehicleType),
-                        new ArrayList<>(Arrays.asList(dates.split(DATES_REQUEST_PARAM_VALUE_DELIMITER)))
+                        new ArrayList<>(Arrays.asList(dates.split(DEFAULT_VALUE_DELIMITER)))
                                 .stream()
                                 .map(date -> DateUtils.convert(date, DATE_TIME_PATTERN))
                                 .toList()

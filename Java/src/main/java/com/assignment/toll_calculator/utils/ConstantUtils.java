@@ -16,7 +16,7 @@ public class ConstantUtils {
     public static final String VEHICLE_TYPE_REQUEST_PARAM = "vehicle_type";
     public static final String DATES_REQUEST_PARAM = "dates";
 
-    public static final String DATES_REQUEST_PARAM_VALUE_DELIMITER = ",";
+    public static final String DEFAULT_VALUE_DELIMITER = ",";
 
     public static final String INVALID_VEHICLE_TYPE_ERROR_MESSAGE = "The vehicle type is required!";
     public static final String INVALID_DATES_ERROR_MESSAGE = "At least one date is required!";

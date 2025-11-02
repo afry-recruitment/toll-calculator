@@ -10,3 +10,5 @@ logging.level:
     com.assignment.toll_calculator: ${LOG_LEVEL:DEBUG}
 
 management.endpoints.web.exposure.include: health
+
+cors.allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

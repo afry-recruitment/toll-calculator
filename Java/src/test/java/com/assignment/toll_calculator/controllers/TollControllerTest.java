@@ -33,7 +33,7 @@ public class TollControllerTest {
         // given
         String vehicleType = null;
         String dates = String.join(
-                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                DEFAULT_VALUE_DELIMITER,
                 Stream.of(composeDate(Calendar.SEPTEMBER, 2)).map(TestUtils::format).toList()
         );
 
@@ -64,7 +64,7 @@ public class TollControllerTest {
         // given
         String vehicleType = "";
         String dates = String.join(
-                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                DEFAULT_VALUE_DELIMITER,
                 Stream.of(composeDate(Calendar.SEPTEMBER, 2)).map(TestUtils::format).toList()
         );
 
@@ -93,7 +93,7 @@ public class TollControllerTest {
         // given
         String vehicleType = "some-vehicle-type";
         String dates = String.join(
-                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                DEFAULT_VALUE_DELIMITER,
                 Stream.of(composeDate(Calendar.SEPTEMBER, 2)).map(TestUtils::format).toList()
         );
 
@@ -168,7 +168,7 @@ public class TollControllerTest {
         // given
         String vehicleType = VehicleType.CAR.getType();
         String dates = String.join(
-                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                DEFAULT_VALUE_DELIMITER,
                 Stream.of(composeDate(Calendar.SEPTEMBER, 2, 7, 30)).map(TestUtils::format).toList()
         );
 
@@ -190,7 +190,7 @@ public class TollControllerTest {
         // given
         String vehicleType = VehicleType.MOTORBIKE.getType();
         String dates = String.join(
-                DATES_REQUEST_PARAM_VALUE_DELIMITER,
+                DEFAULT_VALUE_DELIMITER,
                 Stream.of(composeDate(Calendar.SEPTEMBER, 2, 7, 30)).map(TestUtils::format).toList()
         );
 
