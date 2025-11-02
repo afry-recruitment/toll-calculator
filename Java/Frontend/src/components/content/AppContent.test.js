@@ -26,7 +26,7 @@ test('renders title', async () => {
   // waiting for the page to be rendered
   await renderWithLocalizationProvider();
 
-  // then the title is visible
+  // then the title should be visible
   expect(screen.getByText(/Toll Fee Calculator/i)).toBeInTheDocument();
 });
 
@@ -50,6 +50,6 @@ test('selects vehicle type', async () => {
   });
   userEvent.click(within(optionsPopupEl).getByText(/car/i));
 
-  // then the selected item is visible
+  // then the selected item should be visible
   expect(await screen.findByText(/car/i)).toBeInTheDocument();
 });
