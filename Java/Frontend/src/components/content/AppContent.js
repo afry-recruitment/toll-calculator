@@ -70,28 +70,34 @@ function AppContent() {
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}>
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 0px', borderRight: '1px solid lightgrey' }}>
-                        <FormControl style={{ minWidth: '250px' }}>
-                            <InputLabel id='vehicle-type-selection-label'>Vehicle Type Selection</InputLabel>
-                            <Select
-                                labelId='vehicle-type-selection-label'
-                                id='vehicle-type-selection-select'
-                                value={selectedVehicleType}
-                                label='Vehicle Type Selection'
-                                onChange={onVehicleTypeSelected}
-                                autoWidth
-                            >
-                                <MenuItem value=''><em>None</em></MenuItem>
-                                {availableVehicleTypes?.map(vehicleType => <MenuItem value={vehicleType}>{vehicleType}</MenuItem>)}
-                            </Select>
-                        </FormControl>
+                    <div style={{ flex: 1, borderRight: '1px solid lightgrey', paddingRight: '20px' }}>
+                        <div>Choose the vehicle type</div>
+                        <div style={{  display: 'flex', justifyContent: 'center', padding: '20px 0px' }}>
+                            <FormControl style={{ minWidth: '250px' }}>
+                                <InputLabel id='vehicle-type-selection-label'>Vehicle Type Selection</InputLabel>
+                                <Select
+                                    labelId='vehicle-type-selection-label'
+                                    id='vehicle-type-selection-select'
+                                    value={selectedVehicleType}
+                                    label='Vehicle Type Selection'
+                                    onChange={onVehicleTypeSelected}
+                                    autoWidth
+                                >
+                                    <MenuItem value=''><em>None</em></MenuItem>
+                                    {availableVehicleTypes?.map(vehicleType => <MenuItem value={vehicleType}>{vehicleType}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 0px', borderLeft: '1px solid lightgrey' }}>
-                        <DatePicker
-                            label='Day Selection'
-                            value={day}
-                            onChange={(selectedDay) => setDay(selectedDay)}
-                        />
+                    <div style={{ flex: 1, borderLeft: '1px solid lightgrey', paddingLeft: '20px' }}>
+                        <div>Choose the day</div>
+                        <div style={{  display: 'flex', justifyContent: 'center', padding: '20px 0px' }}>
+                            <DatePicker
+                                label='Day Selection'
+                                value={day}
+                                onChange={(selectedDay) => setDay(selectedDay)}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div style={{ paddingTop: '20px', borderTop: '2px solid lightgrey' }}>
