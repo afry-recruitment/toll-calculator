@@ -15,6 +15,7 @@
 &emsp;[2.11. React - Frontend application](#2.11)<br>
 [3. Modification suggestions](#3)<br>
 &emsp;[3.1. Holidays](#3.1)<br>
+&emsp;[3.2. More React tests](#3.2)<br>
 
 # 1. Summary <a id="1"></a>
 
@@ -227,9 +228,10 @@ I have managed to set up a React app as well that interacts with the Spring Boot
 
 This frontend app has some basic CSS configuration to help the user understanding.
 
-It also contains test utilizing the React Testing Library.
+It also contains tests utilizing the React Testing Library.
 
-I have managed to set up a frontend application as well that communicates with the API endpoints.
+You need node and npm to be installed on your computer to run the application and tests.
+I have used node version v24.11.0 and npm version 11.6.1 in my local computer during the development.
 
 For the commands below, please enter the `Java/Frontend` folder of the repo.
 
@@ -259,3 +261,8 @@ The holiday dates can differ between countries as well.
 I think we would need to maintain a static date list of holidays in each year to be able to support this requirement.
 
 I will keep the year 2013 holidays in the code so that I could write tests for this scenario as well.
+
+## 3.2. More React tests <a id="3.2"/>
+
+It is always good to have more and more tests. I added a couple of tests with React Testing Library.
+I did not have to add more because I wanted to focus on automated testing as well.
