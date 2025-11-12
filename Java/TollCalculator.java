@@ -1,8 +1,41 @@
-
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class TollCalculator {
+
+  private static final List<FeeTimeRange> TIME_RANGES = List.of(
+    FeeTimeRange.of(6, 0, 6, 29, 8),
+    FeeTimeRange.of(6, 30, 6, 59, 13),
+    FeeTimeRange.of(7, 0, 7, 59, 18),
+    FeeTimeRange.of(8, 0, 8, 29, 13),
+    FeeTimeRange.of(8, 30, 8, 59, 8),
+    FeeTimeRange.of(9, 30, 9, 59, 8),
+    FeeTimeRange.of(10, 30, 10, 59, 8),
+    FeeTimeRange.of(11, 30, 11, 59, 8),
+    FeeTimeRange.of(12, 30, 12, 59, 8),
+    FeeTimeRange.of(13, 30, 13, 59, 8),
+    FeeTimeRange.of(14, 30, 14, 59, 8),
+    FeeTimeRange.of(15, 0, 15, 29, 13),
+    FeeTimeRange.of(15, 30, 16, 59, 18),
+    FeeTimeRange.of(17, 0, 17, 59, 13),
+    FeeTimeRange.of(18, 0, 18, 30, 8)
+  );
+
+  private static final List<DateRange> HOLLIDAYS = List.of(
+    DateRange.of(1, 1, 1, 1),
+    DateRange.of(3, 28, 3, 29),
+    DateRange.of(4, 1, 4, 1),
+    DateRange.of(4, 30, 4, 30),
+    DateRange.of(5, 1, 5, 1),
+    DateRange.of(5, 8, 5, 9),
+    DateRange.of(6, 5, 6, 6),
+    DateRange.of(6, 21, 6, 21),
+    DateRange.of(7, 1, 7, 31),
+    DateRange.of(11, 1, 11, 1),
+    DateRange.of(12, 24, 12, 26),
+    DateRange.of(12, 31, 12, 31)
+  );
 
   /**
    * Calculate the total toll fee for one day
@@ -11,100 +44,76 @@ public class TollCalculator {
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
+  public int getDailyFee(Vehicle vehicle, LocalDateTime... datetimes) {
+    
+    if (vehicle.isTollFree() || datetimes.length == 0)
+      return 0;
+
+    List<LocalDateTime> sortedDates = Arrays.stream(datetimes).sorted().toList();
+
+    LocalDateTime intervalStart = sortedDates.get(0);
     int totalFee = 0;
-    for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
 
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    int maxFeeInWindow = getTollFee(intervalStart, vehicle);
 
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
+    for (int i = 1; i < sortedDates.size(); i++) {
+      LocalDateTime datetime = sortedDates.get(i);
+
+      long diffInMinutes = ChronoUnit.MINUTES.between(intervalStart, datetime);
+
+      int currentFee = getTollFee(datetime, vehicle);
+
+      if (diffInMinutes <= 60) {
+        maxFeeInWindow = Math.max(maxFeeInWindow, currentFee);
       } else {
-        totalFee += nextFee;
+        totalFee += maxFeeInWindow;
+        intervalStart = datetime;
+        maxFeeInWindow = currentFee;
       }
     }
+
+    // Add the last fee
+    totalFee += maxFeeInWindow;
+
     if (totalFee > 60) totalFee = 60;
     return totalFee;
   }
 
-  private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
-    String vehicleType = vehicle.getType();
-    return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
-  }
+  /**
+   * Determine the toll fee for a specific pass
+   *
+   * @param datetime - date and time of the pass
+   * @param vehicle - the vehicle
+   * @return - the fee for the pass
+   */
+  public int getTollFee(LocalDateTime datetime, Vehicle vehicle) {
+    if(isTollFreeDate(datetime.toLocalDate()) || vehicle.isTollFree()) 
+      return 0;
+    
+    LocalTime time = datetime.toLocalTime();
 
-  public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
-
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
-  }
-
-  private Boolean isTollFreeDate(Date date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
-
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
-      }
+    for (FeeTimeRange range : TIME_RANGES) {
+      if (range.contains(time))
+        return range.getFee();
     }
+
+    return 0;
+  }
+
+  
+  private Boolean isTollFreeDate(LocalDate date) {
+    DayOfWeek dayOfWeek = date.getDayOfWeek();
+    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) return true;
+
+    MonthDay md = MonthDay.from(date);
+
+    for (DateRange range : HOLLIDAYS) {
+      if (range.contains(md))
+        return true;
+    }
+
     return false;
   }
 
-  private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
-    TRACTOR("Tractor"),
-    EMERGENCY("Emergency"),
-    DIPLOMAT("Diplomat"),
-    FOREIGN("Foreign"),
-    MILITARY("Military");
-    private final String type;
-
-    TollFreeVehicles(String type) {
-      this.type = type;
-    }
-
-    public String getType() {
-      return type;
-    }
-  }
 }
 
