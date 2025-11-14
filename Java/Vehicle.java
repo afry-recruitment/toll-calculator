@@ -1,5 +1,14 @@
+import java.util.Objects;
 
-public interface Vehicle {
+public final class Vehicle {
 
-  public String getType();
+    private final VehicleType type;
+
+    public Vehicle(VehicleType type) {
+        this.type = Objects.requireNonNull(type, "Vehicle type cannot be null");
+    }
+
+    public boolean isTollFree() {
+        return type.isTollFree();
+    }
 }

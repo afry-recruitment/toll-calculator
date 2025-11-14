@@ -67,11 +67,7 @@ public class TollCalculator {
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null)
-        return false;
-
-    VehicleType type = mapVehicleType(vehicle.getType());
-    return type.isTollFree();
+    return vehicle != null && vehicle.isTollFree();
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
@@ -118,22 +114,5 @@ public class TollCalculator {
       MonthDay.of(12, 31)  // New Year's Eve
   );
 
-  // Maps string representation of vehicle type to VehicleType enum
-  private VehicleType mapVehicleType(String type) {
-      if(type == null)
-          throw new IllegalArgumentException("Vehicle type cannot be null");
-      return switch (type.toUpperCase()) {
-          case "CAR" -> VehicleType.CAR;
-          case "MOTORBIKE" -> VehicleType.MOTORBIKE;
-          case "TRACTOR" -> VehicleType.TRACTOR;
-          case "EMERGENCY" -> VehicleType.EMERGENCY;
-          case "DIPLOMAT" -> VehicleType.DIPLOMAT;
-          case "FOREIGN" -> VehicleType.FOREIGN;
-          case "MILITARY" -> VehicleType.MILITARY;
-          case "TRUCK" -> VehicleType.TRUCK;
-          case "BUS" -> VehicleType.BUS;
-          default -> throw new IllegalArgumentException("Unknown vehicle type: " + type);
-      };
-  }
 }
 
