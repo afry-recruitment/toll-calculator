@@ -1,10 +1,7 @@
 
-import java.time.LocalDate;
-import java.time.MonthDay;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 public class TollCalculator {
@@ -16,7 +13,9 @@ public class TollCalculator {
    * @param dates   - date and time of all passes on one day
    * @return - the total toll fee for that day
    */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
+  private static final NavigableMap<LocalTime, Integer> FEE_SCHEDULE = initializeFeeSchedule();
+
+    public int getTollFee(Vehicle vehicle, Date... dates) {
       if (vehicle == null || dates == null || dates.length == 0) {
           return 0;
       }
@@ -76,24 +75,33 @@ public class TollCalculator {
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
+        //convert Date to LocalDate before sending to isTollFreeDate
+     if(isTollFreeDate(LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault())) || isTollFreeVehicle(vehicle))
+         return 0;
+
     Calendar calendar = GregorianCalendar.getInstance();
     calendar.setTime(date);
     int hour = calendar.get(Calendar.HOUR_OF_DAY);
     int minute = calendar.get(Calendar.MINUTE);
 
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
+    Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(LocalTime.of(hour, minute));
+    return entry != null ? entry.getValue() : 0;
   }
-
+  // Initialize the fee schedule map, a cleaner way to set up the time-fee pairs and get rid of repetitive and inefficient if else statements
+  private static NavigableMap<LocalTime, Integer> initializeFeeSchedule() {
+    NavigableMap<LocalTime, Integer> feeSchedule = new TreeMap<>();
+      feeSchedule.put(LocalTime.of(6, 0), 8);
+      feeSchedule.put(LocalTime.of(6, 30), 13);
+      feeSchedule.put(LocalTime.of(7, 0), 18);
+      feeSchedule.put(LocalTime.of(8, 0), 13);
+      feeSchedule.put(LocalTime.of(8, 30), 8);
+      feeSchedule.put(LocalTime.of(15, 0), 13);
+      feeSchedule.put(LocalTime.of(15, 30), 18);
+      feeSchedule.put(LocalTime.of(17, 0), 13);
+      feeSchedule.put(LocalTime.of(18, 0), 8);
+      feeSchedule.put(LocalTime.of(18, 30), 0);
+      return feeSchedule;
+  }
   private Boolean isTollFreeDate(LocalDate date) {
       boolean weekend = date.getDayOfWeek().getValue() >= 6;
       boolean holiday = TOLL_FREE_HOLIDAYS.contains(MonthDay.from(date));
