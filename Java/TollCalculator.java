@@ -15,23 +15,8 @@ public class TollCalculator {
    */
   private static final NavigableMap<LocalTime, Integer> FEE_SCHEDULE = initializeFeeSchedule();
 
-    public int getTollFee(Vehicle vehicle, Date... dates) {
-      if (vehicle == null || dates == null || dates.length == 0) {
-          return 0;
-      }
-
-      if (isTollFreeVehicle(vehicle)) {
-          return 0;
-      }
-
-      List<LocalDateTime> passages = Arrays.stream(dates)
-              .map(d -> LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()))
-              .collect(Collectors.toList());
-
-      return calculateDailyFee(vehicle, passages);
-  }
   // Calculate the total toll fee for one day with LocalDateTime
-  public int calculateDailyFee(Vehicle vehicle, List<LocalDateTime> passages) {
+  public int getTollFee(Vehicle vehicle, List<LocalDateTime> passages) {
       /*if (vehicle == null || passages == null || passages.isEmpty()) {
           return 0;
       }*/
@@ -39,13 +24,13 @@ public class TollCalculator {
       LocalDateTime intervalStart = passages.get(0);
       int totalFee = 0;
 
-      int maxFeeInWindow = getTollFee(Date.from(intervalStart.atZone(ZoneId.systemDefault()).toInstant()), vehicle);
+      int maxFeeInWindow = feePerPassage(intervalStart, vehicle);
 
       for (int i = 1; i< passages.size(); i++) {
 
           LocalDateTime currentPassage = passages.get(i);
 
-          int currentFee = getTollFee(Date.from(currentPassage.atZone(ZoneId.systemDefault()).toInstant()), vehicle);
+          int currentFee = feePerPassage(currentPassage, vehicle);
           long minutesDifference = java.time.Duration.between(intervalStart, currentPassage).toMinutes();
 
           if(minutesDifference <= 60) {
@@ -70,21 +55,20 @@ public class TollCalculator {
     return vehicle != null && vehicle.isTollFree();
   }
 
-  public int getTollFee(final Date date, Vehicle vehicle) {
-     if(isTollFreeDate(toLocalDate(date)) || isTollFreeVehicle(vehicle))
-         return 0;
+  private int feePerPassage(LocalDateTime passage, Vehicle vehicle) {
+      if (passage == null || vehicle == null) {
+          return 0;
+      }
+      LocalDate date = passage.toLocalDate();
+      LocalTime time = passage.toLocalTime();
 
-    Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(toLocalTime(date));
-    return entry != null ? entry.getValue() : 0;
+      if (isTollFreeDate(date) || isTollFreeVehicle(vehicle))
+          return 0;
+
+      Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(time);
+      return entry != null ? entry.getValue() : 0;
   }
-  // Convert Date to LocalDate
-  private LocalDate toLocalDate(Date date) {
-      return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-  }
-  // Convert Date to LocalTime
-  private LocalTime toLocalTime(Date date) {
-      return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-  }
+
   // Initialize the fee schedule map, a cleaner way to set up the time-fee pairs and get rid of repetitive and inefficient if else statements
   private static NavigableMap<LocalTime, Integer> initializeFeeSchedule() {
     NavigableMap<LocalTime, Integer> feeSchedule = new TreeMap<>();
