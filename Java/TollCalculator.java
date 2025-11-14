@@ -35,14 +35,11 @@ public class TollCalculator {
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
-    String vehicleType = vehicle.getType();
-    return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
+    if(vehicle == null)
+        return false;
+
+    VehicleType type = mapVehicleType(vehicle.getType());
+    return type.isTollFree();
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
@@ -89,22 +86,22 @@ public class TollCalculator {
     return false;
   }
 
-  private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
-    TRACTOR("Tractor"),
-    EMERGENCY("Emergency"),
-    DIPLOMAT("Diplomat"),
-    FOREIGN("Foreign"),
-    MILITARY("Military");
-    private final String type;
-
-    TollFreeVehicles(String type) {
-      this.type = type;
-    }
-
-    public String getType() {
-      return type;
-    }
+  // Maps string representation of vehicle type to VehicleType enum
+  private VehicleType mapVehicleType(String type) {
+      if(type == null)
+          throw new IllegalArgumentException("Vehicle type cannot be null");
+      return switch (type.toUpperCase()) {
+          case "CAR" -> VehicleType.CAR;
+          case "MOTORBIKE" -> VehicleType.MOTORBIKE;
+          case "TRACTOR" -> VehicleType.TRACTOR;
+          case "EMERGENCY" -> VehicleType.EMERGENCY;
+          case "DIPLOMAT" -> VehicleType.DIPLOMAT;
+          case "FOREIGN" -> VehicleType.FOREIGN;
+          case "MILITARY" -> VehicleType.MILITARY;
+          case "TRUCK" -> VehicleType.TRUCK;
+          case "BUS" -> VehicleType.BUS;
+          default -> throw new IllegalArgumentException("Unknown vehicle type: " + type);
+      };
   }
 }
 
