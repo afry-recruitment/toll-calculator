@@ -3,6 +3,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.stream.Collectors;
 
 public class TollCalculator {
 
@@ -14,30 +15,7 @@ public class TollCalculator {
    * @return - the total toll fee for that day
    */
   public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
-    int totalFee = 0;
-    for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
-
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
-      } else {
-        totalFee += nextFee;
-      }
-    }
-    if (totalFee > 60) totalFee = 60;
-    return totalFee;
-  }
-  // Calculate the total toll fee for one day but with LocalDateTime input instead of Date, will try to convert to Date and call the old method which uses Date
-  public int calculateDailyFee(Vehicle vehicle, List<LocalDateTime> passages) {
-      if (vehicle == null || passages == null || passages.isEmpty()) {
+      if (vehicle == null || dates == null || dates.length == 0) {
           return 0;
       }
 
@@ -45,13 +23,46 @@ public class TollCalculator {
           return 0;
       }
 
-      //for now let's jsut convert LocalDateTime to Date and call the old method for calculating toll fee
-      Date[] dates = passages.stream()
-              .map(dateTime -> Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()))
-              .sorted()
-              .toArray(Date[]::new);
+      List<LocalDateTime> passages = Arrays.stream(dates)
+              .map(d -> LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()))
+              .collect(Collectors.toList());
 
-      return getTollFee(vehicle, dates);
+      return calculateDailyFee(vehicle, passages);
+  }
+  // Calculate the total toll fee for one day with LocalDateTime
+  public int calculateDailyFee(Vehicle vehicle, List<LocalDateTime> passages) {
+      /*if (vehicle == null || passages == null || passages.isEmpty()) {
+          return 0;
+      }*/
+
+      LocalDateTime intervalStart = passages.get(0);
+      int totalFee = 0;
+
+      int maxFeeInWindow = getTollFee(Date.from(intervalStart.atZone(ZoneId.systemDefault()).toInstant()), vehicle);
+
+      for (int i = 1; i< passages.size(); i++) {
+
+          LocalDateTime currentPassage = passages.get(i);
+
+          int currentFee = getTollFee(Date.from(currentPassage.atZone(ZoneId.systemDefault()).toInstant()), vehicle);
+          long minutesDifference = java.time.Duration.between(intervalStart, currentPassage).toMinutes();
+
+          if(minutesDifference <= 60) {
+              if (currentFee > maxFeeInWindow)
+                  maxFeeInWindow = currentFee;
+          }
+          else {
+              totalFee = totalFee + maxFeeInWindow;
+              intervalStart = currentPassage;
+              maxFeeInWindow = currentFee;
+          }
+      }
+      totalFee = totalFee + maxFeeInWindow;
+
+      if (totalFee > 60)
+          totalFee = 60;
+
+      return totalFee;
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
