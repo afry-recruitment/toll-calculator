@@ -1,6 +1,8 @@
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class TollCalculator {
 
@@ -32,6 +34,24 @@ public class TollCalculator {
     }
     if (totalFee > 60) totalFee = 60;
     return totalFee;
+  }
+  // Calculate the total toll fee for one day but with LocalDateTime input instead of Date, will try to convert to Date and call the old method which uses Date
+  public int calculateDailyFee(Vehicle vehicle, List<LocalDateTime> passages) {
+      if (vehicle == null || passages == null || passages.isEmpty()) {
+          return 0;
+      }
+
+      if (isTollFreeVehicle(vehicle)) {
+          return 0;
+      }
+
+      //for now let's jsut convert LocalDateTime to Date and call the old method for calculating toll fee
+      Date[] dates = passages.stream()
+              .map(dateTime -> Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()))
+              .sorted()
+              .toArray(Date[]::new);
+
+      return getTollFee(vehicle, dates);
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
