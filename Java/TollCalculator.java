@@ -1,110 +1,107 @@
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.MonthDay;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class TollCalculator {
 
-  /**
-   * Calculate the total toll fee for one day
-   *
-   * @param vehicle - the vehicle
-   * @param dates   - date and time of all passes on one day
-   * @return - the total toll fee for that day
-   */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
-    int totalFee = 0;
-    for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
-
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
-      } else {
-        totalFee += nextFee;
+    private static final NavigableMap<LocalTime, Integer> FEE_SCHEDULE = initializeFeeSchedule();
+    /**
+     * Calculate the total toll fee for one day.
+     * Assumes all passages belong to the same calendar date
+     * and are provided in chronological order.
+     *
+     * @param vehicle   the vehicle being charged
+     * @param passages  date and time of all passes on one day
+     * @return the total toll fee for that day (max 60 SEK)
+     */
+  // Calculate the total toll fee for one day with LocalDateTime
+  public int getTollFee(Vehicle vehicle, List<LocalDateTime> passages) {
+      if (vehicle == null || passages == null || passages.isEmpty()) {
+          return 0;
       }
-    }
-    if (totalFee > 60) totalFee = 60;
-    return totalFee;
+
+      LocalDateTime intervalStart = passages.getFirst();
+
+      int totalFee = 0;
+      int maxFeeInWindow = feePerPassage(intervalStart, vehicle);
+
+      for (int i = 1; i< passages.size(); i++) {
+
+          LocalDateTime currentPassage = passages.get(i);
+
+          int currentFee = feePerPassage(currentPassage, vehicle);
+          long minutesDifference = java.time.Duration.between(intervalStart, currentPassage).toMinutes();
+
+          if(minutesDifference <= 60) {
+              if (currentFee > maxFeeInWindow)
+                  maxFeeInWindow = currentFee;
+          }
+          else {
+              totalFee = totalFee + maxFeeInWindow;
+              intervalStart = currentPassage;
+              maxFeeInWindow = currentFee;
+          }
+      }
+      totalFee = totalFee + maxFeeInWindow;
+
+      if (totalFee > 60)
+          totalFee = 60;
+
+      return totalFee;
   }
 
   private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
-    String vehicleType = vehicle.getType();
-    return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
+    return vehicle != null && vehicle.isTollFree();
   }
 
-  public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
+  // Calculate fee for a single passage
+  private int feePerPassage(LocalDateTime passage, Vehicle vehicle) {
+      LocalDate date = passage.toLocalDate();
+      LocalTime time = passage.toLocalTime();
 
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
+      if (isTollFreeDate(date) || isTollFreeVehicle(vehicle))
+          return 0;
+
+      return getFeeForTime(time);
+  }
+  // Get fee based on time using the fee schedule map
+  private int getFeeForTime(LocalTime time) {
+      Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(time);
+      return entry != null ? entry.getValue() : 0;
   }
 
-  private Boolean isTollFreeDate(Date date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
+  // Initialize the fee schedule map, a cleaner way to set up the time-fee pairs and get rid of repetitive and inefficient if else statements
+  private static NavigableMap<LocalTime, Integer> initializeFeeSchedule() {
+    NavigableMap<LocalTime, Integer> feeSchedule = new TreeMap<>();
+      feeSchedule.put(LocalTime.of(6, 0), 8);
+      feeSchedule.put(LocalTime.of(6, 30), 13);
+      feeSchedule.put(LocalTime.of(7, 0), 18);
+      feeSchedule.put(LocalTime.of(8, 0), 13);
+      feeSchedule.put(LocalTime.of(8, 30), 8);
+      feeSchedule.put(LocalTime.of(15, 0), 13);
+      feeSchedule.put(LocalTime.of(15, 30), 18);
+      feeSchedule.put(LocalTime.of(17, 0), 13);
+      feeSchedule.put(LocalTime.of(18, 0), 8);
+      feeSchedule.put(LocalTime.of(18, 30), 0);
+      return feeSchedule;
+  }
+  // Check if the date is toll-free (weekends or holidays)
+  private boolean isTollFreeDate(LocalDate date) {
+      boolean weekend = date.getDayOfWeek().getValue() >= 6;
+      boolean holiday = TOLL_FREE_HOLIDAYS.contains(MonthDay.from(date));
 
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
-
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
-      }
-    }
-    return false;
+      return weekend || holiday;
   }
 
-  private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
-    TRACTOR("Tractor"),
-    EMERGENCY("Emergency"),
-    DIPLOMAT("Diplomat"),
-    FOREIGN("Foreign"),
-    MILITARY("Military");
-    private final String type;
+  // Define a set of fixed toll-free holidays, more holidays can be added as needed first parameter is month, second is day
+  private static final Set<MonthDay> TOLL_FREE_HOLIDAYS = Set.of(
+      MonthDay.of(1, 1),   // New Year's Day
+      MonthDay.of(5, 1),   // Labour Day
+      MonthDay.of(12, 25), // Christmas Day
+      MonthDay.of(12, 31)  // New Year's Eve
+  );
 
-    TollFreeVehicles(String type) {
-      this.type = type;
-    }
-
-    public String getType() {
-      return type;
-    }
-  }
 }
 
