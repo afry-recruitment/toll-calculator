@@ -75,17 +75,19 @@ public class TollCalculator {
   }
 
   public int getTollFee(final Date date, Vehicle vehicle) {
-        //convert Date to LocalDate before sending to isTollFreeDate
-     if(isTollFreeDate(LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault())) || isTollFreeVehicle(vehicle))
+     if(isTollFreeDate(toLocalDate(date)) || isTollFreeVehicle(vehicle))
          return 0;
 
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
-
-    Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(LocalTime.of(hour, minute));
+    Map.Entry<LocalTime, Integer> entry = FEE_SCHEDULE.floorEntry(toLocalTime(date));
     return entry != null ? entry.getValue() : 0;
+  }
+  // Convert Date to LocalDate
+  private LocalDate toLocalDate(Date date) {
+      return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+  }
+  // Convert Date to LocalTime
+  private LocalTime toLocalTime(Date date) {
+      return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
   }
   // Initialize the fee schedule map, a cleaner way to set up the time-fee pairs and get rid of repetitive and inefficient if else statements
   private static NavigableMap<LocalTime, Integer> initializeFeeSchedule() {
