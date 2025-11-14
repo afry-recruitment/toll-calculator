@@ -1,4 +1,6 @@
 
+import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.*;
 import java.util.concurrent.*;
 import java.time.LocalDateTime;
@@ -92,30 +94,19 @@ public class TollCalculator {
     else return 0;
   }
 
-  private Boolean isTollFreeDate(Date date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
+  private Boolean isTollFreeDate(LocalDate date) {
+      boolean weekend = date.getDayOfWeek().getValue() >= 6;
+      boolean holiday = TOLL_FREE_HOLIDAYS.contains(MonthDay.from(date));
 
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
-
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
-      }
-    }
-    return false;
+      return weekend || holiday;
   }
+
+  private static final Set<MonthDay> TOLL_FREE_HOLIDAYS = Set.of(
+      MonthDay.of(1, 1),   // New Year's Day
+      MonthDay.of(5, 1),   // Labour Day
+      MonthDay.of(12, 25), // Christmas Day
+      MonthDay.of(12, 31)  // New Year's Eve
+  );
 
   // Maps string representation of vehicle type to VehicleType enum
   private VehicleType mapVehicleType(String type) {
