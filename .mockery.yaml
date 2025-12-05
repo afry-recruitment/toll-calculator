@@ -1,0 +1,9 @@
+with-expecter: true
+dir: "mocks"
+packages:
+  afry-toll-calculator:
+    config:
+      recursive: true
+      all: true
+      dir: "mocks/{{.PackagePath}}"
+      outpkg: "mock_{{.PackageName}}"

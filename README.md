@@ -1,33 +1,68 @@
-![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
+# Toll Calculator
 
-# Toll fee calculator 1.0
-A calculator for vehicle toll fees.
+The toll calculator has evolved into a REST API packaged as a Docker-ready Go binary.
+It runs in a minimal container image as a non-root user. The service serves HTTP traffic
+and expects TLS termination to be handled at the edge. The entry point should be a
+global load balancer that distributes traffic across regional deployments for high
+availability. Each regional deployment includes an application gateway for authorization
+and rate limiting before routing to the service.
 
-* Make sure you read these instructions carefully
-* The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
-* No requirement but bonus points if you know what movie is in the gif
+**Pending improvements on the roadmap**
+* when ops team gives us a database to use, we will replace the hardcoded getter implementations
+  with database persistence and store the dagsmart holidays response in the database too 
+* the holidays fetching will be a separate job and this API will no longer depend on dagsmart availability 
+  during a cold start 
+* add tracing when we have the infrastructure to monitor it
+* use OpenAPI spec and swagger to document our APIs
 
 ## Background
-Our city has decided to implement toll fees in order to reduce traffic congestion during rush hours.
-This is the current draft of requirements:
- 
-* Fees will differ between 8 SEK and 18 SEK, depending on the time of day 
+
+Our city has decided to implement toll fees in order to reduce traffic congestion during rush hours. This is the current draft of requirements:
+
+* Fees will differ between 8 SEK and 18 SEK, depending on the time of day
 * Rush-hour traffic will render the highest fee
 * The maximum fee for one day is 60 SEK
 * A vehicle should only be charged once an hour
-  * In the case of multiple fees in the same hour period, the highest one applies.
+* In the case of multiple fees in the same hour period, the highest one applies.
 * Some vehicle types are fee-free
 * Weekends and holidays are fee-free
 
-## Your assignment
-The last city-developer quit recently, claiming that this solution is production-ready. 
-You are now the new developer for our city - congratulations! 
+## Quick start
 
-Your job is to deliver the code and from now on, you are the responsible go-to-person for this solution. This is a solution you will have to put your name on. 
+**In docker compose (Recommended, includes grafana and prometheus)**
+```
+make docker-up
+make docker-down
+```
 
-## Instructions
-You can make any modifications or suggestions for modifications that you see fit. Fork this repository and deliver your results via a pull-request. You could also create a gist, for privacy reasons, and send us the link.
+**On devbox**
+```
+make build
+make run
+```
 
-## Help I dont know C# or Java
-No worries! We accept submissions in other languages as well, why not try it in Go or nodejs.
+**In docker**
+```
+make docker-build
+make docker-run
+```
 
+## Optional tooling
+
+1. direnv for loading .envrc automatically
+2. mockery to generate mocks
+
+## Lookup optimization
+
+The getPrice part of the toll calculator has been optimized for a high-throughput scenario by converting the price list
+into a minutes after midnight lookup.
+
+A benchmark on the test machine shows a performance of ~15ns per 10M GetPrice calls, which optimistically could achieve ~65M lookups/s, 
+in the raw function call benchmark. Profiling locally through the /fee REST API averages around 40k req/s and processes 1M 
+requests in under 20s, which should suffice for Transportstyrelsen!
+
+## Monitoring
+
+When running with docker-compose, navigate to [grafana](http://localhost:3001) to see metrics. Use the secure admin
+login (u: admin, p: securepassword) and load-test to generate some traffic for the dashboard. Based on monitoring 
+results, we can set up additional alerting.

@@ -1,0 +1,422 @@
+{
+  "title": "Toll Calculator",
+  "tags": [
+    "toll-calculator"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 16,
+  "version": 0,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request Rate",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m])) by (status)",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "reqps",
+          "label": "Requests/sec"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "pointradius": 5,
+      "legend": {
+        "show": true,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true
+      }
+    },
+    {
+      "id": 2,
+      "title": "Request Duration (p50, p95, p99)",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket[1m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le))",
+          "legendFormat": "p95",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[1m])) by (le))",
+          "legendFormat": "p99",
+          "refId": "C"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "s",
+          "label": "Duration"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 0,
+      "linewidth": 2,
+      "legend": {
+        "show": true,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true
+      }
+    },
+    {
+      "id": 3,
+      "title": "Error Rate",
+      "type": "graph",
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[1m])) / sum(rate(http_requests_total[1m])) * 100",
+          "legendFormat": "Error Rate %",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": "Error Rate",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "alert": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                5
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "name": "Error Rate Alert"
+      },
+      "lines": true,
+      "fill": 2,
+      "linewidth": 2
+    },
+    {
+      "id": 4,
+      "title": "Total Requests",
+      "type": "singlestat",
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 8,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(http_requests_total)",
+          "refId": "A"
+        }
+      ],
+      "valueName": "current",
+      "format": "short",
+      "sparkline": {
+        "show": true,
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)"
+      },
+      "gauge": {
+        "show": false
+      }
+    },
+    {
+      "id": 5,
+      "title": "Uptime",
+      "type": "singlestat",
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 12,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "time() - process_start_time_seconds",
+          "refId": "A"
+        }
+      ],
+      "valueName": "current",
+      "format": "dtdurations",
+      "sparkline": {
+        "show": false
+      }
+    },
+    {
+      "id": 6,
+      "title": "Active Requests",
+      "type": "singlestat",
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 16,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m])) * 60",
+          "refId": "A"
+        }
+      ],
+      "valueName": "current",
+      "format": "short",
+      "sparkline": {
+        "show": true,
+        "full": true
+      }
+    },
+    {
+      "id": 7,
+      "title": "Fee Calculations by Vehicle Type",
+      "type": "graph",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(fee_calculations_total{status=\"success\"}[1m])) by (vehicle_type)",
+          "legendFormat": "{{vehicle_type}}",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "ops",
+          "label": "Calculations/sec"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "xaxis": {
+        "mode": "time"
+      },
+      "lines": true,
+      "fill": 1,
+      "linewidth": 2,
+      "stack": false,
+      "legend": {
+        "show": true,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "total": true
+      }
+    },
+    {
+      "id": 8,
+      "title": "Fee Amount Distribution",
+      "type": "heatmap",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(fee_amount_bucket[5m])) by (le)",
+          "format": "heatmap",
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "calculate": false,
+        "yAxis": {
+          "unit": "short"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Success vs Error Calculations",
+      "type": "piechart",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum(fee_calculations_total) by (status)",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "pieType": "pie",
+      "legend": {
+        "show": true,
+        "values": true,
+        "percentage": true
+      }
+    },
+    {
+      "id": 10,
+      "title": "Average Fee by Vehicle Type",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(fee_amount_sum[5m])) by (vehicle_type) / sum(rate(fee_amount_count[5m])) by (vehicle_type)",
+          "legendFormat": "{{vehicle_type}}",
+          "refId": "A"
+        }
+      ],
+      "orientation": "horizontal",
+      "displayMode": "gradient",
+      "unit": "currencyUSD"
+    },
+    {
+      "id": 11,
+      "title": "Request Methods",
+      "type": "piechart",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum(http_requests_total) by (method)",
+          "legendFormat": "{{method}}",
+          "refId": "A"
+        }
+      ],
+      "pieType": "donut",
+      "legend": {
+        "show": true,
+        "values": true
+      }
+    },
+    {
+      "id": 12,
+      "title": "Status Codes",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 22
+      },
+      "targets": [
+        {
+          "expr": "sum(http_requests_total) by (status)",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ],
+      "orientation": "vertical",
+      "displayMode": "lcd"
+    }
+  ],
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  }
+}
+
