@@ -19,28 +19,55 @@ namespace TollFeeCalculator
 
         public int GetTollFee(Vehicle vehicle, DateTime[] dates)
         {
-            DateTime intervalStart = dates[0];
-            int totalFee = 0;
-            foreach (DateTime date in dates)
-            {
-                int nextFee = GetTollFee(date, vehicle);
-                int tempFee = GetTollFee(intervalStart, vehicle);
+            // Handle edge cases
+            if (dates == null || dates.Length == 0)
+                return 0;
 
-                TimeSpan timeDiff = date - intervalStart;
+            // Sort dates to ensure chronological order
+            Array.Sort(dates);
+
+            int totalFee = 0;
+            DateTime windowStart = dates[0];  // Start of current 60-minute window
+            int windowMaxFee = GetTollFee(dates[0], vehicle);  // Highest fee in current window
+
+            for (int i = 1; i < dates.Length; i++)
+            {
+                DateTime currentPass = dates[i];
+                int currentFee = GetTollFee(currentPass, vehicle);
+
+                // Calculate time difference from the start of the current window
+                TimeSpan timeDiff = currentPass - windowStart;
                 long minutes = (long)timeDiff.TotalMinutes;
 
                 if (minutes <= 60)
                 {
-                    if (totalFee > 0) totalFee -= tempFee;
-                    if (nextFee >= tempFee) tempFee = nextFee;
-                    totalFee += tempFee;
+                    // Still within the same 60-minute window
+                    // Keep track of the highest fee in this window
+                    if (currentFee > windowMaxFee)
+                    {
+                        windowMaxFee = currentFee;
+                    }
                 }
                 else
                 {
-                    totalFee += nextFee;
+                    // More than 60 minutes have passed - close current window and start new one
+                    
+                    // Add the highest fee from the completed window to total
+                    totalFee += windowMaxFee;
+
+                    // Start a new window at this pass
+                    windowStart = currentPass;
+                    windowMaxFee = currentFee;
                 }
             }
-            if (totalFee > 60) totalFee = 60;
+
+            // Add the fee from the last window (which hasn't been added yet)
+            totalFee += windowMaxFee;
+
+            // Cap the daily maximum at 60 SEK
+            if (totalFee > 60)
+                totalFee = 60;
+
             return totalFee;
         }
 
