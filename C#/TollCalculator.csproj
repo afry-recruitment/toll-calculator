@@ -11,4 +11,10 @@
     <PackageReference Include="Nager.Date" Version="1.33.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="TollCalculator.Tests\**" />
+    <EmbeddedResource Remove="TollCalculator.Tests\**" />
+    <None Remove="TollCalculator.Tests\**" />
+  </ItemGroup>
+
 </Project>
