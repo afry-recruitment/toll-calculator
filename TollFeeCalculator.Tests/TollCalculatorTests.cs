@@ -183,5 +183,23 @@ namespace TollFeeCalculator.Tests
             Assert.Equal(expectedFee, totalFee);
         }
 
+        [Theory]
+        [InlineData(18, 29, 8)]  // Last minute of the 18:00 window
+        [InlineData(18, 30, 0)]  // First minute of the free evening
+        [InlineData(23, 59, 0)]  // Just before midnight
+        [InlineData(05, 59, 0)]  // Just before the morning toll starts
+        public void GetTollFee_ShouldHandleBoundaryTimesCorrectly(int hour, int minute, int expectedFee)
+        {
+            // Arrange
+            var car = new Car();
+            var requestTime = new DateTime(2013, 1, 2, hour, minute, 0);
+
+            // Act
+            int fee = _calculator.GetTollFee(requestTime, car);
+
+            // Assert
+            Assert.Equal(expectedFee, fee);
+        }
+
     }
 }
