@@ -13,16 +13,32 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-     private const int MaxDailyFee = 60;
-     private const int MaxIntervalMinutes = 60;
+    private const int MaxDailyFee = 60;
+    private const int MaxIntervalMinutes = 60;
 
     public int GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        if (dates == null || dates.Length == 0) return 0;
+        if (dates == null || dates.Length == 0 || IsTollFreeVehicle(vehicle)) return 0;
 
+        // Group passages by Date (ignoring time)
+        var passagesByDay = dates.GroupBy(d => d.Date);
+        int totalFeeForAllDays = 0;
+
+        foreach (var dayGroup in passagesByDay)
+        {
+            int dailyFee = CalculateDailyFee(vehicle, dayGroup.ToArray());
+            totalFeeForAllDays += dailyFee;
+        }
+
+        return totalFeeForAllDays;
+    }
+
+    private int CalculateDailyFee(Vehicle vehicle, DateTime[] dates)
+    {
         var sortedDates = dates.OrderBy(d => d).ToArray();
 
         DateTime intervalStart = sortedDates[0];
+        
         int totalFee = 0;
         int maxFeeInInterval = GetTollFee(intervalStart, vehicle);
 
@@ -33,15 +49,11 @@ public class TollCalculator
 
             if (minutes <= MaxIntervalMinutes)
             {
-                if (currentFee > maxFeeInInterval)
-                {
-                    maxFeeInInterval = currentFee;
-                }
+                if (currentFee > maxFeeInInterval) maxFeeInInterval = currentFee;
             }
             else
             {
                 totalFee += maxFeeInInterval;
-
                 intervalStart = date;
                 maxFeeInInterval = currentFee;
             }
@@ -49,13 +61,13 @@ public class TollCalculator
 
         totalFee += maxFeeInInterval;
 
-        if (totalFee > MaxDailyFee)
-        {
-            totalFee = MaxDailyFee;
+        if (totalFee > MaxDailyFee) { 
+            totalFee = MaxDailyFee; 
         }
 
         return totalFee;
     }
+
 
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
