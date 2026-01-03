@@ -28,14 +28,14 @@ public class TollCalculator
 
         foreach (DateTime date in sortedDates)
         {
-            int nextFee = GetTollFee(date, vehicle);
+            int currentFee = GetTollFee(date, vehicle);
             double minutes = (date - intervalStart).TotalMinutes;
 
             if (minutes <= MaxIntervalMinutes)
             {
-                if (nextFee > maxFeeInInterval)
+                if (currentFee > maxFeeInInterval)
                 {
-                    maxFeeInInterval = nextFee;
+                    maxFeeInInterval = currentFee;
                 }
             }
             else
@@ -43,7 +43,7 @@ public class TollCalculator
                 totalFee += maxFeeInInterval;
 
                 intervalStart = date;
-                maxFeeInInterval = nextFee;
+                maxFeeInInterval = currentFee;
             }
         }
 
