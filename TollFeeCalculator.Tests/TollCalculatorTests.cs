@@ -140,5 +140,22 @@ namespace TollFeeCalculator.Tests
             Assert.Equal(expectedFee, totalFee);
         }
 
+        [Theory]
+        [InlineData(2013, 1, 1)]   // New Year's - Free
+        [InlineData(2013, 7, 14)]  // July - Free
+        [InlineData(2013, 11, 1)]  // All Saints - Free
+        public void GetTotalTollFee_ShouldBeFree_OnWeekendsHolidaysAndJuly(int year, int month, int day)
+        {
+            // Arrange
+            var car = new Car();
+            var passages = new DateTime[] { new DateTime(year, month, day, 14, 0, 0) };
+            
+            // Act
+            int totalFee = _calculator.GetTotalTollFee(car, passages);
+
+            // Assert
+            Assert.Equal(0, totalFee);
+        }
+
     }
 }
