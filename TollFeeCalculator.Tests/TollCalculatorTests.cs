@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using TollFeeCalculator;
 using System;
+using Moq;
 
 namespace TollFeeCalculator.Tests
 {
@@ -65,12 +66,12 @@ namespace TollFeeCalculator.Tests
             var car = new Car();
 
             DateTime[] passages = {
-                new DateTime(2013, 1, 2, 7, 0, 0),      // 18 SEK
-		        new DateTime(2013, 1, 2, 9, 0, 0),      // 8 SEK
-		        new DateTime(2013, 1, 2, 11, 0, 0),     // 8 SEK
-		        new DateTime(2013, 1, 2, 13, 0, 0),     // 8 SEK
-		        new DateTime(2013, 1, 2, 15, 30, 0),    // 18 SEK
-		        new DateTime(2013, 1, 2, 17, 30, 0)     // 13 SEK
+                new DateTime(2013, 1, 2, 7, 0, 0),      // 07:00    (18 SEK)
+		        new DateTime(2013, 1, 2, 9, 0, 0),      // 09:00    (8 SEK)
+		        new DateTime(2013, 1, 2, 11, 0, 0),     // 11:00    (8 SEK)
+		        new DateTime(2013, 1, 2, 13, 0, 0),     // 13:00    (8 SEK)
+		        new DateTime(2013, 1, 2, 15, 30, 0),    // 15:30    (18 SEK)
+		        new DateTime(2013, 1, 2, 17, 30, 0)     // 17:30    (13 SEK)
 	        };
 
             // Act
@@ -87,8 +88,8 @@ namespace TollFeeCalculator.Tests
             // Arrange
             var car = new Car();
             DateTime[] passages = {
-                new DateTime(2013, 1, 2, 6, 15, 0),
-                new DateTime(2013, 1, 2, 6, 45, 0)
+                new DateTime(2013, 1, 2, 6, 15, 0), // 06:15    (8 SEK)   
+                new DateTime(2013, 1, 2, 6, 45, 0)  // 06:45    (13 SEK)
             };
 
             // Act
@@ -105,8 +106,8 @@ namespace TollFeeCalculator.Tests
             // Arrange
             var car = new Car();
             DateTime[] passages = {
-                new DateTime(2013, 1, 2, 7, 0, 0),  // 07:00 (18 SEK)
-                new DateTime(2013, 1, 2, 8, 1, 0)   // 08:01 (13 SEK)
+                new DateTime(2013, 1, 2, 7, 0, 0),  // 07:00    (18 SEK)
+                new DateTime(2013, 1, 2, 8, 1, 0)   // 08:01    (13 SEK)
             };
 
             // Act
@@ -114,6 +115,28 @@ namespace TollFeeCalculator.Tests
 
             // Assert
             int expectedFee = 31;
+            Assert.Equal(expectedFee, totalFee);
+        }
+
+        [Theory]
+        [InlineData("Motorbike")]
+        [InlineData("Tractor")]
+        [InlineData("Emergency")]
+        [InlineData("Diplomat")]
+        [InlineData("Foreign")]
+        [InlineData("Military")]
+        public void GetTotalTollFee_ShouldReturnZero_ForExemptVehicles(string vehicleType)
+        {
+            // Arrange
+            var mockVehicle = new Mock<Vehicle>();
+            mockVehicle.Setup(v => v.GetVehicleType()).Returns(vehicleType);
+            var rushHour = new DateTime[] { new DateTime(2013, 1, 2, 7, 0, 0) };    // 07:00
+
+            // Act
+            int totalFee = _calculator.GetTotalTollFee(mockVehicle.Object, rushHour);
+
+            // Assert
+            int expectedFee = 0;
             Assert.Equal(expectedFee, totalFee);
         }
 
