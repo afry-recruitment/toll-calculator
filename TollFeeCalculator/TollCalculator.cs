@@ -18,9 +18,8 @@ public class TollCalculator
 
     public int GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        if (dates == null || dates.Length == 0 || IsTollFreeVehicle(vehicle)) return 0;
+        if (dates == null || dates.Length == 0) return 0;
 
-        // Group passages by Date (ignoring time)
         var passagesByDay = dates.GroupBy(d => d.Date);
         int totalFeeForAllDays = 0;
 
@@ -38,7 +37,7 @@ public class TollCalculator
         var sortedDates = dates.OrderBy(d => d).ToArray();
 
         DateTime intervalStart = sortedDates[0];
-        
+
         int totalFee = 0;
         int maxFeeInInterval = GetTollFee(intervalStart, vehicle);
 
@@ -61,8 +60,9 @@ public class TollCalculator
 
         totalFee += maxFeeInInterval;
 
-        if (totalFee > MaxDailyFee) { 
-            totalFee = MaxDailyFee; 
+        if (totalFee > MaxDailyFee)
+        {
+            totalFee = MaxDailyFee;
         }
 
         return totalFee;
@@ -85,19 +85,26 @@ public class TollCalculator
     {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
-        int hour = date.Hour;
-        int minute = date.Minute;
+        TimeSpan time = date.TimeOfDay;
 
-        if (hour == 6 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30) return 13;
-        else if (hour == 7) return 18;
-        else if (hour == 8 && minute <= 29) return 13;
-        else if ((hour == 8 && minute >= 30) || (hour >= 9 && hour <= 14)) return 8;
-        else if (hour == 15 && minute <= 29) return 13;
-        else if ((hour == 15 && minute >= 30) || hour == 16) return 18;
-        else if (hour == 17) return 13;
-        else if (hour == 18 && minute <= 29) return 8;
-        else return 0;
+        if (IsBetween(time, 6, 0, 6, 29)) return 8;
+        if (IsBetween(time, 6, 30, 6, 59)) return 13;
+        if (IsBetween(time, 7, 0, 7, 59)) return 18;
+        if (IsBetween(time, 8, 0, 8, 29)) return 13;
+        if (IsBetween(time, 8, 30, 14, 59)) return 8;
+        if (IsBetween(time, 15, 0, 15, 29)) return 13;
+        if (IsBetween(time, 15, 30, 16, 59)) return 18;
+        if (IsBetween(time, 17, 0, 17, 59)) return 13;
+        if (IsBetween(time, 18, 0, 18, 29)) return 8;
+
+        return 0;
+    }
+
+    private bool IsBetween(TimeSpan time, int startH, int startM, int endH, int endM)
+    {
+        var start = new TimeSpan(startH, startM, 0);
+        var end = new TimeSpan(endH, endM, 59);
+        return time >= start && time <= end;
     }
 
     private Boolean IsTollFreeDate(DateTime date)

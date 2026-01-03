@@ -163,15 +163,15 @@ namespace TollFeeCalculator.Tests
             // Arrange
             var car = new Car();
             DateTime[] passages = {
-		        // Monday - hits the 60 SEK cap
-		        new DateTime(2013, 1, 14, 7, 0, 0),  // 18 SEK
-		        new DateTime(2013, 1, 14, 9, 0, 0),  // 8 SEK
-		        new DateTime(2013, 1, 14, 11, 0, 0), // 8 SEK
-		        new DateTime(2013, 1, 14, 13, 0, 0), // 8 SEK
-		        new DateTime(2013, 1, 14, 15, 30, 0),// 18 SEK
-		        new DateTime(2013, 1, 14, 17, 30, 0),// 13 SEK -> Total 73, capped to 60
+		        // Monday
+		        new DateTime(2013, 1, 14, 7, 0, 0),     // 18 SEK
+		        new DateTime(2013, 1, 14, 9, 0, 0),     // 8 SEK
+		        new DateTime(2013, 1, 14, 11, 0, 0),    // 8 SEK
+		        new DateTime(2013, 1, 14, 13, 0, 0),    // 8 SEK
+		        new DateTime(2013, 1, 14, 15, 30, 0),   // 18 SEK
+		        new DateTime(2013, 1, 14, 17, 30, 0),   // 13 SEK -> Total 73, capped to 60
 		
-		        // Tuesday - should start a fresh 60 SEK cap
+		        // Tuesday
 		        new DateTime(2013, 1, 15, 7, 0, 0),  // 18 SEK
 	        };
 
@@ -179,8 +179,8 @@ namespace TollFeeCalculator.Tests
             int totalFee = _calculator.GetTotalTollFee(car, passages);
 
             // Assert
-            // Expected: 60 (Monday) + 18 (Tuesday) = 78
-            Assert.Equal(78, totalFee);
+            int expectedFee = 78;
+            Assert.Equal(expectedFee, totalFee);
         }
 
     }
