@@ -40,9 +40,6 @@ namespace TollFeeCalculator.Tests
             var calculator = new TollCalculator();
             var car = new Car();
 
-            // Passage 1: 06:20 (8 SEK)
-            // Passage 2: 07:10 (18 SEK - Rush Hour)
-            // Total time difference is 50 minutes (within the 60-min rule)
             DateTime[] passages = {
                 new DateTime(2013, 1, 2, 6, 20, 0),
                 new DateTime(2013, 1, 2, 7, 10, 0)
@@ -52,9 +49,32 @@ namespace TollFeeCalculator.Tests
             int totalFee = calculator.GetTotalTollFee(car, passages);
 
             // Assert
-            // It should NOT be 8, and it should NOT be 26 (8+18). 
-            // It should be 18 because 18 is the highest fee in that 60-min window.
-            Assert.Equal(18, totalFee);
+            int expectedFee = 18;
+            Assert.Equal(expectedFee, totalFee);
+        }
+
+        [Fact]
+        public void GetTotalTollFee_ShouldCapAtSixty_WhenDailyTotalExceedsLimit()
+        {
+            // Arrange
+            var calculator = new TollCalculator();
+            var car = new Car();
+
+            DateTime[] passages = {
+                new DateTime(2013, 1, 2, 7, 0, 0),  // 18 SEK
+		        new DateTime(2013, 1, 2, 9, 0, 0),  // 8 SEK
+		        new DateTime(2013, 1, 2, 11, 0, 0), // 8 SEK
+		        new DateTime(2013, 1, 2, 13, 0, 0), // 8 SEK
+		        new DateTime(2013, 1, 2, 15, 30, 0),// 18 SEK
+		        new DateTime(2013, 1, 2, 17, 30, 0) // 13 SEK
+	        };
+
+            // Act
+            int totalFee = calculator.GetTotalTollFee(car, passages);
+
+            // Assert
+            int expectedFee = 60;
+            Assert.Equal(expectedFee, totalFee);
         }
     }
 }

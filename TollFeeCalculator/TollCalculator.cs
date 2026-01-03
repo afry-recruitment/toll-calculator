@@ -15,28 +15,42 @@ public class TollCalculator
 
     public int GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
+        if (dates == null || dates.Length == 0) return 0;
+
+        var sortedDates = dates.OrderBy(d => d).ToArray();
+
+        DateTime intervalStart = sortedDates[0];
         int totalFee = 0;
-        foreach (DateTime date in dates)
+        int maxFeeInInterval = GetTollFee(intervalStart, vehicle);
+
+        foreach (DateTime date in sortedDates)
         {
             int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
-
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            double minutes = (date - intervalStart).TotalMinutes;
 
             if (minutes <= 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                if (nextFee > maxFeeInInterval)
+                {
+                    maxFeeInInterval = nextFee;
+                }
             }
             else
             {
-                totalFee += nextFee;
+                totalFee += maxFeeInInterval;
+
+                intervalStart = date;
+                maxFeeInInterval = nextFee;
             }
         }
-        if (totalFee > 60) totalFee = 60;
+
+        totalFee += maxFeeInInterval;
+
+        if (totalFee > 60)
+        {
+            totalFee = 60;
+        }
+
         return totalFee;
     }
 
@@ -57,18 +71,18 @@ public class TollCalculator
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
         int hour = date.Hour;
-	    int minute = date.Minute;
+        int minute = date.Minute;
 
-	    if (hour == 6 && minute <= 29) return 8;
-	    else if (hour == 6 && minute >= 30) return 13;
-	    else if (hour == 7) return 18;
-	    else if (hour == 8 && minute <= 29) return 13;
-	    else if ((hour == 8 && minute >= 30) || (hour >= 9 && hour <= 14)) return 8;
-	    else if (hour == 15 && minute <= 29) return 13;
-	    else if ((hour == 15 && minute >= 30) || hour == 16) return 18;
-	    else if (hour == 17) return 13;
-	    else if (hour == 18 && minute <= 29) return 8;
-	    else return 0;
+        if (hour == 6 && minute <= 29) return 8;
+        else if (hour == 6 && minute >= 30) return 13;
+        else if (hour == 7) return 18;
+        else if (hour == 8 && minute <= 29) return 13;
+        else if ((hour == 8 && minute >= 30) || (hour >= 9 && hour <= 14)) return 8;
+        else if (hour == 15 && minute <= 29) return 13;
+        else if ((hour == 15 && minute >= 30) || hour == 16) return 18;
+        else if (hour == 17) return 13;
+        else if (hour == 18 && minute <= 29) return 8;
+        else return 0;
     }
 
     private Boolean IsTollFreeDate(DateTime date)
