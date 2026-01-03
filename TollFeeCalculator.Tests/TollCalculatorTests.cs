@@ -82,14 +82,13 @@ namespace TollFeeCalculator.Tests
         }
 
         [Fact]
-        public void GetTotalTollFee_ShouldChargeOnlyOncePerHour()
+        public void GetTotalTollFee_ShouldChargeOnlyOncePerHour_AndPickHighestFee()
         {
             // Arrange
             var car = new Car();
             DateTime[] passages = {
-                new DateTime(2013, 1, 2, 17, 15, 0),
-                new DateTime(2013, 1, 2, 17, 30, 0),
-                new DateTime(2013, 1, 2, 17, 45, 0)
+                new DateTime(2013, 1, 2, 6, 15, 0),
+                new DateTime(2013, 1, 2, 6, 45, 0)
             };
 
             // Act
@@ -99,5 +98,24 @@ namespace TollFeeCalculator.Tests
             int expectedFee = 13;
             Assert.Equal(expectedFee, totalFee);
         }
+
+        [Fact]
+        public void GetTotalTollFee_ShouldChargeTwice_IfPassagesAreExactlySixtyOneMinutesApart()
+        {
+            // Arrange
+            var car = new Car();
+            DateTime[] passages = {
+                new DateTime(2013, 1, 2, 7, 0, 0),  // 07:00 (18 SEK)
+                new DateTime(2013, 1, 2, 8, 1, 0)   // 08:01 (13 SEK)
+            };
+
+            // Act
+            int totalFee = _calculator.GetTotalTollFee(car, passages);
+
+            // Assert
+            int expectedFee = 31;
+            Assert.Equal(expectedFee, totalFee);
+        }
+
     }
 }
