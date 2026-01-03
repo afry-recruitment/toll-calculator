@@ -141,9 +141,21 @@ namespace TollFeeCalculator.Tests
         }
 
         [Theory]
-        [InlineData(2013, 1, 1)]   // New Year's - Free
-        [InlineData(2013, 7, 14)]  // July - Free
-        [InlineData(2013, 11, 1)]  // All Saints - Free
+        [InlineData(2025, 1, 4)]    // Lördag 4 januari
+        [InlineData(2025, 1, 5)]    // Söndag 5 januari
+        [InlineData(2025, 1, 1)]    // Nyårsdagen: Onsdag 1 januari
+        [InlineData(2025, 1, 6)]    // Trettondagen: Måndag 6 januari
+        [InlineData(2025, 4, 18)]   // Långfredagen: Fredag 18 april
+        [InlineData(2025, 4, 20)]   // Påskdagen: Söndag 20 april
+        [InlineData(2025, 4, 21)]   // Annandag påsk: Måndag 21 april
+        [InlineData(2025, 5, 1)]    // Första maj: Torsdag 1 maj
+        [InlineData(2025, 5, 29)]   // Kristi himmelsfärdsdag: Torsdag 29 maj 
+        [InlineData(2025, 6, 6)]    // Sveriges nationaldag: Fredag 6 juni
+        [InlineData(2025, 6, 8)]    // Pingstdagen: Söndag 8 juni
+        [InlineData(2025, 6, 21)]   // Midsommardagen: Lördag 21 juni
+        [InlineData(2025, 7, 21)]   // En dag i juli: 21 juli
+        [InlineData(2025, 12, 25)]  // Juldagen: Torsdag 25 december
+        [InlineData(2025, 12, 26)]   // Annandag jul: Fredag 26 december 
         public void GetTotalTollFee_ShouldBeFree_OnWeekendsHolidaysAndJuly(int year, int month, int day)
         {
             // Arrange
