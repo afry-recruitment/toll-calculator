@@ -13,6 +13,9 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
+     private const int MaxDailyFee = 60;
+     private const int MaxIntervalMinutes = 60;
+
     public int GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
     {
         if (dates == null || dates.Length == 0) return 0;
@@ -28,7 +31,7 @@ public class TollCalculator
             int nextFee = GetTollFee(date, vehicle);
             double minutes = (date - intervalStart).TotalMinutes;
 
-            if (minutes <= 60)
+            if (minutes <= MaxIntervalMinutes)
             {
                 if (nextFee > maxFeeInInterval)
                 {
@@ -46,9 +49,9 @@ public class TollCalculator
 
         totalFee += maxFeeInInterval;
 
-        if (totalFee > 60)
+        if (totalFee > MaxDailyFee)
         {
-            totalFee = 60;
+            totalFee = MaxDailyFee;
         }
 
         return totalFee;
