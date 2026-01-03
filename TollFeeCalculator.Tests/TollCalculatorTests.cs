@@ -6,6 +6,13 @@ namespace TollFeeCalculator.Tests
 {
     public class TollCalculatorTests
     {
+        private readonly TollCalculator _calculator;
+
+        public TollCalculatorTests()
+        {
+            _calculator = new TollCalculator();
+        }
+
         [Theory]
         [InlineData(6, 0, 8)]    // Start of 8 SEK 
         [InlineData(6, 29, 8)]   // End of 8 SEK 
@@ -21,13 +28,12 @@ namespace TollFeeCalculator.Tests
         public void GetTollFee_ShouldReturnCorrectFee_BasedOnTime(int hour, int minute, int expectedFee)
         {
             // Arrange
-            var calculator = new TollCalculator();
             var car = new Car();
 
             var dateTime = new DateTime(2013, 1, 2, hour, minute, 0);
 
             // Act
-            int actualFee = calculator.GetTollFee(dateTime, car);
+            int actualFee = _calculator.GetTollFee(dateTime, car);
 
             // Assert
             Assert.Equal(expectedFee, actualFee);
@@ -37,7 +43,6 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldPickHighestFee_WhenRushHourOccursWithinSameHour()
         {
             // Arrange
-            var calculator = new TollCalculator();
             var car = new Car();
 
             DateTime[] passages = {
@@ -46,7 +51,7 @@ namespace TollFeeCalculator.Tests
             };
 
             // Act
-            int totalFee = calculator.GetTotalTollFee(car, passages);
+            int totalFee = _calculator.GetTotalTollFee(car, passages);
 
             // Assert
             int expectedFee = 18;
@@ -57,23 +62,41 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldCapAtSixty_WhenDailyTotalExceedsLimit()
         {
             // Arrange
-            var calculator = new TollCalculator();
             var car = new Car();
 
             DateTime[] passages = {
-                new DateTime(2013, 1, 2, 7, 0, 0),  // 18 SEK
-		        new DateTime(2013, 1, 2, 9, 0, 0),  // 8 SEK
-		        new DateTime(2013, 1, 2, 11, 0, 0), // 8 SEK
-		        new DateTime(2013, 1, 2, 13, 0, 0), // 8 SEK
-		        new DateTime(2013, 1, 2, 15, 30, 0),// 18 SEK
-		        new DateTime(2013, 1, 2, 17, 30, 0) // 13 SEK
+                new DateTime(2013, 1, 2, 7, 0, 0),      // 18 SEK
+		        new DateTime(2013, 1, 2, 9, 0, 0),      // 8 SEK
+		        new DateTime(2013, 1, 2, 11, 0, 0),     // 8 SEK
+		        new DateTime(2013, 1, 2, 13, 0, 0),     // 8 SEK
+		        new DateTime(2013, 1, 2, 15, 30, 0),    // 18 SEK
+		        new DateTime(2013, 1, 2, 17, 30, 0)     // 13 SEK
 	        };
 
             // Act
-            int totalFee = calculator.GetTotalTollFee(car, passages);
+            int totalFee = _calculator.GetTotalTollFee(car, passages);
 
             // Assert
             int expectedFee = 60;
+            Assert.Equal(expectedFee, totalFee);
+        }
+
+        [Fact]
+        public void GetTotalTollFee_ShouldChargeOnlyOncePerHour()
+        {
+            // Arrange
+            var car = new Car();
+            DateTime[] passages = {
+                new DateTime(2013, 1, 2, 17, 15, 0),
+                new DateTime(2013, 1, 2, 17, 30, 0),
+                new DateTime(2013, 1, 2, 17, 45, 0)
+            };
+
+            // Act
+            int totalFee = _calculator.GetTotalTollFee(car, passages);
+
+            // Assert
+            int expectedFee = 13;
             Assert.Equal(expectedFee, totalFee);
         }
     }
