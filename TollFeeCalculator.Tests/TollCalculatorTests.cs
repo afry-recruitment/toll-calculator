@@ -231,5 +231,23 @@ namespace TollFeeCalculator.Tests
             Assert.Throws<ArgumentNullException>(() => _calculator.GetTotalTollFee(car, null));
         }
 
+        [Fact]
+        public void GetTollFee_ShouldThrowArgumentNullException_WhenVehicleIsNull()
+        {
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => _calculator.GetTollFee(DateTime.Now, null));
+        }
+
+        [Fact]
+        public void GetTollFee_ShouldThrowArgumentOutOfRangeException_WhenVehicleTypeIsInvalid()
+        {
+            // Arrange
+            var invalidVehicle = new Vehicle((VehicleType)999);
+            var date = new DateTime(2013, 1, 2, 7, 0, 0);
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => _calculator.GetTollFee(date, invalidVehicle));
+        }
+
     }
 }

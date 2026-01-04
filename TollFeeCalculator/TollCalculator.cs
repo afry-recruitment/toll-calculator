@@ -81,22 +81,23 @@ public class TollCalculator
     {
         if (vehicle == null) return false;
 
-        switch (vehicle.Type)
+        return vehicle.Type switch
         {
-            case VehicleType.Motorbike:
-            case VehicleType.Tractor:
-            case VehicleType.Emergency:
-            case VehicleType.Diplomat:
-            case VehicleType.Foreign:
-            case VehicleType.Military:
-                return true;
-            default:
-                return false;
-        }
+            VehicleType.Motorbike => true,
+            VehicleType.Tractor => true,
+            VehicleType.Emergency => true,
+            VehicleType.Diplomat => true,
+            VehicleType.Foreign => true,
+            VehicleType.Military => true,
+            VehicleType.Car => false,
+            _ => throw new ArgumentOutOfRangeException(nameof(vehicle.Type), "Unsupported vehicle type.")
+        };
     }
 
     public int GetTollFee(DateTime date, Vehicle vehicle)
     {
+        if (vehicle == null) throw new ArgumentNullException(nameof(vehicle));
+
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
         TimeSpan time = date.TimeOfDay;
@@ -131,15 +132,5 @@ public class TollCalculator
         if (swedishHolidays.IsPublicHoliday(date)) return true;
 
         return false;
-    }
-
-    private enum TollFreeVehicles
-    {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
     }
 }
