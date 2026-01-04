@@ -18,11 +18,17 @@ namespace TollFeeCalculator
     }
     public class Vehicle
     {
+        public string LicensePlate { get; }
         public VehicleType Type { get; }
 
-        public Vehicle(VehicleType type)
-        {
-            Type = type;
-        }
+        public Vehicle(string licensePlate, VehicleType type)
+		{
+			// Guard against empty plates
+			if (string.IsNullOrWhiteSpace(licensePlate))
+				throw new ArgumentException("License plate cannot be empty.", nameof(licensePlate));
+
+			LicensePlate = licensePlate;
+			Type = type;
+		}
     }
 }

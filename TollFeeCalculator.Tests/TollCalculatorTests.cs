@@ -15,21 +15,21 @@ namespace TollFeeCalculator.Tests
         }
 
         [Theory]
-        [InlineData(6, 0, 8)]    // Start of 8 SEK 
-        [InlineData(6, 29, 8)]   // End of 8 SEK 
-        [InlineData(6, 30, 13)]  // Start of 13 SEK 
-        [InlineData(7, 0, 18)]   // Start of 18 SEK (Rush hour)
-        [InlineData(8, 29, 13)]  // End of 13 SEK 
-        [InlineData(8, 30, 8)]   // Start of mid-day 8 SEK
-        [InlineData(14, 59, 8)]  // End of mid-day 8 SEK
-        [InlineData(15, 0, 13)]  // Start of afternoon 13 SEK
-        [InlineData(18, 0, 8)]   // Start of last 8 SEK 
-        [InlineData(18, 29, 8)]  // End of last 8 SEK 
-        [InlineData(18, 30, 0)]  // Start of free evening
+        [InlineData(6, 0, 8)]    // 06:00 Start of 8 SEK 
+        [InlineData(6, 29, 8)]   // 06:29 End of 8 SEK 
+        [InlineData(6, 30, 13)]  // 06:40 Start of 13 SEK 
+        [InlineData(7, 0, 18)]   // 07:00 Start of 18 SEK (Rush hour)
+        [InlineData(8, 29, 13)]  // 08:29 End of 13 SEK 
+        [InlineData(8, 30, 8)]   // 08:30 Start of mid-day 8 SEK
+        [InlineData(14, 59, 8)]  // 14:59 End of mid-day 8 SEK
+        [InlineData(15, 0, 13)]  // 15:00 Start of afternoon 13 SEK
+        [InlineData(18, 0, 8)]   // 18:00 Start of last 8 SEK 
+        [InlineData(18, 29, 8)]  // 18:29 End of last 8 SEK 
+        [InlineData(18, 30, 0)]  // 18:30 Start of free evening
         public void GetTollFee_ShouldReturnCorrectFee_BasedOnTime(int hour, int minute, int expectedFee)
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
 
             var dateTime = new DateTime(2013, 1, 2, hour, minute, 0);
 
@@ -44,7 +44,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldPickHighestFee_WhenRushHourOccursWithinSameHour()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
 
             DateTime[] passages = {
                 new DateTime(2013, 1, 2, 6, 20, 0),
@@ -63,7 +63,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldCapAtSixty_WhenDailyTotalExceedsLimit()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
 
             DateTime[] passages = {
                 new DateTime(2013, 1, 2, 7, 0, 0),      // 07:00    (18 SEK)
@@ -86,7 +86,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldChargeOnlyOncePerHour_AndPickHighestFee()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
             DateTime[] passages = {
                 new DateTime(2013, 1, 2, 6, 15, 0), // 06:15    (8 SEK)   
                 new DateTime(2013, 1, 2, 6, 45, 0)  // 06:45    (13 SEK)
@@ -104,7 +104,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldChargeTwice_IfPassagesAreExactlySixtyOneMinutesApart()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
             DateTime[] passages = {
                 new DateTime(2013, 1, 2, 7, 0, 0),  // 07:00    (18 SEK)
                 new DateTime(2013, 1, 2, 8, 1, 0)   // 08:01    (13 SEK)
@@ -129,7 +129,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldBeFree_ForExemptVehicleTypes(VehicleType type)
         {
             // Arrange
-            var vehicle = new Vehicle(type);
+            var vehicle = new Vehicle("TEST-123", type);
             var times = new DateTime[] { new DateTime(2013, 1, 2, 7, 0, 0) }; // Rush hour
 
             // Act
@@ -159,7 +159,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldBeFree_OnWeekendsHolidaysAndJuly(int year, int month, int day)
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
             var passages = new DateTime[] { new DateTime(year, month, day, 14, 0, 0) };
 
             // Act
@@ -173,7 +173,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldResetCap_AtMidnight()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
             DateTime[] passages = {
 		        // Monday
 		        new DateTime(2013, 1, 14, 7, 0, 0),     // 18 SEK
@@ -204,7 +204,7 @@ namespace TollFeeCalculator.Tests
         public void GetTollFee_ShouldHandleBoundaryTimesCorrectly(int hour, int minute, int expectedFee)
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
             var requestTime = new DateTime(2013, 1, 2, hour, minute, 0);
 
             // Act
@@ -225,7 +225,7 @@ namespace TollFeeCalculator.Tests
         public void GetTotalTollFee_ShouldThrowArgumentNullException_WhenDatesArrayIsNull()
         {
             // Arrange
-            var car = new Vehicle(VehicleType.Car);
+            var car = new Vehicle("TEST-123", VehicleType.Car);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => _calculator.GetTotalTollFee(car, null));
@@ -242,7 +242,7 @@ namespace TollFeeCalculator.Tests
         public void GetTollFee_ShouldThrowArgumentOutOfRangeException_WhenVehicleTypeIsInvalid()
         {
             // Arrange
-            var invalidVehicle = new Vehicle((VehicleType)999);
+            var invalidVehicle = new Vehicle("TEST-123", (VehicleType)999);
             var date = new DateTime(2013, 1, 2, 7, 0, 0);
 
             // Act & Assert
