@@ -19,18 +19,25 @@ public class TollCalculator
 
     public int GetTotalTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        if (dates == null || dates.Length == 0) return 0;
+        if (vehicle == null) throw new ArgumentNullException(nameof(vehicle), "Vehicle cannot be null.");
+        if (dates == null) throw new ArgumentNullException(nameof(dates), "Dates array cannot be null.");
 
-        var passagesByDay = dates.GroupBy(d => d.Date);
-        int totalFeeForAllDays = 0;
-
-        foreach (var dayGroup in passagesByDay)
+        try
         {
-            int dailyFee = CalculateDailyFee(vehicle, dayGroup.ToArray());
-            totalFeeForAllDays += dailyFee;
-        }
+            var passagesByDay = dates.GroupBy(d => d.Date);
+            int totalFeeForAllDays = 0;
 
-        return totalFeeForAllDays;
+            foreach (var dayGroup in passagesByDay)
+            {
+                totalFeeForAllDays += CalculateDailyFee(vehicle, dayGroup.ToArray());
+            }
+
+            return totalFeeForAllDays;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Error calculating toll fee. Ensure date formats are correct.", ex);
+        }
     }
 
     private int CalculateDailyFee(Vehicle vehicle, DateTime[] dates)
