@@ -6,8 +6,23 @@ using System.Threading.Tasks;
 
 namespace TollFeeCalculator
 {
-    public abstract class Vehicle
+    public enum VehicleType
     {
-        public abstract string GetVehicleType();
+        Car,
+        Motorbike,
+        Tractor,
+        Emergency,
+        Diplomat,
+        Foreign,
+        Military
+    }
+    public class Vehicle
+    {
+        public VehicleType Type { get; }
+
+        public Vehicle(VehicleType type)
+        {
+            Type = type;
+        }
     }
 }
