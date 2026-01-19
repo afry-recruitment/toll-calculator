@@ -1,0 +1,6 @@
+@TollFeeCalculator.Presentation_HostAddress = http://localhost:5079
+
+GET {{TollFeeCalculator.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

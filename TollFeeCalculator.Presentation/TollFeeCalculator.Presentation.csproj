@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TollFeeCalculator.Application\TollFeeCalculator.Application.csproj" />
+    <ProjectReference Include="..\TollFeeCalculator.Enterprise\TollFeeCalculator.Enterprise.csproj" />
+    <ProjectReference Include="..\TollFeeCalculator.Infrastructure\TollFeeCalculator.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

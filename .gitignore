@@ -1,0 +1,55 @@
+## Visual Studio / VS Code
+.vs/
+.vscode/
+
+## Build results
+bin/
+obj/
+**/bin/
+**/obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## MSBuild / logs
+*.log
+*.tlog
+*.lastbuildstate
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+## Test results / coverage
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverlet/
+
+## Publish output
+publish/
+**/publish/
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+
+## OS junk
+.DS_Store
+Thumbs.db
+
+## Optional: local env/secrets
+.env
+.env.*
+secrets.json
+appsettings.Development.json
