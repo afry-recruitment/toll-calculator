@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Afry.TollCalculator.SampleApi/Afry.TollCalculator.SampleApi.csproj" />
+    <Project Path="Afry.TollCalculator/Afry.TollCalculator.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="Afry.TollCalculator.Tests/Afry.TollCalculator.Tests.csproj" />
+  </Folder>
+</Solution>
