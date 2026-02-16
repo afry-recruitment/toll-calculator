@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: toll-calculator
+toll:
+  daily-max-fee: 60
+  zone-id: Europe/Stockholm
+  toll-free-vehicles:
+    - MOTORBIKE
+    - TRACTOR
+    - EMERGENCY
+    - DIPLOMAT
+    - FOREIGN
+    - MILITARY
+  fee-rules:
+    - from: "06:00"
+      to: "06:29"
+      fee: 8
+
+    - from: "06:30"
+      to: "06:59"
+      fee: 13
+
+    - from: "07:00"
+      to: "07:59"
+      fee: 18
+
+    - from: "08:00"
+      to: "08:29"
+      fee: 13
+
+    - from: "08:30"
+      to: "14:59"
+      fee: 8
+
+    - from: "15:00"
+      to: "15:29"
+      fee: 13
+
+    - from: "15:30"
+      to: "16:59"
+      fee: 18
+
+    - from: "17:00"
+      to: "17:59"
+      fee: 13
+
+    - from: "18:00"
+      to: "18:29"
+      fee: 8
+  toll-free-dates:
+    - "2026-01-01" # New Year
+    - "2026-04-01" # April 1st
+    - "2026-05-01" # May Day
+    - "2026-12-25" # Christmas
+    - "2026-12-26" # Boxin day

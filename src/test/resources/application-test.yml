@@ -1,0 +1,17 @@
+toll:
+  daily-max-fee: 60
+  toll-free-vehicles:
+    - MOTORBIKE
+    - TRACTOR
+  fee-rules:
+    - from: "06:00"
+      to: "06:29"
+      fee: 8
+    - from: "06:30"
+      to: "06:59"
+      fee: 13
+    - from: "07:00"
+      to: "07:59"
+      fee: 18
+  toll-free-dates:
+    - "2026-01-01"

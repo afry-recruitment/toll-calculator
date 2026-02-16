@@ -1,33 +1,18 @@
-![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
+Toll Calculator
 
-# Toll fee calculator 1.0
-A calculator for vehicle toll fees.
+A Spring Boot–based toll calculation system designed with extensibility, clean architecture, and configuration-driven behavior in mind.
 
-* Make sure you read these instructions carefully
-* The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
-* No requirement but bonus points if you know what movie is in the gif
+Architectural Highlights
+✔ Externalized toll rules, toll-free vehicles, and toll-free dates into application.yaml
+✔ Configuration loaded via @ConfigurationProperties
+✔ Easily extendable to load configurations from a database
+✔ Profile-based switching between YAML and DB configurations using Spring profiles
+✔ Clear separation of interfaces (SPI) and implementations
+✔ Business logic decoupled from configuration source
+✔ Time zone–aware implementation (configurable ZoneId)
+✔ Full unit test coverage for business logic components
+✔ Integration tests validating end-to-end functionality within Spring context
+✔ Clean layered structure: config, domain, service, spi
 
-## Background
-Our city has decided to implement toll fees in order to reduce traffic congestion during rush hours.
-This is the current draft of requirements:
- 
-* Fees will differ between 8 SEK and 18 SEK, depending on the time of day 
-* Rush-hour traffic will render the highest fee
-* The maximum fee for one day is 60 SEK
-* A vehicle should only be charged once an hour
-  * In the case of multiple fees in the same hour period, the highest one applies.
-* Some vehicle types are fee-free
-* Weekends and holidays are fee-free
-
-## Your assignment
-The last city-developer quit recently, claiming that this solution is production-ready. 
-You are now the new developer for our city - congratulations! 
-
-Your job is to deliver the code and from now on, you are the responsible go-to-person for this solution. This is a solution you will have to put your name on. 
-
-## Instructions
-You can make any modifications or suggestions for modifications that you see fit. Fork this repository and deliver your results via a pull-request. You could also create a gist, for privacy reasons, and send us the link.
-
-## Help I dont know C# or Java
-No worries! We accept submissions in other languages as well, why not try it in Go or nodejs.
-
+Tech Stack
+Java 21, Spring Boot 3.3, JUnit 5, Mockito, AssertJ
