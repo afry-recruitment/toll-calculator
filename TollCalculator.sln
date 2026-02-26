@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLegacy.Lib", "TollCalculatorLegacy\CalculatorLegacy.Lib\CalculatorLegacy.Lib.csproj", "{43776116-90F5-454B-850D-CFFA3C4D31E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLegacy.Tests", "TollCalculatorLegacy\CalculatorLegacy.Tests\CalculatorLegacy.Tests.csproj", "{0224F313-306A-40CA-87B2-5FD12E4EE96A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TollCalculatorLegacy", "TollCalculatorLegacy", "{EE8E44F3-8953-4416-A8E4-DBD2AC9452D3}"
+	ProjectSection(SolutionItems) = preProject
+		TollCalculatorLegacy\BugFix.md = TollCalculatorLegacy\BugFix.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculator", "TollFeeCalculator\TollFeeCalculator.csproj", "{22CBD5B3-839C-4477-B4E9-AB1AE1E54A84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TollFeeCalculatorTests", "TollFeeCalculatorTests\TollFeeCalculatorTests.csproj", "{A01C0E5A-DD67-4AB9-9884-ACA82F689835}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Api", "Presentation.Api\Presentation.Api.csproj", "{F09CBA81-F228-424F-B1B2-6C0D97DA1FB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43776116-90F5-454B-850D-CFFA3C4D31E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43776116-90F5-454B-850D-CFFA3C4D31E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43776116-90F5-454B-850D-CFFA3C4D31E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43776116-90F5-454B-850D-CFFA3C4D31E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0224F313-306A-40CA-87B2-5FD12E4EE96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0224F313-306A-40CA-87B2-5FD12E4EE96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0224F313-306A-40CA-87B2-5FD12E4EE96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0224F313-306A-40CA-87B2-5FD12E4EE96A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22CBD5B3-839C-4477-B4E9-AB1AE1E54A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CBD5B3-839C-4477-B4E9-AB1AE1E54A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CBD5B3-839C-4477-B4E9-AB1AE1E54A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CBD5B3-839C-4477-B4E9-AB1AE1E54A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A01C0E5A-DD67-4AB9-9884-ACA82F689835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A01C0E5A-DD67-4AB9-9884-ACA82F689835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A01C0E5A-DD67-4AB9-9884-ACA82F689835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A01C0E5A-DD67-4AB9-9884-ACA82F689835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F09CBA81-F228-424F-B1B2-6C0D97DA1FB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F09CBA81-F228-424F-B1B2-6C0D97DA1FB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F09CBA81-F228-424F-B1B2-6C0D97DA1FB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F09CBA81-F228-424F-B1B2-6C0D97DA1FB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{43776116-90F5-454B-850D-CFFA3C4D31E1} = {EE8E44F3-8953-4416-A8E4-DBD2AC9452D3}
+		{0224F313-306A-40CA-87B2-5FD12E4EE96A} = {EE8E44F3-8953-4416-A8E4-DBD2AC9452D3}
+	EndGlobalSection
+EndGlobal
