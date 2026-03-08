@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace TollFeeCalculator
 {
+ 
     public class Car : Vehicle
     {
-        public String GetVehicleType()
+        // Noggranhet: Stort "S" till litet "s" på string.
+        public string GetVehicleType()
         {
             return "Car";
         }
