@@ -22,13 +22,20 @@ public class TollCalculator
             int nextFee = GetTollFee(date, vehicle);
             int tempFee = GetTollFee(intervalStart, vehicle);
 
+            // Varför diffar man millisekunderna?
             long diffInMillies = date.Millisecond - intervalStart.Millisecond;
             long minutes = diffInMillies/1000/60;
 
+            // Tokig räkning här när man diffat millisekunderna
             if (minutes <= 60)
             {
                 if (totalFee > 0) totalFee -= tempFee;
+
+                // intervalStart uppdateras aldrig så man räknar mot samma start hela tiden
+                // Så tempFee får ju alltid samma kr i varje loop
                 if (nextFee >= tempFee) tempFee = nextFee;
+
+                // Skrivs över konstigt pga millisekundgrejen
                 totalFee += tempFee;
             }
             else
