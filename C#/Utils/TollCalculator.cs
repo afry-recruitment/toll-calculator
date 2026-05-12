@@ -3,7 +3,7 @@ using Types;
 
 namespace Utils
 {
-    public class TollCalculator
+    public static class TollCalculator
     {
 
         /**
@@ -14,7 +14,7 @@ namespace Utils
          * @return - the total toll fee for that day
          */
 
-        public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+        public static int GetTollFee(IVehicle vehicle, DateTime[] dates)
         {
             DateTime intervalStart = dates[0];
             int totalFee = 0;
@@ -41,7 +41,7 @@ namespace Utils
             return totalFee;
         }
 
-        private bool IsTollFreeVehicle(IVehicle vehicle)
+        private static bool IsTollFreeVehicle(IVehicle vehicle)
         {
             if (vehicle == null) return false;
             String vehicleType = vehicle.GetVehicleType();
@@ -53,7 +53,7 @@ namespace Utils
                    vehicleType.Equals(TollFreeVehicles.Military.ToString());
         }
 
-        public int GetTollFee(DateTime date, IVehicle vehicle)
+        public static int GetTollFee(DateTime date, IVehicle vehicle)
         {
             if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
 
@@ -72,22 +72,22 @@ namespace Utils
             else return 0;
         }
 
-        public DateTime SetDateTime(int year, int month, int day, int hour, int minute)
+        public static DateTime SetDateTime(int year, int month, int day, int hour, int minute)
         {
             return new DateTime(year, month, day, hour, minute, 0);
         }
 
-        public void PrintSingleFee(string scenario, IVehicle vehicle, DateTime date)
+        public static void PrintSingleFee(string scenario, IVehicle vehicle, DateTime date)
         {
             Console.WriteLine($"{scenario}: {GetTollFee(date, vehicle)}");
         }
 
-        public void PrintDailyFee(string scenario, IVehicle vehicle, params DateTime[] dates)
+        public static void PrintDailyFee(string scenario, IVehicle vehicle, params DateTime[] dates)
         {
             Console.WriteLine($"{scenario}: {GetTollFee(vehicle, dates)}");
         }
 
-        private Boolean IsTollFreeDate(DateTime date)
+        private static Boolean IsTollFreeDate(DateTime date)
         {
             int year = date.Year;
             int month = date.Month;
