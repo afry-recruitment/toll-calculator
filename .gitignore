@@ -1,0 +1,66 @@
+# Visual Studio
+.vs/
+.vscode/
+.idea/
+
+# Build output
+[Bb]in/
+[Oo]bj/
+artifacts/
+
+# Rider
+*.sln.iml
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+
+# Dotnet
+project.lock.json
+project.fragment.lock.json
+
+# Publish folder
+publish/
+
+# Test results
+TestResults/
+*.trx
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite
+*.bak
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE/workspace
+*.code-workspace
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Temporary
+*.tmp
+*.cache
+
+# IIS Express
+/.vs/
+
+# Local environment
+.env
+
+# Ignore compiled python files if any
+__pycache__/
+*.pyc
