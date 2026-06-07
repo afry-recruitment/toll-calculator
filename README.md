@@ -1,11 +1,23 @@
-![here we are](https://media.giphy.com/media/FnGJfc18tDDHy/giphy.gif)
 
-# Toll fee calculator 1.0
+
+# Toll fee calculator 1.0.1
 A calculator for vehicle toll fees.
 
-* Make sure you read these instructions carefully
-* The current code base is in Java and C#, but please make sure that you do an implementation in a language **you feel comfortable** in like Javascript, Python, Assembler or [ModiScript](https://en.wikipedia.org/wiki/ModiScript) (please don't choose ModiScript). 
-* No requirement but bonus points if you know what movie is in the gif
+## Library usage 
+See in the tests:
+```C#
+var calculator = new TollCalculator(/*config*/);
+_result = calc.GetTollFee(_vehicle, _dates);
+```
+
+or with the included `builder` for convenience, also see in tests.
+
+## Testing:
+See [reqnroll](https://docs.reqnroll.net/latest/quickstart/index.html) docs for details.
+
+Otherwise run the tests with Visual Studio Test Explorer or `dotnet test`
+
+---
 
 ## Background
 Our city has decided to implement toll fees in order to reduce traffic congestion during rush hours.
@@ -18,16 +30,4 @@ This is the current draft of requirements:
   * In the case of multiple fees in the same hour period, the highest one applies.
 * Some vehicle types are fee-free
 * Weekends and holidays are fee-free
-
-## Your assignment
-The last city-developer quit recently, claiming that this solution is production-ready. 
-You are now the new developer for our city - congratulations! 
-
-Your job is to deliver the code and from now on, you are the responsible go-to-person for this solution. This is a solution you will have to put your name on. 
-
-## Instructions
-You can make any modifications or suggestions for modifications that you see fit. Fork this repository and deliver your results via a pull-request. You could also create a gist, for privacy reasons, and send us the link.
-
-## Help I dont know C# or Java
-No worries! We accept submissions in other languages as well, why not try it in Go or nodejs.
 
