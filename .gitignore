@@ -1,0 +1,12 @@
+# .NET build output
+**/bin/
+**/obj/
+
+# JetBrains / VS / VS Code
+.vs/
+.idea/
+*.user
+
+# OS files
+.DS_Store
+Thumbs.db
