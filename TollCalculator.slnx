@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="TollCalculator.Tests/TollCalculator.Tests.csproj" Id="edc3bc62-47c4-4ea9-b1f4-941ffc256c70" />
+  <Project Path="TollCalculator\TollCalculator.csproj" />
+</Solution>
