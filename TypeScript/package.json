@@ -1,0 +1,21 @@
+{
+  "name": "intelligent-toll-calc",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Intelligent Toll Calculation SDK with pluggable model providers and caching.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "start": "tsx --env-file=.env IntelligentTollCalcConsumer/myTollCalcConsumer.ts",
+    "test": "tsx IntelligentTollCalcTests/tollModel.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
+    "openai": "^6.45.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
