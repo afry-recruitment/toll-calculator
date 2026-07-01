@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Project Path="TollCalculator.Tests/TollCalculator.Tests.csproj" />
+  <Project Path="TollCalculator/TollCalculator.csproj" />
+</Solution>
