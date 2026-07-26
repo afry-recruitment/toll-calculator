@@ -1,13 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TollFeeCalculator;
 
-namespace TollFeeCalculator
+public class Car : IVehicle
 {
-    public interface Vehicle
-    {
-        String GetVehicleType();
-    }
+    public bool IsTollFree() { return false; }
 }
+public class Motorbike : IVehicle
+{ 
+    public bool IsTollFree() { return true; }
+}
+public class Tractor : IVehicle
+{
+    public bool IsTollFree() { return true; }
+}
+public class Emergency : IVehicle
+{
+    public bool IsTollFree() { return true; }
+}
+public class Diplomat : IVehicle
+{
+    public bool IsTollFree() { return true; }
+}
+public class Foreign : IVehicle
+{
+    public bool IsTollFree() { return true; }
+}
+public class Military : IVehicle
+{
+    public bool IsTollFree() { return true; }
+}  
