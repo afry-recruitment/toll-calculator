@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using TollFeeCalculator;
+using static TollFeeCalculator.TollFeeSchedule;
 
 public class TollCalculator
 {
@@ -43,13 +44,7 @@ public class TollCalculator
     private bool IsTollFreeVehicle(Vehicle vehicle)
     {
         if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        return vehicle.IsTollFree;
     }
 
     public int GetTollFee(DateTime date, Vehicle vehicle)
@@ -71,24 +66,24 @@ public class TollCalculator
         else return 0;
     }
 
-    private Boolean IsTollFreeDate(DateTime date)
+    private static Boolean IsTollFreeDate(DateTime date)
     {
         int year = date.Year;
         int month = date.Month;
         int day = date.Day;
 
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
+        if (TollFeeSchedule.IsTollFreeDate(date)) return true;
 
         if (year == 2013)
         {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
+            if (month == (int)Months.January && day == 1 ||
+                month == (int)Months.March && (day == 28 || day == 29) ||
+                month == (int)Months.April && (day == 1 || day == 30) ||
+                month == (int)Months.May && (day == 1 || day == 8 || day == 9) ||
+                month == (int)Months.June && (day == 5 || day == 6 || day == 21) ||
+                month == (int)Months.July && day == 1 ||
+                month == (int)Months.November && day == 1 ||
+                month == (int)Months.December && (day == 24 || day == 25 || day == 26 || day == 31))
             {
                 return true;
             }
@@ -105,4 +100,6 @@ public class TollCalculator
         Foreign = 4,
         Military = 5
     }
+
+    
 }
