@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TollFeeCalculatorLibrary/TollFeeCalculatorLibrary.csproj" />
+  <Project Path="TollFeeCalculatorTests/TollFeeCalculatorTests.csproj" Id="a1a142df-7b3e-4905-8cab-26e87265d7d0" />
+</Solution>
