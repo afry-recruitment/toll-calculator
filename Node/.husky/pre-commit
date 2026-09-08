@@ -1,0 +1,3 @@
+cd Node || exit 1
+pnpm test || exit 1
+pnpm exec lint-staged
