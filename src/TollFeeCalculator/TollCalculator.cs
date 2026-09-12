@@ -8,6 +8,10 @@ public class TollCalculator
     /**
      * Calculate the total toll fee for one day
      *
+     * Passages within 60 minutes of each other are grouped into the same
+     * charging window. Only the highest single fee within each window is
+     * counted; separate windows (more than 60 minutes apart) are summed.
+     *
      * @param vehicle - the vehicle
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
@@ -17,22 +21,32 @@ public class TollCalculator
     {
         DateTime intervalStart = dates[0];
         int totalFee = 0;
+        int currentWindowFee = 0; // fee currently counted toward totalFee for the active window
+
         foreach (DateTime date in dates)
         {
             int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            TimeSpan diff = date - intervalStart;
 
-            if (minutes <= 60)
+            double diffInMinutes = diff.TotalMinutes;
+
+            if (diffInMinutes <= 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                // A higher fee appeared in this window: replace what was previously
+                // counted with the new, higher fee.
+                if (nextFee > currentWindowFee)
+                {
+                    totalFee -= currentWindowFee;
+                    totalFee += nextFee;
+                    currentWindowFee = nextFee;
+                }
             }
             else
             {
+                // More than 60 minutes since the window started: begin a new window.
+                intervalStart = date;
+                currentWindowFee = nextFee;
                 totalFee += nextFee;
             }
         }
@@ -59,16 +73,18 @@ public class TollCalculator
         int hour = date.Hour;
         int minute = date.Minute;
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        else return 0;
+        int totalMinutes = hour * 60 + minute;
+
+        if (totalMinutes >= 360 && totalMinutes <= 389) return 8;	        // 06:00 to 06:29
+        else if (totalMinutes >= 390 && totalMinutes <= 419) return 13;	    // 06:30 to 06:59
+        else if (totalMinutes >= 420 && totalMinutes <= 479) return 18;	    // 07:00 to 07:59
+        else if (totalMinutes >= 480 && totalMinutes <= 509) return 13;	    // 08:00 to 08:29
+        else if (totalMinutes >= 510 && totalMinutes <= 899) return 8;	    // 08:30 to 14:59
+        else if (totalMinutes >= 900 && totalMinutes <= 929) return 13;	    // 15:00 to 15:29
+        else if (totalMinutes >= 930 && totalMinutes <= 1019) return 18;	// 15:30 to 16:59
+        else if (totalMinutes >= 1020 && totalMinutes <= 1079) return 13;	// 17:00 to 17:59
+        else if (totalMinutes >= 1080 && totalMinutes <= 1109) return 8;	// 18:00 to 18:29
+        else return 0;                                                      // 18:30 to 23:59 and 00:00 to 05:59 (not charged)
     }
 
     private Boolean IsTollFreeDate(DateTime date)
