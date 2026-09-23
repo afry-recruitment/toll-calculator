@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace TollFeeCalculator
 {
-    public interface Vehicle
+    public class Vehicle
     {
-        String GetVehicleType();
+        
+        public VehicleType Type { get; }
+
+        // Constructor forcing every vehicle to have a valid VehicleType
+        public Vehicle(VehicleType type)
+        {
+            Type = type;
+        }
     }
 }
