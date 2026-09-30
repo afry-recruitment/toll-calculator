@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace TollFeeCalculator;
 
-namespace TollFeeCalculator
+/// <summary>A vehicle classified using the types supported by the toll rules.</summary>
+public sealed class Vehicle
 {
-    public interface Vehicle
+    public Vehicle(VehicleType type)
     {
-        String GetVehicleType();
+        if (!Enum.IsDefined(type))
+        {
+            throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown vehicle type.");
+        }
+
+        Type = type;
     }
+
+    public VehicleType Type { get; }
 }
