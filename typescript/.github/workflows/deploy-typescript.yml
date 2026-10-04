@@ -1,0 +1,129 @@
+name: Deploy toll service
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to deploy to
+        type: choice
+        options: [dev, stage, prod]
+        default: dev
+        required: true
+      image_tag:
+        description: Existing image tag to deploy. Leave empty to build the selected ref.
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-toll-service-${{ inputs.environment || 'dev' }}
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: toll-service
+  KUSTOMIZE_ROOT: .github/workflows/kustomize
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.vars.outputs.environment }}
+      image: ${{ steps.vars.outputs.image }}
+      tag: ${{ steps.vars.outputs.tag }}
+      build: ${{ steps.vars.outputs.build }}
+    steps:
+      - id: vars
+        env:
+          INPUT_ENVIRONMENT: ${{ inputs.environment }}
+          INPUT_IMAGE_TAG: ${{ inputs.image_tag }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          environment="${INPUT_ENVIRONMENT:-dev}"
+          image="ghcr.io/${REPOSITORY,,}/${IMAGE_NAME}"
+          if [ -n "${INPUT_IMAGE_TAG}" ]; then
+            tag="${INPUT_IMAGE_TAG}"
+            build=false
+          else
+            tag="${SHA}"
+            build=true
+          fi
+          {
+            echo "environment=${environment}"
+            echo "image=${image}"
+            echo "tag=${tag}"
+            echo "build=${build}"
+          } >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ needs.prepare.outputs.image }}:${{ needs.prepare.outputs.tag }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: [prepare, build]
+    if: ${{ !cancelled() && needs.prepare.result == 'success' && needs.build.result != 'failure' }}
+    runs-on: ubuntu-latest
+    # Secrets (KUBE_CONFIG, MONGODB_URI, MONGODB_USERNAME, MONGODB_PASSWORD) are stored per GitHub environment, and
+    # protection rules such as required reviewers can be set on stage and prod
+    environment: ${{ needs.prepare.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure kubectl
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          mkdir -p ~/.kube
+          echo "${KUBE_CONFIG}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Inject secrets and image
+        env:
+          ENVIRONMENT: ${{ needs.prepare.outputs.environment }}
+          IMAGE: ${{ needs.prepare.outputs.image }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+        run: |
+          overlay="${KUSTOMIZE_ROOT}/${ENVIRONMENT}"
+          printf 'MONGODB_URI=%s\nMONGODB_USERNAME=%s\nMONGODB_PASSWORD=%s\n' \
+            "${MONGODB_URI}" "${MONGODB_USERNAME}" "${MONGODB_PASSWORD}" > "${overlay}/secrets.env"
+          cd "${overlay}"
+          kustomize edit set image "toll-service=${IMAGE}:${TAG}"
+
+      - name: Deploy
+        env:
+          ENVIRONMENT: ${{ needs.prepare.outputs.environment }}
+        run: |
+          # The rendered manifest contains the Secret, so keep it out of logs
+          kustomize build "${KUSTOMIZE_ROOT}/${ENVIRONMENT}" > "${RUNNER_TEMP}/rendered.yaml"
+          kubectl apply -f "${RUNNER_TEMP}/rendered.yaml"
+          kubectl rollout status deployment/toll-service \
+            --namespace "toll-${ENVIRONMENT}" --timeout=180s

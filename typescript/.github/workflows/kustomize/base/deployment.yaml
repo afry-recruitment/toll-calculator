@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toll-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: toll-service
+  template:
+    metadata:
+      labels:
+        app: toll-service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: toll-service
+          # Replaced per environment by the `images` entry in each overlay
+          image: toll-service
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            # Fixed here so it can't drift from containerPort and the probes
+            - name: PORT
+              value: "3000"
+          envFrom:
+            # Generated from <env>/app.env
+            - configMapRef:
+                name: toll-service-config
+            # Generated from <env>/secrets.env
+            - secretRef:
+                name: toll-service-secrets
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: toll-service
+spec:
+  type: ClusterIP
+  selector:
+    app: toll-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
