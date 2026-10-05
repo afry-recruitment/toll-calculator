@@ -22,8 +22,8 @@ public class TollCalculator
             int nextFee = GetTollFee(date, vehicle);
             int tempFee = GetTollFee(intervalStart, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+            TimeSpan diff = date - intervalStart;
+            double minutes = diff.TotalMinutes;
 
             if (minutes <= 60)
             {
@@ -34,6 +34,7 @@ public class TollCalculator
             else
             {
                 totalFee += nextFee;
+                intervalStart = date;
             }
         }
         if (totalFee > 60) totalFee = 60;
@@ -59,15 +60,17 @@ public class TollCalculator
         int hour = date.Hour;
         int minute = date.Minute;
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
+        if (hour == 6 && minute <= 29) return 8;
         else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
+        else if (hour == 7 && minute <= 59) return 18;
+        else if (hour == 8 && minute <= 29) return 13;
+        else if (hour == 8 && minute >= 30 && minute <= 59) return 8;
+        else if (hour >= 9 && hour <= 14 && minute <= 59) return 8;
+        else if (hour == 15 && minute <= 29) return 13;
+        else if (hour == 15 && minute >= 30 && minute <= 59) return 18;
+        else if (hour == 16 && minute <= 59) return 18;
+        else if (hour == 17 && minute <= 59) return 13;
+        else if (hour == 18 && minute <= 29) return 8;
         else return 0;
     }
 
