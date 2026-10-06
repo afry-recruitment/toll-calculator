@@ -1,110 +1,171 @@
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.NavigableMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TollCalculator {
 
-  /**
-   * Calculate the total toll fee for one day
-   *
-   * @param vehicle - the vehicle
-   * @param dates   - date and time of all passes on one day
-   * @return - the total toll fee for that day
-   */
-  public int getTollFee(Vehicle vehicle, Date... dates) {
-    Date intervalStart = dates[0];
-    int totalFee = 0;
-    for (Date date : dates) {
-      int nextFee = getTollFee(date, vehicle);
-      int tempFee = getTollFee(intervalStart, vehicle);
+    private final ZoneId tollStationZone;
 
-      TimeUnit timeUnit = TimeUnit.MINUTES;
-      long diffInMillies = date.getTime() - intervalStart.getTime();
-      long minutes = timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    private final Set<VehicleType> tollVehicleTypes;
 
-      if (minutes <= 60) {
-        if (totalFee > 0) totalFee -= tempFee;
-        if (nextFee >= tempFee) tempFee = nextFee;
-        totalFee += tempFee;
-      } else {
-        totalFee += nextFee;
-      }
-    }
-    if (totalFee > 60) totalFee = 60;
-    return totalFee;
-  }
+    private final NavigableMap<LocalTime, Integer> scheduledFees;
 
-  private boolean isTollFreeVehicle(Vehicle vehicle) {
-    if(vehicle == null) return false;
-    String vehicleType = vehicle.getType();
-    return vehicleType.equals(TollFreeVehicles.MOTORBIKE.getType()) ||
-           vehicleType.equals(TollFreeVehicles.TRACTOR.getType()) ||
-           vehicleType.equals(TollFreeVehicles.EMERGENCY.getType()) ||
-           vehicleType.equals(TollFreeVehicles.DIPLOMAT.getType()) ||
-           vehicleType.equals(TollFreeVehicles.FOREIGN.getType()) ||
-           vehicleType.equals(TollFreeVehicles.MILITARY.getType());
-  }
+    private final int maxFeePerDay;
 
-  public int getTollFee(final Date date, Vehicle vehicle) {
-    if(isTollFreeDate(date) || isTollFreeVehicle(vehicle)) return 0;
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    int minute = calendar.get(Calendar.MINUTE);
+    private final boolean useGeneralSummerHoliday;
 
-    if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-    else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-    else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-    else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-    else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-    else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-    else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-    else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-    else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-    else return 0;
-  }
-
-  private Boolean isTollFreeDate(Date date) {
-    Calendar calendar = GregorianCalendar.getInstance();
-    calendar.setTime(date);
-    int year = calendar.get(Calendar.YEAR);
-    int month = calendar.get(Calendar.MONTH);
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-    if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) return true;
-
-    if (year == 2013) {
-      if (month == Calendar.JANUARY && day == 1 ||
-          month == Calendar.MARCH && (day == 28 || day == 29) ||
-          month == Calendar.APRIL && (day == 1 || day == 30) ||
-          month == Calendar.MAY && (day == 1 || day == 8 || day == 9) ||
-          month == Calendar.JUNE && (day == 5 || day == 6 || day == 21) ||
-          month == Calendar.JULY ||
-          month == Calendar.NOVEMBER && day == 1 ||
-          month == Calendar.DECEMBER && (day == 24 || day == 25 || day == 26 || day == 31)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private enum TollFreeVehicles {
-    MOTORBIKE("Motorbike"),
-    TRACTOR("Tractor"),
-    EMERGENCY("Emergency"),
-    DIPLOMAT("Diplomat"),
-    FOREIGN("Foreign"),
-    MILITARY("Military");
-    private final String type;
-
-    TollFreeVehicles(String type) {
-      this.type = type;
+    /**
+     * Creates a calculator with the default configuration, see {@link TollConfiguration#defaults()}.
+     */
+    public TollCalculator() {
+        this(TollConfiguration.defaults());
     }
 
-    public String getType() {
-      return type;
+    /**
+     * Creates a calculator with the given configuration.
+     *
+     * @param configuration - vehicle types, timezone, fee intervals, maximum fee per day and whether July is toll-free
+     */
+    public TollCalculator(TollConfiguration configuration) {
+        if (configuration == null) {
+            throw new IllegalArgumentException("Configuration must not be null");
+        }
+
+        tollVehicleTypes = configuration.getTollFeeVehicleTypes().stream()
+                .map(VehicleType::valueOf)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(VehicleType.class)));
+
+        this.tollStationZone = ZoneId.of(configuration.getTollStationTimezone());
+
+        this.maxFeePerDay = configuration.getMaxFeePerDay();
+
+        this.useGeneralSummerHoliday = configuration.useGeneralSummerHoliday();
+
+        List<FeeInterval> intervalFees = configuration.getFeeIntervals();
+        scheduledFees = new TreeMap<>();
+        scheduledFees.put(LocalTime.MIDNIGHT, 0);
+        for (FeeInterval interval : intervalFees) {
+            scheduledFees.put(interval.startTime(), interval.fee());
+            scheduledFees.putIfAbsent(interval.endTime(), 0);
+        }
     }
-  }
+
+    /**
+     * NOTE: This method is deprecated because it uses the old Date class, which is less precise and less convenient than the newer Instant class.
+     * It is recommended to use the getTollFee(Vehicle vehicle, Instant... instants) method instead.
+     * 
+     * Calculate the total toll fee for one day
+     *
+     * @param vehicle - the vehicle
+     * @param dates   - date and time of all passes on one day
+     * @return - the total toll fee for that day
+     */
+    @Deprecated 
+    public int getTollFee(Vehicle vehicle, Date... dates) {
+        // Keep nulls as nulls so that validateInput rejects them the same way as for Instants
+        Instant[] instants = dates == null ? null : Arrays.stream(dates)
+                .map(date -> date == null ? null : date.toInstant())
+                .toArray(Instant[]::new);
+        return getTollFee(vehicle, instants);
+    }
+
+    /**
+     * Calculate the total toll fee for one day
+     *
+     * @param vehicle - the vehicle
+     * @param instants   - instants of all passes on one day
+     * @return - the total toll fee for that day
+     */
+    public int getTollFee(Vehicle vehicle, Instant... instants) {
+        validateInput(vehicle, instants);
+        
+        // If no passgaes or toll-free vehicle, return 0 (no fee)
+        if (instants.length == 0) {
+            return 0;
+        }
+
+        // Check that all passages are on the same day
+        List<LocalDateTime> localDateTimes = Arrays.stream(instants)
+                .map(instant -> instant.atZone(tollStationZone).toLocalDateTime())
+                .toList();
+        if (!isSameDay(localDateTimes)) {
+            throw new IllegalArgumentException("All instants must be on the same day");
+        }
+
+        // Check if the date is toll-free (weekend or holiday) or if the vehicle is toll-free
+        if (isTollFreeDate(localDateTimes.get(0)) || isTollFreeVehicle(vehicle)) {
+            return 0;
+        }
+
+        // Calculate the total toll fee for the day, considering the maximum fee per day 
+        return getTollFeeForOneDay(localDateTimes);
+
+    }
+
+    private int getTollFeeForOneDay(List<LocalDateTime> localDateTimes) {
+        List<List<LocalDateTime>> windows = groupPassagesIntoHourWindows(localDateTimes);
+
+        int totalFee = windows.stream()
+                .mapToInt(window -> window.stream().mapToInt(this::feeAt).max().orElse(0))
+                .sum();
+            return Math.min(totalFee, maxFeePerDay);
+    }
+
+    private List<List<LocalDateTime>> groupPassagesIntoHourWindows(List<LocalDateTime> localDateTimes) {
+        List<List<LocalDateTime>> windows = new ArrayList<>();
+        LocalDateTime windowStart = null;
+        for (LocalDateTime dateTime : localDateTimes.stream().sorted().toList()) {
+            if (windowStart == null || !dateTime.isBefore(windowStart.plusHours(1))) {
+                windowStart = dateTime;
+                windows.add(new ArrayList<>());
+            }
+            windows.get(windows.size() - 1).add(dateTime);
+        }
+        return windows;
+    }
+
+    private int feeAt(LocalDateTime dateTime) {
+        return scheduledFees.floorEntry(dateTime.toLocalTime()).getValue();
+    }
+
+    private boolean isSameDay(List<LocalDateTime> localDateTimes) {
+        LocalDate firstDay = localDateTimes.get(0).toLocalDate();
+        return localDateTimes.stream()
+            .allMatch(dateTime -> dateTime.toLocalDate().equals(firstDay));
+    }
+
+    private boolean isTollFreeVehicle(Vehicle vehicle) {
+        return !tollVehicleTypes.contains(vehicle.getType());
+    }
+
+    private Boolean isTollFreeDate(LocalDateTime localDateTime) {
+        return DateHelper.isTollFreeDate(localDateTime, useGeneralSummerHoliday);
+    }
+
+    private void validateInput(Vehicle vehicle, Instant[] instants) {
+        if (vehicle == null) {
+            throw new IllegalArgumentException("Vehicle must not be null");
+        }
+        if (instants == null) {
+            throw new IllegalArgumentException("Instants must not be null");
+        }
+        if (Stream.of(instants).anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Instant must not be null");
+        }
+    }
 }
 
