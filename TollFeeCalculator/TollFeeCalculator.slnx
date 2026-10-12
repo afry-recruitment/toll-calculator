@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TollFeeCalculator.Core/TollFeeCalculator.Core.csproj" Id="de08dfb5-a4b7-4d45-829b-138bf01d78aa" />
+    <Project Path="src/TollFeeCalculator.Demo/TollFeeCalculator.Demo.csproj" Id="4974dc7a-a734-4001-9986-a57861cd1d06" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TollFeeCalculation.Tests/TollFeeCalculator.Tests.csproj" Id="e9fb58ca-227f-40c1-9b20-db6162aa00c1" />
+  </Folder>
+</Solution>
