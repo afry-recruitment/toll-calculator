@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+
+**/TestResults/
+*.coverage
+*.coveragexml
+
+.vs/
+.idea/
+*.user
+*.suo

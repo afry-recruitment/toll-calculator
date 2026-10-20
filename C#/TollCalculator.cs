@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using TollFeeCalculator;
 
 public class TollCalculator
@@ -13,62 +12,101 @@ public class TollCalculator
      * @return - the total toll fee for that day
      */
 
-    public int GetTollFee(Vehicle vehicle, DateTime[] dates)
+    public int GetTollFee(VehicleType vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
-        int totalFee = 0;
+        bool isTollFreeVehicle = IsTollFreeVehicle(vehicle);
+        ArgumentNullException.ThrowIfNull(dates);
+
+        if (dates.Length == 0) return 0;
+
         foreach (DateTime date in dates)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            ValidateYear(date, nameof(dates));
+        }
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
+        if (dates.Any(date => date.Date != dates[0].Date))
+        {
+            throw new ArgumentException("All passages must be on the same calendar date.", nameof(dates));
+        }
+
+        if (isTollFreeVehicle) return 0;
+
+        var sortedDates = dates.OrderBy(date => date).ToArray();
+
+        DateTime intervalStart = sortedDates[0];
+        int totalFee = 0;
+        int highestFeeInInterval = 0;
+
+        foreach (DateTime date in sortedDates)
+        {
+            int nextFee = GetTollFee(date, vehicle);
+
+            double minutes = (date - intervalStart).TotalMinutes;
 
             if (minutes <= 60)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                highestFeeInInterval = Math.Max(highestFeeInInterval, nextFee);
             }
             else
             {
-                totalFee += nextFee;
+                totalFee += highestFeeInInterval;
+
+                intervalStart = date;
+                highestFeeInInterval = nextFee;
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+
+        totalFee += highestFeeInInterval;
+        return Math.Min(totalFee, 60);
     }
 
-    private bool IsTollFreeVehicle(Vehicle vehicle)
+    private static bool IsTollFreeVehicle(VehicleType vehicle)
     {
-        if (vehicle == null) return false;
-        String vehicleType = vehicle.GetVehicleType();
-        return vehicleType.Equals(TollFreeVehicles.Motorbike.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Tractor.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Emergency.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Diplomat.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Foreign.ToString()) ||
-               vehicleType.Equals(TollFreeVehicles.Military.ToString());
+        switch (vehicle)
+        {
+            case VehicleType.Car:
+                return false;
+            case VehicleType.Motorbike:
+            case VehicleType.Tractor:
+            case VehicleType.Emergency:
+            case VehicleType.Diplomat:
+            case VehicleType.Foreign:
+            case VehicleType.Military:
+                return true;
+            default:
+                throw new ArgumentOutOfRangeException(
+                    nameof(vehicle), vehicle, "A supported vehicle type must be specified.");
+        }
     }
 
-    public int GetTollFee(DateTime date, Vehicle vehicle)
+    public int GetTollFee(DateTime date, VehicleType vehicle)
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+        bool isTollFreeVehicle = IsTollFreeVehicle(vehicle);
+        ValidateYear(date, nameof(date));
+
+        if (IsTollFreeDate(date) || isTollFreeVehicle) return 0;
 
         int hour = date.Hour;
         int minute = date.Minute;
 
-        if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
+        if (hour == 6 && minute >= 0 && minute <= 29) return 8;                        // 06:00-06:29
+        else if (hour == 6 && minute >= 30 && minute <= 59) return 13;                 // 06:30-06:59
+        else if (hour == 7 && minute >= 0 && minute <= 59) return 18;                  // 07:00-07:59
+        else if (hour == 8 && minute >= 0 && minute <= 29) return 13;                  // 08:00-08:29
+        else if ((hour == 8 && minute >= 30) || (hour >= 9 && hour <= 14)) return 8;   // 08:30-14:59
+        else if (hour == 15 && minute >= 0 && minute <= 29) return 13;                 // 15:00-15:29
+        else if (hour == 15 && minute >= 30 || hour == 16 && minute <= 59) return 18;  // 15:30-16:59
+        else if (hour == 17 && minute >= 0 && minute <= 59) return 13;                 // 17:00-17:59
+        else if (hour == 18 && minute >= 0 && minute <= 29) return 8;                  // 18:00-18:29
         else return 0;
+    }
+
+    private static void ValidateYear(DateTime date, string parameterName)
+    {
+        if (date.Year != 2013)
+        {
+            throw new ArgumentOutOfRangeException(parameterName, date, "Only dates in 2013 are supported.");
+        }
     }
 
     private Boolean IsTollFreeDate(DateTime date)
@@ -96,13 +134,4 @@ public class TollCalculator
         return false;
     }
 
-    private enum TollFreeVehicles
-    {
-        Motorbike = 0,
-        Tractor = 1,
-        Emergency = 2,
-        Diplomat = 3,
-        Foreign = 4,
-        Military = 5
-    }
 }
