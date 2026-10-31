@@ -1,0 +1,15 @@
+Tullfria fordon:
+
+Motorbike
+Tractor
+Emergency
+Diplomat
+Foreign
+Military
+
+Det enda programmet ska göra är egentligen att returnera en avgift baserat på parametrar
+Readme säger inget om hur input ser ut, men det borde räcka med vehicleType och en lista med passager/timestamps. Då antar vi att alla passager gäller samma fordon. Alt ett objekt som innehåller båda.
+Borde använda passagedatum istället för dagens datum. då kan man även räkna på gamla passager i efterhand om det skulle behövas
+"charged once an hour" borde räknas från första avgiftspliktiga passage och 60 min fram
+orginalet tar med hela juli som en avgiftsfri månad samt julafton som en tullfri dag, och så funkar det även i gbg, men står ej specificerat i readme. vill man lägga till det senare ska målet ändå vara att det är enkelt att bygga vidare på. ta bara med helger och röda dagar
+Såg att det fanns ett npm-paket för röda dagar, funkar det bra kan vi slippa skriva logik för rörliga röda dagar, och man kan enkelt byta land osv. Skulle det tillkomma nya röda dagar kanske det även underhålls väl och uppdateras snabbt
