@@ -6,7 +6,7 @@ public class TollCalculatorTests
     public void Car_in_morning_rush_hour_pays_18()
     {
         var calculator = new TollCalculator();
-        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Car());
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Vehicle(VehicleType.Car));
         Assert.Equal(18, fee);
     }
 
@@ -44,43 +44,24 @@ public class TollCalculatorTests
         var calculator = new TollCalculator();
         var passage = new DateTime(2013, 2, 4, hour, minute, 0);
 
-        var fee = calculator.GetTollFee(passage, new Car());
+        var fee = calculator.GetTollFee(passage, new Vehicle(VehicleType.Car));
 
         Assert.Equal(expectedFee, fee);
     }
 
     [Theory]
-    [InlineData("Motorbike")]
-    [InlineData("Tractor")]
-    [InlineData("Emergency")]
-    [InlineData("Diplomat")]
-    [InlineData("Foreign")]
-    [InlineData("Military")]
-    public void Toll_free_vehicle_pays_nothing_in_rush_hour(string vehicleType)
+    [InlineData(VehicleType.Motorbike)]
+    [InlineData(VehicleType.Tractor)]
+    [InlineData(VehicleType.Emergency)]
+    [InlineData(VehicleType.Diplomat)]
+    [InlineData(VehicleType.Foreign)]
+    [InlineData(VehicleType.Military)]
+    public void Toll_free_vehicle_pays_nothing_in_rush_hour(VehicleType type)
     {
         var calculator = new TollCalculator();
 
-        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new StubVehicle(vehicleType));
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Vehicle(type));
 
         Assert.Equal(0, fee);
-    }
-
-    [Fact]
-    public void Motorbike_pays_nothing_in_rush_hour()
-    {
-        var calculator = new TollCalculator();
-
-        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Motorbike());
-
-        Assert.Equal(0, fee);
-    }
-
-    // Stands in for the toll-free types that have no class of their own.
-    private class StubVehicle(string vehicleType) : Vehicle
-    {
-        public string GetVehicleType()
-        {
-            return vehicleType;
-        }
     }
 }
