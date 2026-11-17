@@ -48,4 +48,39 @@ public class TollCalculatorTests
 
         Assert.Equal(expectedFee, fee);
     }
+
+    [Theory]
+    [InlineData("Motorbike")]
+    [InlineData("Tractor")]
+    [InlineData("Emergency")]
+    [InlineData("Diplomat")]
+    [InlineData("Foreign")]
+    [InlineData("Military")]
+    public void Toll_free_vehicle_pays_nothing_in_rush_hour(string vehicleType)
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new StubVehicle(vehicleType));
+
+        Assert.Equal(0, fee);
+    }
+
+    [Fact]
+    public void Motorbike_pays_nothing_in_rush_hour()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Motorbike());
+
+        Assert.Equal(0, fee);
+    }
+
+    // Stands in for the toll-free types that have no class of their own.
+    private class StubVehicle(string vehicleType) : Vehicle
+    {
+        public string GetVehicleType()
+        {
+            return vehicleType;
+        }
+    }
 }
