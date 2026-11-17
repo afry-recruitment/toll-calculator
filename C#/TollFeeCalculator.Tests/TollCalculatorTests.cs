@@ -8,6 +8,7 @@ public class TollCalculatorTests
     private const int LowFee = 8;
     private const int MediumFee = 13;
     private const int HighFee = 18;
+    private const int MaxDailyFee = 60;
 
     private static readonly Vehicle Car = new(VehicleType.Car);
     private static readonly DateTime RushHour = At(7, 0);
@@ -181,6 +182,33 @@ public class TollCalculatorTests
         var fee = calculator.GetTollFee(Car, []);
 
         Assert.Equal(NoFee, fee);
+    }
+
+    [Fact]
+    public void A_day_never_costs_more_than_the_daily_maximum()
+    {
+        var calculator = new TollCalculator();
+
+        // Twelve passages more than an hour apart, worth 144 SEK without the maximum.
+        DateTime[] passages =
+        [
+            At(6, 0), At(7, 5), At(8, 10), At(9, 15), At(10, 20), At(11, 25),
+            At(12, 30), At(13, 35), At(14, 40), At(15, 45), At(16, 50), At(17, 55),
+        ];
+
+        var fee = calculator.GetTollFee(Car, passages);
+
+        Assert.Equal(MaxDailyFee, fee);
+    }
+
+    [Fact]
+    public void A_day_below_the_daily_maximum_is_charged_in_full()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(7, 0), At(8, 5), At(9, 10), At(15, 30)]);
+
+        Assert.Equal(HighFee + MediumFee + LowFee + HighFee, fee);
     }
 
     // A time on Monday 4 February 2013, an ordinary weekday.
