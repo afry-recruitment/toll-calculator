@@ -64,4 +64,24 @@ public class TollCalculatorTests
 
         Assert.Equal(0, fee);
     }
+
+    [Fact]
+    public void Missing_vehicle_is_charged_as_a_paying_vehicle()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), null!);
+
+        Assert.Equal(18, fee);
+    }
+
+    [Fact]
+    public void Unknown_vehicle_type_is_charged_as_a_paying_vehicle()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(new DateTime(2013, 2, 4, 7, 0, 0), new Vehicle((VehicleType)99));
+
+        Assert.Equal(18, fee);
+    }
 }
