@@ -211,6 +211,35 @@ public class TollCalculatorTests
         Assert.Equal(HighFee + MediumFee + LowFee + HighFee, fee);
     }
 
+    [Fact]
+    public void Passages_on_two_days_are_charged_for_each_day()
+    {
+        var calculator = new TollCalculator();
+        var nextDayRushHour = RushHour.AddDays(1);
+
+        var fee = calculator.GetTollFee(Car, [RushHour, nextDayRushHour]);
+
+        Assert.Equal(HighFee + HighFee, fee);
+    }
+
+    [Fact]
+    public void Each_day_has_its_own_daily_maximum()
+    {
+        var calculator = new TollCalculator();
+
+        // Twelve passages worth 144 SEK on Monday, and the same again on Tuesday.
+        DateTime[] monday =
+        [
+            At(6, 0), At(7, 5), At(8, 10), At(9, 15), At(10, 20), At(11, 25),
+            At(12, 30), At(13, 35), At(14, 40), At(15, 45), At(16, 50), At(17, 55),
+        ];
+        DateTime[] tuesday = [.. monday.Select(passage => passage.AddDays(1))];
+
+        var fee = calculator.GetTollFee(Car, [.. monday, .. tuesday]);
+
+        Assert.Equal(MaxDailyFee + MaxDailyFee, fee);
+    }
+
     // A time on Monday 4 February 2013, an ordinary weekday.
     private static DateTime At(int hour, int minute)
     {

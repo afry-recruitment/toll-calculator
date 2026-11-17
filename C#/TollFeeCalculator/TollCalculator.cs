@@ -11,15 +11,21 @@ public class TollCalculator
     private const int MaxDailyFee = 60;
     private static readonly TimeSpan ChargingWindow = TimeSpan.FromMinutes(60);
 
-    /**
-     * Calculate the total toll fee for one day
-     *
-     * @param vehicle - the vehicle
-     * @param dates   - date and time of all passes on one day
-     * @return - the total toll fee for that day
-     */
-
+    /// <summary>
+    /// Calculates the total toll fee for a vehicle's passages.
+    /// Each day is calculated on its own and has its own daily maximum.
+    /// </summary>
+    /// <param name="vehicle">The vehicle.</param>
+    /// <param name="dates">Date and time of the passages, in time order.</param>
+    /// <returns>The total toll fee.</returns>
     public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+    {
+        return dates
+            .GroupBy(date => date.Date)
+            .Sum(day => GetDailyFee(vehicle, day));
+    }
+
+    private int GetDailyFee(IVehicle vehicle, IEnumerable<DateTime> dates)
     {
         int totalFee = 0;
         int windowFee = 0;
