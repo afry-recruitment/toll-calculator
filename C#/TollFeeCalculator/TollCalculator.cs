@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-using TollFeeCalculator;
+using TollFeeCalculator.Policies;
+using TollFeeCalculator.Vehicles;
+
+namespace TollFeeCalculator;
 
 public class TollCalculator
 {
@@ -41,51 +44,10 @@ public class TollCalculator
         return totalFee;
     }
 
-    private static readonly HashSet<VehicleType> TollFreeTypes =
-    [
-        VehicleType.Motorbike,
-        VehicleType.Tractor,
-        VehicleType.Emergency,
-        VehicleType.Diplomat,
-        VehicleType.Foreign,
-        VehicleType.Military,
-    ];
-
-    private static bool IsTollFreeVehicle(IVehicle vehicle)
-    {
-        if (vehicle == null) return false;
-        return TollFreeTypes.Contains(vehicle.Type);
-    }
-
     public int GetTollFee(DateTime date, IVehicle vehicle)
     {
-        if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+        if (TollFreeDates.Includes(date) || TollFreeVehicles.Includes(vehicle)) return 0;
 
         return FeeSchedule.FeeAt(TimeOnly.FromDateTime(date));
-    }
-
-    private Boolean IsTollFreeDate(DateTime date)
-    {
-        int year = date.Year;
-        int month = date.Month;
-        int day = date.Day;
-
-        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) return true;
-
-        if (year == 2013)
-        {
-            if (month == 1 && day == 1 ||
-                month == 3 && (day == 28 || day == 29) ||
-                month == 4 && (day == 1 || day == 30) ||
-                month == 5 && (day == 1 || day == 8 || day == 9) ||
-                month == 6 && (day == 5 || day == 6 || day == 21) ||
-                month == 7 ||
-                month == 11 && day == 1 ||
-                month == 12 && (day == 24 || day == 25 || day == 26 || day == 31))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

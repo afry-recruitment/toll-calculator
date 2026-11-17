@@ -1,4 +1,4 @@
-namespace TollFeeCalculator;
+﻿namespace TollFeeCalculator.Policies;
 
 public static class FeeSchedule
 {
