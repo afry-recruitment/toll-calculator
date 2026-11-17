@@ -4,17 +4,22 @@ namespace TollFeeCalculator.Tests;
 
 public class TollCalculatorTests
 {
-    // Monday 4 February 2013 at 07:00: an ordinary weekday in rush hour.
-    private static readonly DateTime RushHour = new(2013, 2, 4, 7, 0, 0);
+    private const int NoFee = 0;
+    private const int LowFee = 8;
+    private const int MediumFee = 13;
+    private const int HighFee = 18;
+
+    private static readonly Vehicle Car = new(VehicleType.Car);
+    private static readonly DateTime RushHour = At(7, 0);
 
     [Fact]
     public void Car_in_morning_rush_hour_pays_18()
     {
         var calculator = new TollCalculator();
 
-        var fee = calculator.GetTollFee(RushHour, new Vehicle(VehicleType.Car));
+        var fee = calculator.GetTollFee(RushHour, Car);
 
-        Assert.Equal(18, fee);
+        Assert.Equal(HighFee, fee);
     }
 
     [Fact]
@@ -24,7 +29,7 @@ public class TollCalculatorTests
 
         var fee = calculator.GetTollFee(RushHour, new Vehicle(VehicleType.Motorbike));
 
-        Assert.Equal(0, fee);
+        Assert.Equal(NoFee, fee);
     }
 
     [Fact]
@@ -33,9 +38,9 @@ public class TollCalculatorTests
         var calculator = new TollCalculator();
         var saturdayRushHour = new DateTime(2013, 2, 2, 7, 0, 0);
 
-        var fee = calculator.GetTollFee(saturdayRushHour, new Vehicle(VehicleType.Car));
+        var fee = calculator.GetTollFee(saturdayRushHour, Car);
 
-        Assert.Equal(0, fee);
+        Assert.Equal(NoFee, fee);
     }
 
     [Fact]
@@ -45,7 +50,7 @@ public class TollCalculatorTests
 
         var fee = calculator.GetTollFee(RushHour, null!);
 
-        Assert.Equal(18, fee);
+        Assert.Equal(HighFee, fee);
     }
 
     [Fact]
@@ -55,6 +60,62 @@ public class TollCalculatorTests
 
         var fee = calculator.GetTollFee(RushHour, new Vehicle((VehicleType)99));
 
-        Assert.Equal(18, fee);
+        Assert.Equal(HighFee, fee);
+    }
+
+    [Fact]
+    public void Single_passage_costs_its_fee()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(7, 0)]);
+
+        Assert.Equal(HighFee, fee);
+    }
+
+    [Fact]
+    public void Two_passages_within_an_hour_with_the_same_fee_are_charged_once()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 5), At(6, 25)]);
+
+        Assert.Equal(LowFee, fee);
+    }
+
+    [Fact]
+    public void Two_passages_within_an_hour_cost_the_higher_fee_when_the_second_is_higher()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 20), At(6, 40)]);
+
+        Assert.Equal(MediumFee, fee);
+    }
+
+    [Fact]
+    public void Two_passages_within_an_hour_cost_the_higher_fee_when_the_first_is_higher()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(7, 50), At(8, 10)]);
+
+        Assert.Equal(HighFee, fee);
+    }
+
+    [Fact]
+    public void Toll_free_vehicle_pays_nothing_for_a_day_of_passages()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(new Vehicle(VehicleType.Motorbike), [At(7, 0), At(12, 0), At(16, 0)]);
+
+        Assert.Equal(NoFee, fee);
+    }
+
+    // A time on Monday 4 February 2013, an ordinary weekday.
+    private static DateTime At(int hour, int minute)
+    {
+        return new DateTime(2013, 2, 4, hour, minute, 0);
     }
 }
