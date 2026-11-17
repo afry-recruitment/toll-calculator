@@ -252,6 +252,16 @@ public class TollCalculatorTests
         Assert.Equal(inTimeOrder, outOfTimeOrder);
     }
 
+    [Fact]
+    public void Missing_list_of_passages_is_rejected()
+    {
+        var calculator = new TollCalculator();
+
+        var exception = Assert.Throws<ArgumentNullException>(() => calculator.GetTollFee(Car, null!));
+
+        Assert.Equal("dates", exception.ParamName);
+    }
+
     // A time on Monday 4 February 2013, an ordinary weekday.
     private static DateTime At(int hour, int minute)
     {

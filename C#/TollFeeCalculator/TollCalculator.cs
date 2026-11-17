@@ -16,10 +16,12 @@ public class TollCalculator
     /// Each day is calculated on its own and has its own daily maximum.
     /// </summary>
     /// <param name="vehicle">The vehicle.</param>
-    /// <param name="dates">Date and time of the passages, in any order.</param>
+    /// <param name="dates">Date and time of the passages in local time, in any order.</param>
     /// <returns>The total toll fee.</returns>
     public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
+        ArgumentNullException.ThrowIfNull(dates);
+
         return dates
             .GroupBy(date => date.Date)
             .Sum(day => GetDailyFee(vehicle, day));
