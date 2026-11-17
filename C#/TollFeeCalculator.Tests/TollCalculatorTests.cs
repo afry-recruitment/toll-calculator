@@ -113,6 +113,76 @@ public class TollCalculatorTests
         Assert.Equal(NoFee, fee);
     }
 
+    [Fact]
+    public void Passages_in_separate_hours_are_each_charged()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 0), At(15, 0)]);
+
+        Assert.Equal(LowFee + MediumFee, fee);
+    }
+
+    [Fact]
+    public void Three_passages_within_an_hour_cost_the_highest_fee_once()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 20), At(6, 40), At(7, 10)]);
+
+        Assert.Equal(HighFee, fee);
+    }
+
+    [Fact]
+    public void A_passage_after_the_hour_has_ended_starts_a_new_hour()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 0), At(6, 30), At(7, 10)]);
+
+        Assert.Equal(MediumFee + HighFee, fee);
+    }
+
+    [Fact]
+    public void A_passage_exactly_60_minutes_later_belongs_to_the_same_hour()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 0), At(7, 0)]);
+
+        Assert.Equal(HighFee, fee);
+    }
+
+    [Fact]
+    public void A_passage_61_minutes_later_starts_a_new_hour()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(6, 0), At(7, 1)]);
+
+        Assert.Equal(LowFee + HighFee, fee);
+    }
+
+    [Fact]
+    public void A_free_passage_does_not_start_the_hour()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, [At(5, 50), At(6, 10), At(6, 55)]);
+
+        Assert.Equal(MediumFee, fee);
+    }
+
+    [Fact]
+    public void No_passages_cost_nothing()
+    {
+        var calculator = new TollCalculator();
+
+        var fee = calculator.GetTollFee(Car, []);
+
+        Assert.Equal(NoFee, fee);
+    }
+
     // A time on Monday 4 February 2013, an ordinary weekday.
     private static DateTime At(int hour, int minute)
     {

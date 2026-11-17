@@ -8,6 +8,8 @@ namespace TollFeeCalculator;
 
 public class TollCalculator
 {
+    private const int MaxDailyFee = 60;
+    private static readonly TimeSpan ChargingWindow = TimeSpan.FromMinutes(60);
 
     /**
      * Calculate the total toll fee for one day
@@ -19,29 +21,31 @@ public class TollCalculator
 
     public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
         int totalFee = 0;
+        int windowFee = 0;
+        DateTime? windowStart = null;
+
         foreach (DateTime date in dates)
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            int fee = GetTollFee(date, vehicle);
+            if (fee == 0) continue;
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies / 1000 / 60;
-
-            if (minutes <= 60)
+            bool startsNewWindow = windowStart is null || date - windowStart > ChargingWindow;
+            if (startsNewWindow)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                totalFee += windowFee;
+                windowStart = date;
+                windowFee = fee;
             }
             else
             {
-                totalFee += nextFee;
+                windowFee = Math.Max(windowFee, fee);
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+
+        totalFee += windowFee;
+
+        return Math.Min(totalFee, MaxDailyFee);
     }
 
     public int GetTollFee(DateTime date, IVehicle vehicle)
