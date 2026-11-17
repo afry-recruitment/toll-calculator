@@ -16,7 +16,7 @@ public class TollCalculator
     /// Each day is calculated on its own and has its own daily maximum.
     /// </summary>
     /// <param name="vehicle">The vehicle.</param>
-    /// <param name="dates">Date and time of the passages, in time order.</param>
+    /// <param name="dates">Date and time of the passages, in any order.</param>
     /// <returns>The total toll fee.</returns>
     public int GetTollFee(IVehicle vehicle, DateTime[] dates)
     {
@@ -31,7 +31,7 @@ public class TollCalculator
         int windowFee = 0;
         DateTime? windowStart = null;
 
-        foreach (DateTime date in dates)
+        foreach (DateTime date in dates.Order())
         {
             int fee = GetTollFee(date, vehicle);
             if (fee == 0) continue;

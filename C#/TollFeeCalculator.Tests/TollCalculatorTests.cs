@@ -240,6 +240,18 @@ public class TollCalculatorTests
         Assert.Equal(MaxDailyFee + MaxDailyFee, fee);
     }
 
+    [Fact]
+    public void Passages_out_of_time_order_cost_the_same_as_in_time_order()
+    {
+        var calculator = new TollCalculator();
+
+        var inTimeOrder = calculator.GetTollFee(Car, [At(6, 0), At(6, 30), At(7, 10)]);
+        var outOfTimeOrder = calculator.GetTollFee(Car, [At(7, 10), At(6, 0), At(6, 30)]);
+
+        Assert.Equal(MediumFee + HighFee, inTimeOrder);
+        Assert.Equal(inTimeOrder, outOfTimeOrder);
+    }
+
     // A time on Monday 4 February 2013, an ordinary weekday.
     private static DateTime At(int hour, int minute)
     {
