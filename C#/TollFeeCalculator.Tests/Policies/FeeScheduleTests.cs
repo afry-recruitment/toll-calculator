@@ -75,4 +75,30 @@ public class FeeScheduleTests
 
         Assert.Equal("entries", exception.ParamName);
     }
+
+    [Fact]
+    public void Negative_fee_is_rejected()
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new FeeSchedule([(new TimeOnly(6, 0), -10)]));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
+
+    [Fact]
+    public void Two_entries_with_the_same_start_time_are_rejected()
+    {
+        var exception = Assert.Throws<ArgumentException>(
+            () => new FeeSchedule([(new TimeOnly(6, 0), 10), (new TimeOnly(6, 0), 20)]));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
+
+    [Fact]
+    public void Empty_schedule_charges_nothing()
+    {
+        var schedule = new FeeSchedule([]);
+
+        Assert.Equal(0, schedule.FeeAt(new TimeOnly(7, 0)));
+    }
 }

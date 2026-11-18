@@ -10,6 +10,16 @@ public class FeeSchedule
         ArgumentNullException.ThrowIfNull(entries);
 
         _entries = [.. entries.OrderBy(entry => entry.Start)];
+
+        if (_entries.Any(entry => entry.Fee < 0))
+        {
+            throw new ArgumentOutOfRangeException(nameof(entries), "A fee cannot be negative.");
+        }
+
+        if (_entries.DistinctBy(entry => entry.Start).Count() != _entries.Length)
+        {
+            throw new ArgumentException("Two entries cannot start at the same time.", nameof(entries));
+        }
     }
 
     // The city's fee schedule.
