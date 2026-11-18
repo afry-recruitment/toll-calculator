@@ -1,9 +1,19 @@
 ﻿namespace TollFeeCalculator.Policies;
 
-public static class FeeSchedule
+public class FeeSchedule
 {
+    private readonly (TimeOnly Start, int Fee)[] _entries;
+
     // Each entry applies from its start time until the next entry starts.
-    private static readonly (TimeOnly Start, int Fee)[] Entries =
+    public FeeSchedule(IEnumerable<(TimeOnly Start, int Fee)> entries)
+    {
+        ArgumentNullException.ThrowIfNull(entries);
+
+        _entries = [.. entries.OrderBy(entry => entry.Start)];
+    }
+
+    // The city's fee schedule.
+    public static FeeSchedule Default { get; } = new(
     [
         (new TimeOnly(6, 0), 8),
         (new TimeOnly(6, 30), 13),
@@ -15,11 +25,11 @@ public static class FeeSchedule
         (new TimeOnly(17, 0), 13),
         (new TimeOnly(18, 0), 8),
         (new TimeOnly(18, 30), 0),
-    ];
+    ]);
 
-    public static int FeeAt(TimeOnly time)
+    public int FeeAt(TimeOnly time)
     {
         // Before the first entry no entry matches, and the default entry has fee 0.
-        return Entries.LastOrDefault(entry => entry.Start <= time).Fee;
+        return _entries.LastOrDefault(entry => entry.Start <= time).Fee;
     }
 }

@@ -8,8 +8,28 @@ namespace TollFeeCalculator;
 
 public class TollCalculator
 {
-    private const int MaxDailyFee = 60;
+    private const int DefaultMaxDailyFee = 60;
     private static readonly TimeSpan ChargingWindow = TimeSpan.FromMinutes(60);
+
+    private readonly FeeSchedule _feeSchedule;
+    private readonly int _maxDailyFee;
+
+    /// <summary>
+    /// Creates a calculator with the city's fee schedule and daily maximum.
+    /// </summary>
+    public TollCalculator()
+        : this(FeeSchedule.Default, DefaultMaxDailyFee)
+    {
+    }
+
+    public TollCalculator(FeeSchedule feeSchedule, int maxDailyFee)
+    {
+        ArgumentNullException.ThrowIfNull(feeSchedule);
+        ArgumentOutOfRangeException.ThrowIfNegative(maxDailyFee);
+
+        _feeSchedule = feeSchedule;
+        _maxDailyFee = maxDailyFee;
+    }
 
     /// <summary>
     /// Calculates the total toll fee for a vehicle's passages.
@@ -53,13 +73,13 @@ public class TollCalculator
 
         totalFee += windowFee;
 
-        return Math.Min(totalFee, MaxDailyFee);
+        return Math.Min(totalFee, _maxDailyFee);
     }
 
     public int GetTollFee(DateTime date, IVehicle vehicle)
     {
         if (TollFreeDates.Includes(date) || TollFreeVehicles.Includes(vehicle)) return 0;
 
-        return FeeSchedule.FeeAt(TimeOnly.FromDateTime(date));
+        return _feeSchedule.FeeAt(TimeOnly.FromDateTime(date));
     }
 }

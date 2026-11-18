@@ -33,9 +33,9 @@ public class FeeScheduleTests
     [InlineData(18, 30, 0)]
     [InlineData(23, 59, 0)]
     [InlineData(0, 0, 0)]
-    public void Fee_follows_the_schedule(int hour, int minute, int expectedFee)
+    public void Default_schedule_follows_the_citys_price_list(int hour, int minute, int expectedFee)
     {
-        var fee = FeeSchedule.FeeAt(new TimeOnly(hour, minute));
+        var fee = FeeSchedule.Default.FeeAt(new TimeOnly(hour, minute));
 
         Assert.Equal(expectedFee, fee);
     }
