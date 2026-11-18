@@ -1,13 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TollFeeCalculator
 {
-    public interface Vehicle
+    public abstract class Vehicle
     {
-        String GetVehicleType();
+        protected Vehicle(string licensePlate)
+        {
+            if (licensePlate == null || licensePlate.Length != 6)
+            {
+                throw new ArgumentException("License plate must be 6 characters.", nameof(licensePlate));
+            }
+
+            LicensePlate = licensePlate;
+        }
+
+        public string LicensePlate { get; }
+
+        public abstract string GetVehicleType();
     }
 }

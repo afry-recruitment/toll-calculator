@@ -31,3 +31,34 @@ You can make any modifications or suggestions for modifications that you see fit
 ## Help I dont know C# or Java
 No worries! We accept submissions in other languages as well, why not try it in Go or nodejs.
 
+# Solution
+## Changes made
+* `TollCalculator.GetTollFee(Vehicle, DateTime[])` now handles one day of passages. It sorts the passages, charges the highest fee within each one-hour interval starting from the first passage, and caps the day's total at 60 SEK.
+* Passages on more than one day, or a `null` array, now throw an exception. An empty array returns 0.
+* `Vehicle` is now an abstract base class that validates the license plate (exactly 6 characters) and stores it as `LicensePlate`. `Car` is charged. `Motorbike`, `Emergency`, `Tractor`, `Diplomat`, `Foreign`, and `Military` are toll-free.
+* Fee-free dates: weekends and Swedish public holidays (including Midsummer Day, which is computed from the calendar since it is not fixed).
+* Added `TollCalculator.csproj` (class library, `net11.0`) and `Program.cs` with example usage, including a fake in-memory database that stores license plate, date, and total fee.
+* Added an xUnit test project in `C#/Tests` with 17 tests covering fees, the daily cap, input order, fee-free vehicles and dates, and validation.
+* Added a `.gitignore` for .NET build output and Visual Studio user files.
+
+## Open requirement question
+* The requirements do not say whether the day before a holiday is fee-free. **This library assumes it is not** (it is charged). This needs to be clarified with the city before release.
+
+## Running the tests (C#)
+The tests use xUnit and target .NET 11, so you need the [.NET 11 SDK](https://dotnet.microsoft.com/download) installed.
+
+From the repository root, run:
+
+```
+cd C#/Tests
+dotnet test
+```
+
+## Running the example program (C#)
+`C#/TollCalculator.csproj` is a class library (`<OutputType>Library</OutputType>`), so `dotnet run` won't run `Program.cs`. To run it, change the project type to an executable first:
+
+1. In `C#/TollCalculator.csproj`, change `<OutputType>Library</OutputType>` to `<OutputType>Exe</OutputType>`.
+2. From `C#`, run `dotnet run`.
+3. Change it back to `Library` before running the tests or building the library for other use.
+
+
