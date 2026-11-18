@@ -119,6 +119,13 @@ public class TollFreeDatesTests
         Assert.False(TollFreeDates.Includes(new DateTime(2024, 2, 29)));
     }
 
+    [Fact]
+    public void Last_day_of_the_calendar_is_toll_free_like_every_new_years_eve()
+    {
+        // 31 December 9999 is a Friday. DateTime.MaxValue is often used as a placeholder date.
+        Assert.True(TollFreeDates.Includes(DateTime.MaxValue));
+    }
+
     [Theory]
     [InlineData(2013, 1)]
     [InlineData(2013, 15)]

@@ -10,7 +10,15 @@ public static class TollFreeDates
         return IsWeekend(day)
             || day.Month == 7
             || IsPublicHoliday(day)
-            || IsPublicHoliday(day.AddDays(1));
+            || IsDayBeforePublicHoliday(day);
+    }
+
+    private static bool IsDayBeforePublicHoliday(DateOnly day)
+    {
+        // The last day of the calendar has no next day to look up, but it is a New Year's Eve like any other.
+        if (day == DateOnly.MaxValue) return true;
+
+        return IsPublicHoliday(day.AddDays(1));
     }
 
     private static bool IsWeekend(DateOnly day)
