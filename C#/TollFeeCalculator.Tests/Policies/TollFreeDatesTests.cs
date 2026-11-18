@@ -43,6 +43,21 @@ public class TollFreeDatesTests
         Assert.True(TollFreeDates.Includes(new DateTime(2013, month, day)));
     }
 
+    // Only the holiday and the day before it are toll-free, not the days around them.
+    [Theory]
+    [InlineData(1, 2)] // Wednesday, the day after New Year's Day
+    [InlineData(3, 27)] // Wednesday, two days before Good Friday
+    [InlineData(4, 2)] // Tuesday, the day after Easter Monday
+    [InlineData(5, 10)] // Friday, the day after Ascension Day
+    [InlineData(6, 4)] // Tuesday, two days before National Day
+    [InlineData(6, 7)] // Friday, the day after National Day
+    [InlineData(12, 23)] // Monday, two days before Christmas Day
+    [InlineData(12, 27)] // Friday, the day after Boxing Day
+    public void Weekday_next_to_a_holiday_in_2013_is_not_toll_free(int month, int day)
+    {
+        Assert.False(TollFreeDates.Includes(new DateTime(2013, month, day)));
+    }
+
     // The dates Transportstyrelsen lists as exempt in Gothenburg for 2026,
     // in addition to weekends and July.
     [Theory]
