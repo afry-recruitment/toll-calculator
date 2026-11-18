@@ -1,8 +1,14 @@
-﻿namespace TollFeeCalculator.Policies;
+﻿using System.Collections.Concurrent;
+
+namespace TollFeeCalculator.Policies;
 
 // Weekends, public holidays, the day before a public holiday and all of July are toll-free.
 public static class TollFreeDates
 {
+    // The holidays of a year never change, so they are calculated once and kept.
+    // The dictionary is thread-safe because the class is shared by all callers.
+    private static readonly ConcurrentDictionary<int, HashSet<DateOnly>> HolidaysByYear = new();
+
     public static bool Includes(DateTime date)
     {
         var day = DateOnly.FromDateTime(date);
@@ -28,10 +34,10 @@ public static class TollFreeDates
 
     private static bool IsPublicHoliday(DateOnly day)
     {
-        return PublicHolidays(day.Year).Contains(day);
+        return HolidaysByYear.GetOrAdd(day.Year, PublicHolidays).Contains(day);
     }
 
-    // The Swedish public holidays, which follow the same rules every year.
+    // The Swedish public holidays of a year, according to the current rules.
     private static HashSet<DateOnly> PublicHolidays(int year)
     {
         var easterSunday = EasterSunday(year);
