@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-using TollFeeCalculator.Policies;
+﻿using TollFeeCalculator.Policies;
 using TollFeeCalculator.Vehicles;
 
 namespace TollFeeCalculator;
