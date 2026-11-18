@@ -32,10 +32,10 @@ public class TollCalculator
     /// Calculates the total toll fee for a vehicle's passages.
     /// Each day is calculated on its own and has its own daily maximum.
     /// </summary>
-    /// <param name="vehicle">The vehicle.</param>
+    /// <param name="vehicle">The vehicle. A missing vehicle is charged as a paying vehicle.</param>
     /// <param name="dates">Date and time of the passages in local time, in any order.</param>
     /// <returns>The total toll fee.</returns>
-    public int GetTollFee(IVehicle vehicle, DateTime[] dates)
+    public int GetTollFee(IVehicle? vehicle, DateTime[] dates)
     {
         ArgumentNullException.ThrowIfNull(dates);
 
@@ -44,7 +44,7 @@ public class TollCalculator
             .Sum(day => GetDailyFee(vehicle, day));
     }
 
-    private int GetDailyFee(IVehicle vehicle, IEnumerable<DateTime> dates)
+    private int GetDailyFee(IVehicle? vehicle, IEnumerable<DateTime> dates)
     {
         int totalFee = 0;
         int windowFee = 0;
@@ -73,7 +73,13 @@ public class TollCalculator
         return Math.Min(totalFee, _maxDailyFee);
     }
 
-    public int GetTollFee(DateTime date, IVehicle vehicle)
+    /// <summary>
+    /// Calculates the toll fee for a single passage.
+    /// </summary>
+    /// <param name="date">Date and time of the passage in local time.</param>
+    /// <param name="vehicle">The vehicle. A missing vehicle is charged as a paying vehicle.</param>
+    /// <returns>The toll fee for the passage.</returns>
+    public int GetTollFee(DateTime date, IVehicle? vehicle)
     {
         if (TollFreeDates.Includes(date) || TollFreeVehicles.Includes(vehicle)) return 0;
 

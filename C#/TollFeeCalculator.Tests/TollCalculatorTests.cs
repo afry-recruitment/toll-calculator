@@ -54,7 +54,7 @@ public class TollCalculatorTests
     [Fact]
     public void Missing_vehicle_is_charged_as_a_paying_vehicle()
     {
-        var fee = _calculator.GetTollFee(RushHour, null!);
+        var fee = _calculator.GetTollFee(RushHour, null);
 
         Assert.Equal(HighFee, fee);
     }

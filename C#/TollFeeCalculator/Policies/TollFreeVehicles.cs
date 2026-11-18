@@ -14,7 +14,11 @@ public static class TollFreeVehicles
         VehicleType.Military,
     ];
 
-    public static bool Includes(IVehicle vehicle)
+    /// <summary>
+    /// Tells whether a vehicle is exempt from toll fees.
+    /// A missing vehicle, or one with an unknown type, is not exempt.
+    /// </summary>
+    public static bool Includes(IVehicle? vehicle)
     {
         if (vehicle == null) return false;
         return TollFreeTypes.Contains(vehicle.Type);
