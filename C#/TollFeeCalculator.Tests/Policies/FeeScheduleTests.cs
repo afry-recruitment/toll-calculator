@@ -39,4 +39,40 @@ public class FeeScheduleTests
 
         Assert.Equal(expectedFee, fee);
     }
+
+    [Fact]
+    public void Entry_applies_from_its_start_time_until_the_next_entry_starts()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(6, 0), 10), (new TimeOnly(7, 0), 20)]);
+
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 0)));
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 59)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(7, 0)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(23, 59)));
+    }
+
+    [Fact]
+    public void Time_before_the_first_entry_is_free()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(6, 0), 10)]);
+
+        Assert.Equal(0, schedule.FeeAt(new TimeOnly(5, 59)));
+    }
+
+    [Fact]
+    public void Entries_can_be_given_in_any_order()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(7, 0), 20), (new TimeOnly(6, 0), 10)]);
+
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 30)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(7, 30)));
+    }
+
+    [Fact]
+    public void Missing_list_of_entries_is_rejected()
+    {
+        var exception = Assert.Throws<ArgumentNullException>(() => new FeeSchedule(null!));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
 }
