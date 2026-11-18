@@ -1,0 +1,104 @@
+using TollFeeCalculator.Policies;
+
+namespace TollFeeCalculator.Tests.Policies;
+
+public class FeeScheduleTests
+{
+    [Theory]
+    [InlineData(5, 59, 0)]
+    [InlineData(6, 0, 8)]
+    [InlineData(6, 29, 8)]
+    [InlineData(6, 30, 13)]
+    [InlineData(6, 59, 13)]
+    [InlineData(7, 0, 18)]
+    [InlineData(7, 59, 18)]
+    [InlineData(8, 0, 13)]
+    [InlineData(8, 29, 13)]
+    [InlineData(8, 30, 8)]
+    [InlineData(9, 0, 8)]
+    [InlineData(9, 29, 8)]
+    [InlineData(9, 30, 8)]
+    [InlineData(12, 15, 8)]
+    [InlineData(14, 0, 8)]
+    [InlineData(14, 29, 8)]
+    [InlineData(14, 59, 8)]
+    [InlineData(15, 0, 13)]
+    [InlineData(15, 29, 13)]
+    [InlineData(15, 30, 18)]
+    [InlineData(16, 59, 18)]
+    [InlineData(17, 0, 13)]
+    [InlineData(17, 59, 13)]
+    [InlineData(18, 0, 8)]
+    [InlineData(18, 29, 8)]
+    [InlineData(18, 30, 0)]
+    [InlineData(23, 59, 0)]
+    [InlineData(0, 0, 0)]
+    public void Default_schedule_follows_the_citys_price_list(int hour, int minute, int expectedFee)
+    {
+        var fee = FeeSchedule.Default.FeeAt(new TimeOnly(hour, minute));
+
+        Assert.Equal(expectedFee, fee);
+    }
+
+    [Fact]
+    public void Entry_applies_from_its_start_time_until_the_next_entry_starts()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(6, 0), 10), (new TimeOnly(7, 0), 20)]);
+
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 0)));
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 59)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(7, 0)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(23, 59)));
+    }
+
+    [Fact]
+    public void Time_before_the_first_entry_is_free()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(6, 0), 10)]);
+
+        Assert.Equal(0, schedule.FeeAt(new TimeOnly(5, 59)));
+    }
+
+    [Fact]
+    public void Entries_can_be_given_in_any_order()
+    {
+        var schedule = new FeeSchedule([(new TimeOnly(7, 0), 20), (new TimeOnly(6, 0), 10)]);
+
+        Assert.Equal(10, schedule.FeeAt(new TimeOnly(6, 30)));
+        Assert.Equal(20, schedule.FeeAt(new TimeOnly(7, 30)));
+    }
+
+    [Fact]
+    public void Missing_list_of_entries_is_rejected()
+    {
+        var exception = Assert.Throws<ArgumentNullException>(() => new FeeSchedule(null!));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
+
+    [Fact]
+    public void Negative_fee_is_rejected()
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(
+            () => new FeeSchedule([(new TimeOnly(6, 0), -10)]));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
+
+    [Fact]
+    public void Two_entries_with_the_same_start_time_are_rejected()
+    {
+        var exception = Assert.Throws<ArgumentException>(
+            () => new FeeSchedule([(new TimeOnly(6, 0), 10), (new TimeOnly(6, 0), 20)]));
+
+        Assert.Equal("entries", exception.ParamName);
+    }
+
+    [Fact]
+    public void Empty_schedule_charges_nothing()
+    {
+        var schedule = new FeeSchedule([]);
+
+        Assert.Equal(0, schedule.FeeAt(new TimeOnly(7, 0)));
+    }
+}

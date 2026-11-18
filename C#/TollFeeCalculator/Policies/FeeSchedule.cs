@@ -1,0 +1,45 @@
+﻿namespace TollFeeCalculator.Policies;
+
+public class FeeSchedule
+{
+    private readonly (TimeOnly Start, int Fee)[] _entries;
+
+    // Each entry applies from its start time until the next entry starts.
+    public FeeSchedule(IEnumerable<(TimeOnly Start, int Fee)> entries)
+    {
+        ArgumentNullException.ThrowIfNull(entries);
+
+        _entries = [.. entries.OrderBy(entry => entry.Start)];
+
+        if (_entries.Any(entry => entry.Fee < 0))
+        {
+            throw new ArgumentOutOfRangeException(nameof(entries), "A fee cannot be negative.");
+        }
+
+        if (_entries.DistinctBy(entry => entry.Start).Count() != _entries.Length)
+        {
+            throw new ArgumentException("Two entries cannot start at the same time.", nameof(entries));
+        }
+    }
+
+    // The city's fee schedule.
+    public static FeeSchedule Default { get; } = new(
+    [
+        (new TimeOnly(6, 0), 8),
+        (new TimeOnly(6, 30), 13),
+        (new TimeOnly(7, 0), 18),
+        (new TimeOnly(8, 0), 13),
+        (new TimeOnly(8, 30), 8),
+        (new TimeOnly(15, 0), 13),
+        (new TimeOnly(15, 30), 18),
+        (new TimeOnly(17, 0), 13),
+        (new TimeOnly(18, 0), 8),
+        (new TimeOnly(18, 30), 0),
+    ]);
+
+    public int FeeAt(TimeOnly time)
+    {
+        // Before the first entry no entry matches, and the default entry has fee 0.
+        return _entries.LastOrDefault(entry => entry.Start <= time).Fee;
+    }
+}
