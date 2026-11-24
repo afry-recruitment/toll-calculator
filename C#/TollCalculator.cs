@@ -12,32 +12,45 @@ public class TollCalculator
      * @param dates   - date and time of all passes on one day
      * @return - the total toll fee for that day
      */
-
+    
     public int GetTollFee(Vehicle vehicle, DateTime[] dates)
     {
-        DateTime intervalStart = dates[0];
+        if (dates == null || dates.Length == 0)
+            return 0;
+
+        var orderedDates = dates.OrderBy(d => d).ToArray();
+
+        const int maxDailyFee = 60;
+        const int intervalMinutes = 60;
+
         int totalFee = 0;
-        foreach (DateTime date in dates)
+
+        DateTime intervalStart = orderedDates[0];
+        int intervalFee = GetTollFee(intervalStart, vehicle);
+
+        foreach (var date in orderedDates.Skip(1))
         {
-            int nextFee = GetTollFee(date, vehicle);
-            int tempFee = GetTollFee(intervalStart, vehicle);
+            int fee = GetTollFee(date, vehicle);
 
-            long diffInMillies = date.Millisecond - intervalStart.Millisecond;
-            long minutes = diffInMillies/1000/60;
-
-            if (minutes <= 60)
+            if ((date - intervalStart).TotalMinutes <= intervalMinutes)
             {
-                if (totalFee > 0) totalFee -= tempFee;
-                if (nextFee >= tempFee) tempFee = nextFee;
-                totalFee += tempFee;
+                intervalFee = Math.Max(intervalFee, fee);
             }
             else
             {
-                totalFee += nextFee;
+                totalFee += intervalFee;
+
+                if (totalFee >= maxDailyFee)
+                    return maxDailyFee;
+
+                intervalStart = date;
+                intervalFee = fee;
             }
         }
-        if (totalFee > 60) totalFee = 60;
-        return totalFee;
+
+        totalFee += intervalFee;
+
+        return Math.Min(totalFee, maxDailyFee);
     }
 
     private bool IsTollFreeVehicle(Vehicle vehicle)
