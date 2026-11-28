@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="TollCalculator/TollCalculator.csproj" />
+  <Project Path="TollFeeCalculatorRunner/TollFeeCalculatorRunner.csproj" />
+  <Project Path="TollFeeCalculatorTests/TollFeeCalculatorTests.csproj" />
+</Solution>
